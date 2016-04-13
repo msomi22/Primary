@@ -1,0 +1,78 @@
+
+ 
++++++++++++++++++++++++++++++++++++++++
++ POS Management System Database Layout.
++++++++++++++++++++++++++++++++++++++++
+
+The tables are divided into the following sections:
+1. Stalk Management
+2. Supplier Management
+
+
+GUID (or UUID) is an acronym for 'Globally Unique Identifier'
+ (or 'Universally Unique Identifier'). It is a 128-bit integer
+  number used to identify resources. The term GUID is generally
+   used by developers working with Microsoft technologies,
+    while UUID is used everywhere else. 
+
+
+======================
+======================
+1. Stalk Management
+======================
+======================
+
+
+-- -------------------
+-- Table product
+-- -------------------
+
+    -id  (primary key)
+    -uuid 
+    -productName
+    -productBarCode
+    -productVAT
+    -productBP
+    -productSP
+    
+  
+
+
+-- -------------------
+-- Table productCategory
+-- -------------------
+
+    -id  (primary key)
+    -uuid 
+    -productUuid
+    -productCategory
+    -productCount
+
+
+
+- -------------------
+-- Table productSale
+-- -------------------
+
+    -Id  (primary key)
+    -Uuid 
+    -productUuid
+    -amount
+    -saleDate  //DD,MM,YY
+
+
+- -------------------
+-- Table customerGoods
+-- -------------------
+
+    -Id  (primary key)
+    -Uuid 
+    -productUuid
+    -customerNumber
+   
+
+======================
+======================
+1. Supplier Management
+======================
+======================
