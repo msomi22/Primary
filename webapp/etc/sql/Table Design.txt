@@ -1,7 +1,7 @@
 
  
 +++++++++++++++++++++++++++++++++++++++
-+ POS Management System Database Layout.
++ Primary SChool Management System Database Layout.
 +++++++++++++++++++++++++++++++++++++++
 
 The tables are divided into the following sections:
@@ -18,61 +18,16 @@ GUID (or UUID) is an acronym for 'Globally Unique Identifier'
 
 ======================
 ======================
-1. Stalk Management
+1. Student Management
 ======================
 ======================
 
 
 -- -------------------
--- Table product
+-- Table student
 -- -------------------
 
     -id  (primary key)
     -uuid 
-    -productName
-    -productBarCode
-    -productVAT
-    -productBP
-    -productSP
     
   
-
-
--- -------------------
--- Table productCategory
--- -------------------
-
-    -id  (primary key)
-    -uuid 
-    -productUuid
-    -productCategory
-    -productCount
-
-
-
-- -------------------
--- Table productSale
--- -------------------
-
-    -Id  (primary key)
-    -Uuid 
-    -productUuid
-    -amount
-    -saleDate  //DD,MM,YY
-
-
-- -------------------
--- Table customerGoods
--- -------------------
-
-    -Id  (primary key)
-    -Uuid 
-    -productUuid
-    -customerNumber
-   
-
-======================
-======================
-1. Supplier Management
-======================
-======================

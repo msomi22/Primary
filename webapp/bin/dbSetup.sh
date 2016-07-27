@@ -38,7 +38,7 @@ echo "Finished creating new role."
 #End automatic creation of role
 
 # Initialize the following variables as appropriate:
-DB_USERNAME="primary"
+DB_USERNAME="prim"
 DB_PASSWORD="priM123PriM"
 DB_HOST="localhost"
 

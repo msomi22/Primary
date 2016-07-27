@@ -1,0 +1,17 @@
+ 
+
+
+    su
+  
+    su - postgres
+
+    psql template1
+
+   CREATE USER prim WITH PASSWORD 'priM123PriM';
+   ALTER ROLE prim WITH CREATEDB;
+   CREATE DATABASE primarydb;
+   GRANT ALL PRIVILEGES ON DATABASE primarydb to prim;
+   ALTER DATABASE primarydb OWNER to prim;
+
+  
+
