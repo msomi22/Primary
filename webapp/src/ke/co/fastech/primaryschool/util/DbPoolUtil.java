@@ -17,8 +17,8 @@ import ke.co.fastech.primaryschool.persistence.DBCredentials;
 /**
  * Utility dealing with database connection pooling.
  * <p>
- *  
- * @author <a href="mailto:michael@tawi.mobi">Michael Wakahe</a>
+ *  @author <a href="mailto:mwendapeter72@gmail.com">Peter mwenda</a>
+ *  @author <a href="mailto:michael@tawi.mobi">Michael Wakahe</a>
  */
 public class DbPoolUtil extends HttpServlet {
 

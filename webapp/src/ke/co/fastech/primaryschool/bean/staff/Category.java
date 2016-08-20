@@ -9,7 +9,7 @@ package ke.co.fastech.primaryschool.bean.staff;
 import ke.co.fastech.primaryschool.bean.StorableBean;
 
 /**
- * a category for which a staff must fall
+ * A category in which a staff must falls
  * 
  * @author <a href="mailto:mwendapeter72@gmail.com">Peter mwenda</a>
  *
@@ -18,7 +18,7 @@ public class Category extends StorableBean{
 	
 	private String categoryName;
 
-	/**
+	/** 
 	 * 
 	 */
 	public Category() {

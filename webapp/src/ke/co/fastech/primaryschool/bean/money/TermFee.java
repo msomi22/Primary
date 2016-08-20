@@ -18,7 +18,9 @@ public class TermFee extends StorableBean{
 	
 	private String term;
 	private String year;
+	private String studentLevel;
 	private int amount;
+	
 
 	/**
 	 * 
@@ -27,15 +29,18 @@ public class TermFee extends StorableBean{
 		super();
 		term = "";
 		year = "";
+		studentLevel ="";
 		amount = 0;
 	}
 	
+
 	/**
 	 * @return the term
 	 */
 	public String getTerm() {
 		return term;
 	}
+
 
 	/**
 	 * @param term the term to set
@@ -44,12 +49,14 @@ public class TermFee extends StorableBean{
 		this.term = term;
 	}
 
+
 	/**
 	 * @return the year
 	 */
 	public String getYear() {
 		return year;
 	}
+
 
 	/**
 	 * @param year the year to set
@@ -58,6 +65,23 @@ public class TermFee extends StorableBean{
 		this.year = year;
 	}
 
+
+	/**
+	 * @return the studentLevel
+	 */
+	public String getStudentLevel() {
+		return studentLevel;
+	}
+
+
+	/**
+	 * @param studentLevel the studentLevel to set
+	 */
+	public void setStudentLevel(String studentLevel) {
+		this.studentLevel = studentLevel;
+	}
+
+
 	/**
 	 * @return the amount
 	 */
@@ -65,12 +89,14 @@ public class TermFee extends StorableBean{
 		return amount;
 	}
 
+
 	/**
 	 * @param amount the amount to set
 	 */
 	public void setAmount(int amount) {
 		this.amount = amount;
 	}
+
 
 	@Override
 	public String toString(){
@@ -82,6 +108,8 @@ public class TermFee extends StorableBean{
 		builder.append(term);
 		builder.append(", year = ");
 		builder.append(year);
+		builder.append(", studentLevel = ");
+		builder.append(studentLevel);
 		builder.append(", amount = ");
 		builder.append(amount);
 		builder.append("]");

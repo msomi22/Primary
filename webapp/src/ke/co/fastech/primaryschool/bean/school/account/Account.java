@@ -8,7 +8,7 @@ package ke.co.fastech.primaryschool.bean.school.account;
 
 import ke.co.fastech.primaryschool.bean.StorableBean;
 
-/**
+/** 
  * A school account
  *
  * @author <a href="mailto:mwendapeter72@gmail.com">Peter mwenda</a>
@@ -23,6 +23,7 @@ public class Account extends StorableBean{
 	private String schoolHomeTown;
 	private String schoolCounty;
 	private String schoolMotto;
+	private String dayBoarding;
 
 	/**
 	 * 
@@ -36,6 +37,7 @@ public class Account extends StorableBean{
 		schoolHomeTown = "";
 		schoolCounty = "";
 		schoolMotto = "";
+		dayBoarding = "";
 	}
 	
 	/**
@@ -135,6 +137,22 @@ public class Account extends StorableBean{
 	public void setSchoolMotto(String schoolMotto) {
 		this.schoolMotto = schoolMotto;
 	}
+	
+	
+
+	/**
+	 * @return the dayBoarding
+	 */
+	public String getDayBoarding() {
+		return dayBoarding;
+	}
+
+	/**
+	 * @param dayBoarding the dayBoarding to set
+	 */
+	public void setDayBoarding(String dayBoarding) {
+		this.dayBoarding = dayBoarding;
+	}
 
 	/**
 	 * @see java.lang.Object#toString()
@@ -159,6 +177,8 @@ public class Account extends StorableBean{
 		builder.append(schoolCounty);
 		builder.append(",schoolMotto=");
 		builder.append(schoolMotto);
+		builder.append(",dayBoarding=");
+		builder.append(dayBoarding);
 		builder.append("]");
 		return builder.toString(); 
 		}

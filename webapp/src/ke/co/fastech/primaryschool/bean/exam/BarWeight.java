@@ -6,15 +6,13 @@
  */
 package ke.co.fastech.primaryschool.bean.exam;
 
-import ke.co.fastech.primaryschool.bean.StorableBean;
-
 /**
  * A weight to be used in drawing a bar graph
  * 
  *@author <a href="mailto:mwendapeter72@gmail.com">Peter mwenda</a>
  *
  */
-public class BarWeight extends StorableBean{
+public class BarWeight {
 	
 	private String studentUuid;
 	private String term;
@@ -102,8 +100,7 @@ public class BarWeight extends StorableBean{
 	 */
 	public String toString(){
 		StringBuilder builder = new StringBuilder();
-		builder.append("BarWeight [ getUuid() = ");
-		builder.append(getUuid());
+		builder.append("BarWeight [ ");
 		builder.append(", studentUuid=");
 		builder.append(studentUuid);
 		builder.append(", term=");
@@ -115,10 +112,5 @@ public class BarWeight extends StorableBean{
 		builder.append("]");
 		return builder.toString(); 
 		}
-
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 4634331524981949854L;
 
 }

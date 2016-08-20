@@ -6,6 +6,8 @@
  */
 package ke.co.fastech.primaryschool.bean.money;
 
+import java.util.Date;
+
 import ke.co.fastech.primaryschool.bean.StorableBean;
 
 /**
@@ -19,7 +21,11 @@ public class StudentFee extends StorableBean{
 	private String studentUuid;
 	private String term;
 	private String year;
+	private String studentType;
 	private int amountPaid;
+	private String transactionID;
+	private Date datePaid;
+	
 
 	/**
 	 * 
@@ -29,7 +35,10 @@ public class StudentFee extends StorableBean{
 		studentUuid = "";
 		term = "";
 		year = "";
+		studentType = "";
 		amountPaid = 0;
+		transactionID = "";
+		datePaid = new Date();
 	}
 	
 	/**
@@ -75,6 +84,20 @@ public class StudentFee extends StorableBean{
 	}
 
 	/**
+	 * @return the studentType
+	 */
+	public String getStudentType() {
+		return studentType;
+	}
+
+	/**
+	 * @param studentType the studentType to set
+	 */
+	public void setStudentType(String studentType) {
+		this.studentType = studentType;
+	}
+
+	/**
 	 * @return the amountPaid
 	 */
 	public int getAmountPaid() {
@@ -86,6 +109,34 @@ public class StudentFee extends StorableBean{
 	 */
 	public void setAmountPaid(int amountPaid) {
 		this.amountPaid = amountPaid;
+	}
+
+	/**
+	 * @return the transactionID
+	 */
+	public String getTransactionID() {
+		return transactionID;
+	}
+
+	/**
+	 * @param transactionID the transactionID to set
+	 */
+	public void setTransactionID(String transactionID) {
+		this.transactionID = transactionID;
+	}
+
+	/**
+	 * @return the datePaid
+	 */
+	public Date getDatePaid() {
+		return datePaid;
+	}
+
+	/**
+	 * @param datePaid the datePaid to set
+	 */
+	public void setDatePaid(Date datePaid) {
+		this.datePaid = datePaid;
 	}
 
 	@Override
@@ -100,8 +151,14 @@ public class StudentFee extends StorableBean{
 		builder.append(term);
 		builder.append(", year = ");
 		builder.append(year);
+		builder.append(", studentType = ");
+		builder.append(studentType);
 		builder.append(", amountPaid = ");
 		builder.append(amountPaid);
+		builder.append(", transactionID = ");
+		builder.append(transactionID);
+		builder.append(", datePaid = ");
+		builder.append(datePaid);
 		builder.append("]");
 		return builder.toString(); 
 		}

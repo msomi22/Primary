@@ -26,6 +26,20 @@ public class OpenerExam extends Performance{
 	public OpenerExam() {
 		super();
 	}
+	
+	/**
+	 * @return the score
+	 */
+	public double getOpenner() {
+		return getScore();
+	}
+
+	/**
+	 * @param score the score to set
+	 */
+	public void setOpenner(double score) {
+		setScore(score); 
+	}
   
 
 	/**
@@ -43,12 +57,12 @@ public class OpenerExam extends Performance{
 		builder.append(getStreamUuid());
 		builder.append(", getClassUuid()="); 
 		builder.append(getClassUuid());
-		builder.append(", getOpenner()=");
-		builder.append(getOpenner());
 		builder.append(", getTerm()=");
 		builder.append(getTerm());
 		builder.append(", getYear()=");
 		builder.append(getYear());
+		builder.append(", Openner =");
+		builder.append(getScore());
 		builder.append("]");
 		return builder.toString();
 	}

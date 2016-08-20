@@ -1,12 +1,17 @@
 /**
- * Primary School Management system
- *  This software is a product of FasTech Solutions Ltd
- *  You can no copy,distribute,sell or use this software.
- *  please read the license
+ * Copy Right 2016. FasTech Solutions Ltd.
+ * 
+ * Licensed under the Open Software License, Version 3.0 (the “License”); you may
+ * not use this file except in compliance with the License. You may obtain a copy
+ * of the License at:
+ * http://opensource.org/licenses/OSL-3.0
+ * 
  */
 package ke.co.fastech.primaryschool.persistence.account;
 
 import static org.junit.Assert.*;
+
+import java.util.List;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -15,7 +20,8 @@ import ke.co.fastech.primaryschool.bean.school.account.Account;
 
 /**
  * Test Unit for {@link Account} DAO 
- * @author peter
+ * 
+ * @author <a href="mailto:mwendapeter72@gmail.com">Peter mwenda</a>
  *
  */
 public class TestAcountDAO {
@@ -116,6 +122,16 @@ public class TestAcountDAO {
 		account.setSchoolHomeTown(SCHOOL_HOME_TOWN_UPDATE);
 		account.setSchoolCounty(SCHOOL_COUNTY_UPDATE); 
 		assertTrue(store.update(account));
+	}
+	
+	@Ignore
+	@Test
+	public final void testgetAllAccounts() {
+		store = new AcountDAO(databaseName, Host, databaseUsername, databasePassword, databasePort);
+		List<Account> list = store.getAllAccounts();
+		for(Account acc : list){
+			System.out.println(acc);
+		}
 	}
 
 }

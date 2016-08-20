@@ -18,7 +18,9 @@ import ke.co.fastech.primaryschool.bean.StorableBean;
  */
 public class Staff extends StorableBean{
 	
+	   private String accountUuid;
 	   private String statusUuid;
+	   private String employeeNo;
 	   private String name;
 	   private String phone;
 	   private String email;
@@ -34,7 +36,9 @@ public class Staff extends StorableBean{
 	 */
 	public Staff() {
 		super();
+		accountUuid = "";
 		statusUuid = "";
+		employeeNo = "";
 		name = "";
 		phone = "";
 		email = "";
@@ -48,6 +52,20 @@ public class Staff extends StorableBean{
 	}
 	
 	/**
+	 * @return the accountUuid
+	 */
+	public String getAccountUuid() {
+		return accountUuid;
+	}
+
+	/**
+	 * @param accountUuid the accountUuid to set
+	 */
+	public void setAccountUuid(String accountUuid) {
+		this.accountUuid = accountUuid;
+	}
+
+	/**
 	 * @return the statusUuid
 	 */
 	public String getStatusUuid() {
@@ -59,6 +77,20 @@ public class Staff extends StorableBean{
 	 */
 	public void setStatusUuid(String statusUuid) {
 		this.statusUuid = statusUuid;
+	}
+    
+	/**
+	 * @return the employeeNo
+	 */
+	public String getEmployeeNo() {
+		return employeeNo;
+	}
+
+	/**
+	 * @param employeeNo the employeeNo to set
+	 */
+	public void setEmployeeNo(String employeeNo) {
+		this.employeeNo = employeeNo;
 	}
 
 	/**
@@ -193,8 +225,12 @@ public class Staff extends StorableBean{
 		builder.append("Staff");
 		builder.append("[getUuid() = ");
 		builder.append(getUuid());
+		builder.append(", accountUuid = ");
+		builder.append(accountUuid);
 		builder.append(", statusUuid = ");
 		builder.append(statusUuid);
+		builder.append(", employeeNo = ");
+		builder.append(employeeNo);
 		builder.append(", phone = ");
 		builder.append(phone);
 		builder.append(", email = ");

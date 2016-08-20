@@ -25,6 +25,20 @@ public class MidTermExam extends Performance{
 	public MidTermExam() {
 		super();
 	}
+	
+	/**
+	 * @return the score
+	 */
+	public double getMidTerm() {
+		return getScore();
+	}
+
+	/**
+	 * @param score the score to set
+	 */
+	public void setMidTerm(double score) {
+		setScore(score);
+	}
 
 	/**
 	 * @see java.lang.Object#toString()
@@ -41,12 +55,12 @@ public class MidTermExam extends Performance{
 		builder.append(getStreamUuid());
 		builder.append(", getClassUuid()="); 
 		builder.append(getClassUuid());
-		builder.append(", getMidterm()=");
-		builder.append(getMidterm());
 		builder.append(", getTerm()=");
 		builder.append(getTerm());
 		builder.append(", getYear()=");
 		builder.append(getYear());
+		builder.append(", Midterm =");
+		builder.append(getScore());
 		builder.append("]");
 		return builder.toString();
 	}

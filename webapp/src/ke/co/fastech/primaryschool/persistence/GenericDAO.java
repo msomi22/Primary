@@ -8,8 +8,7 @@ package ke.co.fastech.primaryschool.persistence;
 
 import java.sql.SQLException;
 
-import ke.co.fastech.primaryschool.util.DbPoolUtil;
-
+import ke.co.fastech.primaryschool.server.servlet.util.DbPoolUtil;
 
 
 /**

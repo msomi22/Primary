@@ -39,10 +39,11 @@ CREATE TABLE  Account (
     schoolAddres text,
     schoolHomeTown text,
     schoolCounty text,
-    schoolMotto text
+    schoolMotto text,
+    dayBoarding text
 );
 
-\COPY Account(uuid,schoolName,schoolEmail,schoolPhone,schoolAddres,schoolHomeTown,schoolCounty,schoolMotto) FROM '/tmp/Account.csv' WITH DELIMITER AS '|' CSV HEADER
+\COPY Account(uuid,schoolName,schoolEmail,schoolPhone,schoolAddres,schoolHomeTown,schoolCounty,schoolMotto,dayBoarding) FROM '/tmp/Account.csv' WITH DELIMITER AS '|' CSV HEADER
 ALTER TABLE Account OWNER TO prim;
 
 
@@ -93,6 +94,7 @@ ALTER TABLE stream OWNER TO prim;
 CREATE TABLE  systemConfig (
     id SERIAL PRIMARY KEY,
     uuid text UNIQUE NOT NULL,
+    accountUuid text REFERENCES Account(Uuid),
     term text,
     year text,
     smsSend text,
@@ -102,7 +104,7 @@ CREATE TABLE  systemConfig (
     openningDate text,
     closingDate text
 );
-\COPY systemConfig(uuid,term,year,smsSend,endTerm,eTMidTerm,examAll,openningDate,closingDate) FROM '/tmp/systemConfig.csv' WITH DELIMITER AS '|' CSV HEADER
+\COPY systemConfig(uuid,accountUuid,term,year,smsSend,endTerm,eTMidTerm,examAll,openningDate,closingDate) FROM '/tmp/systemConfig.csv' WITH DELIMITER AS '|' CSV HEADER
 ALTER TABLE systemConfig OWNER TO prim;
 
 
@@ -114,8 +116,7 @@ ALTER TABLE systemConfig OWNER TO prim;
 CREATE TABLE  Comment (
     id SERIAL PRIMARY KEY,
     uuid text UNIQUE NOT NULL,
-    term text,
-    year text,
+    accountUuid text REFERENCES Account(Uuid),
     headTeacherCom text,
     gradeAplaincom text,
     gradeAminuscom text,
@@ -132,8 +133,57 @@ CREATE TABLE  Comment (
     
    
 );
-\COPY Comment(uuid,term,year,headTeacherCom,gradeAplaincom,gradeAminuscom,gradeBpluscom,gradeBplaincom,gradeBminuscom,gradeCpluscom,gradeCplaincom,gradeCminuscom,gradeDpluscom,gradeDplaincom,gradeDminuscom,gradeEcom) FROM '/tmp/Comment.csv' WITH DELIMITER AS '|' CSV HEADER
+\COPY Comment(uuid,accountUuid,headTeacherCom,gradeAplaincom,gradeAminuscom,gradeBpluscom,gradeBplaincom,gradeBminuscom,gradeCpluscom,gradeCplaincom,gradeCminuscom,gradeDpluscom,gradeDplaincom,gradeDminuscom,gradeEcom) FROM '/tmp/Comment.csv' WITH DELIMITER AS '|' CSV HEADER
 ALTER TABLE Comment OWNER TO prim;
+
+
+
+---------------------
+-- Table SmsSend
+-- -------------------
+
+
+CREATE TABLE  SmsSend (
+    Id SERIAL PRIMARY KEY,
+    Uuid text UNIQUE NOT NULL,
+    Status text,
+    PhoneNo text,
+    MessageId text,
+    Cost text 
+
+    
+
+);
+\COPY SmsSend(Uuid,Status,PhoneNo,MessageId,Cost) FROM '/tmp/SmsSend.csv' WITH DELIMITER AS '|' CSV HEADER
+ALTER TABLE SmsSend OWNER TO prim;
+
+
+
+-- -------------------
+-- Table SMSSPI
+-- -------------------
+
+
+
+CREATE TABLE  smsApi (
+    Id SERIAL PRIMARY KEY,
+    Uuid text UNIQUE NOT NULL,
+    accountUuid text REFERENCES Account(Uuid),
+    apiKey text,
+    apiPassword text
+    
+
+);
+\COPY smsApi(Uuid,accountUuid,apiKey,apiPassword) FROM '/tmp/smsApi.csv' WITH DELIMITER AS '|' CSV HEADER
+ALTER TABLE smsApi OWNER TO prim;
+
+
+
+
+
+
+
+
 
 
 
@@ -168,9 +218,11 @@ CREATE TABLE  student (
     regYear Integer,
     finalTerm Integer,
     finalYear Integer,
+    studentType text,
+    studentLevel text,
     admissiondate timestamp with time zone DEFAULT now()
 );
-\COPY student(uuid,statusUuid,admmissinNo,streamUuid,firstname,middlename,lastname,gender,dateofbirth,birthcertificateNo,country,county,ward,regTerm,regYear,finalTerm,finalYear,admissiondate) FROM '/tmp/student.csv' WITH DELIMITER AS '|' CSV HEADER
+\COPY student(uuid,statusUuid,admmissinNo,streamUuid,firstname,middlename,lastname,gender,dateofbirth,birthcertificateNo,country,county,ward,regTerm,regYear,finalTerm,finalYear,studentType,studentLevel,admissiondate) FROM '/tmp/student.csv' WITH DELIMITER AS '|' CSV HEADER
 ALTER TABLE student OWNER TO prim;
 
 -- -------------------
@@ -207,7 +259,7 @@ ALTER TABLE studentHouse OWNER TO prim;
 
 
 -- =========================
--- 1.  Subject's/Staff Management
+-- 1.  Subject's Management
 -- =========================
 
 
@@ -250,7 +302,9 @@ ALTER TABLE studentSubject OWNER TO prim;
 CREATE TABLE  staff (
     id SERIAL PRIMARY KEY,
     uuid text UNIQUE NOT NULL,
+    accountUuid text REFERENCES Account(Uuid),
     statusUuid text,
+    employeeNo text,
     name text,
     phone text,
     email text,
@@ -262,7 +316,7 @@ CREATE TABLE  staff (
     regDate timestamp with time zone DEFAULT now()
    
 );
-\COPY staff(uuid,statusUuid,name,phone,email,gender,dob,country,county,ward,regDate) FROM '/tmp/staff.csv' WITH DELIMITER AS '|' CSV HEADER
+\COPY staff(uuid,accountUuid,statusUuid,employeeNo,name,phone,email,gender,dob,country,county,ward,regDate) FROM '/tmp/staff.csv' WITH DELIMITER AS '|' CSV HEADER
 ALTER TABLE staff OWNER TO prim;
 
 
@@ -380,7 +434,6 @@ ALTER TABLE exam OWNER TO prim;
 
 CREATE TABLE  performance ( 
     id SERIAL PRIMARY KEY,
-    uuid text UNIQUE NOT NULL,
     studentUuid text REFERENCES student(uuid),
     subjectUuid text REFERENCES subject(uuid),
     streamUuid text REFERENCES stream(uuid),
@@ -392,7 +445,7 @@ CREATE TABLE  performance (
     endterm float 
    
 );
-\COPY performance(uuid,studentUuid,subjectUuid,streamUuid,classUuid,term,year,openner,midterm,endterm) FROM '/tmp/performance.csv' WITH DELIMITER AS '|' CSV HEADER
+\COPY performance(studentUuid,subjectUuid,streamUuid,classUuid,term,year,openner,midterm,endterm) FROM '/tmp/performance.csv' WITH DELIMITER AS '|' CSV HEADER
 ALTER TABLE performance OWNER TO prim;
 
 
@@ -403,6 +456,7 @@ ALTER TABLE performance OWNER TO prim;
  CREATE TABLE  gradingSystem (
      Id SERIAL PRIMARY KEY,
      Uuid text UNIQUE NOT NULL,
+     accountUuid text REFERENCES Account(Uuid),
      gradeAplain Integer,
      gradeAminus Integer,
      gradeBplus Integer,
@@ -420,7 +474,7 @@ ALTER TABLE performance OWNER TO prim;
 );
 
 -- import data from the CSV file for the gradingSystem table
-\COPY gradingSystem(Uuid,gradeAplain,gradeAminus,gradeBplus,gradeBplain,gradeBminus,gradeCplus,gradeCplain,gradeCminus,gradeDplus,gradeDplain,gradeDminus,gradeE) FROM '/tmp/gradingSystem.csv' WITH DELIMITER AS '|' CSV HEADER
+\COPY gradingSystem(Uuid,accountUuid,gradeAplain,gradeAminus,gradeBplus,gradeBplain,gradeBminus,gradeCplus,gradeCplain,gradeCminus,gradeDplus,gradeDplain,gradeDminus,gradeE) FROM '/tmp/gradingSystem.csv' WITH DELIMITER AS '|' CSV HEADER
 ALTER TABLE gradingSystem OWNER TO prim;
 
 
@@ -429,7 +483,6 @@ ALTER TABLE gradingSystem OWNER TO prim;
 -- -------------------
  CREATE TABLE  BarWeight (
     Id SERIAL PRIMARY KEY,
-    uuid text UNIQUE NOT NULL,
     studentUuid text REFERENCES student(Uuid),
     term text,
     year text,
@@ -446,11 +499,12 @@ ALTER TABLE BarWeight OWNER TO prim;
 -- -------------------
  CREATE TABLE  meanScore (
     Id SERIAL PRIMARY KEY,
-    uuid text UNIQUE NOT NULL,
     studentUuid text REFERENCES student(Uuid),
     term text,
     year text,
-    meanScore float  
+    meanScore float,
+    streamPosition Integer,
+    classPosition Integer
    
 );
 ALTER TABLE meanScore OWNER TO prim;
@@ -471,10 +525,11 @@ CREATE TABLE  termFee (
     uuid text UNIQUE NOT NULL,
     term text,
     year text,
-    amount integer
+    studentLevel text,
+    amount integer NOT NULL CHECK (amount>=0)
    
 );
-\COPY termFee(uuid,term,year,amount) FROM '/tmp/termFee.csv' WITH DELIMITER AS '|' CSV HEADER
+\COPY termFee(uuid,term,year,studentLevel,amount) FROM '/tmp/termFee.csv' WITH DELIMITER AS '|' CSV HEADER
 ALTER TABLE termFee OWNER TO prim;
 
 
@@ -489,7 +544,7 @@ CREATE TABLE  otherMoney (
     description text, 
     term text,
     year text,
-    amount integer
+    amount integer NOT NULL CHECK (amount>=0)
    
 );
 \COPY otherMoney(uuid,description,term,year,amount) FROM '/tmp/otherMoney.csv' WITH DELIMITER AS '|' CSV HEADER
@@ -508,10 +563,13 @@ CREATE TABLE  studentFee (
     studentUuid text REFERENCES student(Uuid),
     term text,
     year text,
-    amountPaid integer
+    studentType text,
+    amountPaid integer NOT NULL CHECK (amountPaid>=0),
+    transactionID text,
+    datePaid timestamp with time zone DEFAULT now() 
    
 );
-\COPY studentFee(uuid,studentUuid,term,year,amountPaid) FROM '/tmp/studentFee.csv' WITH DELIMITER AS '|' CSV HEADER
+\COPY studentFee(uuid,studentUuid,term,year,studentType,amountPaid,transactionID,datePaid) FROM '/tmp/studentFee.csv' WITH DELIMITER AS '|' CSV HEADER
 ALTER TABLE studentFee OWNER TO prim;
 
 
@@ -564,7 +622,7 @@ CREATE TABLE  pocketMoney (
     id SERIAL PRIMARY KEY,
     uuid text UNIQUE NOT NULL,
     studentUuid text REFERENCES student(uuid),
-    balance Integer
+    balance Integer NOT NULL CHECK (balance>=0)
    
 );
 \COPY pocketMoney(uuid,studentUuid,balance) FROM '/tmp/pocketMoney.csv' WITH DELIMITER AS '|' CSV HEADER
@@ -583,7 +641,7 @@ CREATE TABLE  withdraw (
     studentUuid text REFERENCES student(uuid),
     term text,
     year text,
-    amountWithdrawn Integer,
+    amountWithdrawn Integer NOT NULL CHECK (amountWithdrawn>=0),
     dateWithdrawn timestamp with time zone DEFAULT now() 
    
 );
@@ -603,7 +661,7 @@ CREATE TABLE  deposit (
     studentUuid text REFERENCES student(uuid),
     term text,
     year text,
-    amountDeposited Integer,
+    amountDeposited Integer NOT NULL CHECK (amountDeposited>=0),
     dateDeposited timestamp with time zone DEFAULT now()
    
 );

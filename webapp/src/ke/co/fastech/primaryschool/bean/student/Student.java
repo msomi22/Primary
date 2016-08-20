@@ -9,7 +9,7 @@ package ke.co.fastech.primaryschool.bean.student;
 import java.util.Date;
 import ke.co.fastech.primaryschool.bean.StorableBean;
 
-/**
+/** 
  * a student in a school
  * 
  * @author <a href="mailto:mwendapeter72@gmail.com">Peter mwenda</a>
@@ -33,6 +33,8 @@ public class Student extends StorableBean implements Comparable<Student>{
 	private int regYear;
 	private int finalTerm;
 	private int finalYear;
+	private String studentType;
+	private String studentLevel;
 	private Date admissiondate;
 
 	/**
@@ -56,6 +58,8 @@ public class Student extends StorableBean implements Comparable<Student>{
 		regYear = 0;
 		finalTerm = 0;
 		finalYear = 0;
+		studentType = "";
+		studentLevel = "";
 		admissiondate = new Date();
 	}
 	
@@ -284,6 +288,34 @@ public class Student extends StorableBean implements Comparable<Student>{
 	}
 
 	/**
+	 * @return the studentLevel
+	 */
+	public String getStudentLevel() {
+		return studentLevel;
+	}
+
+	/**
+	 * @param studentLevel the studentLevel to set
+	 */
+	public void setStudentLevel(String studentLevel) {
+		this.studentLevel = studentLevel;
+	}
+
+	/**
+	 * @return the studentType
+	 */
+	public String getStudentType() {
+		return studentType;
+	}
+
+	/**
+	 * @param studentType the studentType to set
+	 */
+	public void setStudentType(String studentType) {
+		this.studentType = studentType;
+	}
+
+	/**
 	 * @return the admissiondate
 	 */
 	public Date getAdmissiondate() {
@@ -334,6 +366,10 @@ public class Student extends StorableBean implements Comparable<Student>{
 		builder.append(finalTerm);
 		builder.append(",finalYear =");
 		builder.append(finalYear);
+		builder.append(",studentType =");
+		builder.append(studentType);
+		builder.append(",studentLevel =");
+		builder.append(studentLevel);
 		builder.append(",admissiondate =");
 		builder.append(admissiondate);
 		builder.append("]");

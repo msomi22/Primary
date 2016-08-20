@@ -6,31 +6,32 @@
  */
 package ke.co.fastech.primaryschool.bean.exam;
 
-import ke.co.fastech.primaryschool.bean.StorableBean;
-
 /**
  * The students mean score for a particular exam
  * 
  * @author <a href="mailto:mwendapeter72@gmail.com">Peter mwenda</a>
  *
  */
-public class MeanScore extends StorableBean{
+public class MeanScore{
 	
 	private String studentUuid;
 	private String term;
 	private String year;
 	private double meanScore;
+	private int streamPosition;
+	private int classPosition;
 	
 	/**
 	 * 
 	 */
 	public MeanScore() {
-		super();
 		studentUuid = "";
 		term = "";
 		year = "";
 		meanScore = 0;
-	}
+		streamPosition = 0;
+		classPosition = 0;
+	} 
 	
 
 	/**
@@ -95,6 +96,38 @@ public class MeanScore extends StorableBean{
 	public void setMeanScore(double meanScore) {
 		this.meanScore = meanScore;
 	}
+    
+
+	/**
+	 * @return the streamPosition
+	 */
+	public int getStreamPosition() {
+		return streamPosition;
+	}
+
+
+	/**
+	 * @param streamPosition the streamPosition to set
+	 */
+	public void setStreamPosition(int streamPosition) {
+		this.streamPosition = streamPosition;
+	}
+
+
+	/**
+	 * @return the classPosition
+	 */
+	public int getClassPosition() {
+		return classPosition;
+	}
+
+
+	/**
+	 * @param classPosition the classPosition to set
+	 */
+	public void setClassPosition(int classPosition) {
+		this.classPosition = classPosition;
+	}
 
 
 	/**
@@ -102,9 +135,8 @@ public class MeanScore extends StorableBean{
 	 */
 	public String toString(){
 		StringBuilder builder = new StringBuilder();
-		builder.append("MeanScore [ getUuid() = ");
-		builder.append(getUuid());
-		builder.append(", studentUuid=");
+		builder.append("MeanScore [ ");
+		builder.append(" studentUuid=");
 		builder.append(studentUuid);
 		builder.append(", term=");
 		builder.append(term);
@@ -112,11 +144,12 @@ public class MeanScore extends StorableBean{
 		builder.append(year);
 		builder.append(", meanScore=");
 		builder.append(meanScore);
+		builder.append(", streamPosition=");
+		builder.append(streamPosition);
+		builder.append(", classPosition=");
+		builder.append(classPosition);
 		builder.append("]");
-		return builder.toString(); 
+		return builder.toString();    
 		}
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5244715530419961210L;
+	
 }

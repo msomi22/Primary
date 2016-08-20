@@ -6,6 +6,8 @@
  */
 package ke.co.fastech.primaryschool.persistence.account;
 
+import java.util.List;
+
 import ke.co.fastech.primaryschool.bean.school.account.Account;
 
 /**
@@ -33,5 +35,8 @@ public interface SchoolAcountDAO {
 	 * @return whether account was updated successfully
 	 */
 	public boolean update(Account account);
-
+	/**
+	 * 
+	 */
+	public List<Account> getAllAccounts(); 
 }

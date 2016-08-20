@@ -16,6 +16,7 @@ import ke.co.fastech.primaryschool.bean.StorableBean;
  */
 public class GradingSystem extends StorableBean{
 	
+	private String accountUuid;
 	private int GradeAplain;
 	private int GradeAminus;
 	private int GradeBplus;
@@ -34,6 +35,7 @@ public class GradingSystem extends StorableBean{
 	 */
 	public GradingSystem() {
 		super();
+		accountUuid = "";
 		GradeAplain = 0;
 		GradeAminus = 0;
 		GradeBplus = 0;
@@ -47,6 +49,22 @@ public class GradingSystem extends StorableBean{
 		GradeE = 0;
 	}
 	
+
+	/**
+	 * @return the accountUuid
+	 */
+	public String getAccountUuid() {
+		return accountUuid;
+	}
+
+
+	/**
+	 * @param accountUuid the accountUuid to set
+	 */
+	public void setAccountUuid(String accountUuid) {
+		this.accountUuid = accountUuid;
+	}
+
 
 	/**
 	 * @return the gradeAplain
@@ -248,6 +266,8 @@ public class GradingSystem extends StorableBean{
 		StringBuilder builder = new StringBuilder();
 		builder.append("GradingSysem [ getUuid() =");
 		builder.append(getUuid());
+		builder.append(", accountUuid = ");
+		builder.append(accountUuid);
 		builder.append(",GradeAplain=");
 		builder.append(GradeAplain);
 		builder.append(", GradeAminus =");

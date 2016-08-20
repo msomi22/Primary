@@ -24,7 +24,7 @@ public class StudentBook extends StorableBean{
 	private Date borrowDate;
 	private String term;
 	private String year;
-	private Date returnDate;
+	private String returnDate;
 
 	/**
 	 * 
@@ -36,7 +36,8 @@ public class StudentBook extends StorableBean{
 		borrowDate = new Date();
 		term = "";
 		year = "";
-		returnDate = new Date();
+		returnDate = "";
+				
 	}
 	
 	/**
@@ -126,14 +127,14 @@ public class StudentBook extends StorableBean{
 	/**
 	 * @return the returnDate
 	 */
-	public Date getReturnDate() {
+	public String getReturnDate() {
 		return returnDate;
 	}
 
 	/**
 	 * @param returnDate the returnDate to set
 	 */
-	public void setReturnDate(Date returnDate) {
+	public void setReturnDate(String returnDate) {
 		this.returnDate = returnDate;
 	}
 

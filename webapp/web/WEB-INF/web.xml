@@ -3,6 +3,638 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
   xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
 
+  <!-- Servlet definition start -->
+    
+    <!-- Start - Startup servlets -->
+    <servlet>
+        <servlet-name>Log4jInit</servlet-name>
+        <servlet-class>ke.co.fastech.primaryschool.server.servlet.init.Log4jInit</servlet-class>
+        <init-param>
+            <param-name>log4j-init-file</param-name>
+            <param-value>/WEB-INF/log/log4j.properties</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>PropertiesConfig</servlet-name>
+        <servlet-class>ke.co.fastech.primaryschool.server.servlet.util.PropertiesConfig</servlet-class>
+        <init-param>
+            <param-name>config-file</param-name>
+            <param-value>/WEB-INF/config.properties</param-value>
+        </init-param>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>DbPoolUtil</servlet-name>
+        <servlet-class>ke.co.fastech.primaryschool.server.servlet.util.DbPoolUtil</servlet-class>
+        <load-on-startup>3</load-on-startup>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>CacheInit</servlet-name>
+        <servlet-class>ke.co.fastech.primaryschool.server.servlet.init.CacheInit</servlet-class>
+        <init-param>
+            <param-name>ehcache-file</param-name>
+            <param-value>/WEB-INF/classes/ehcache.xml</param-value>
+        </init-param>
+        <load-on-startup>4</load-on-startup>
+    </servlet>
+
+    <!-- End - Startup servlets -->
+    
+
+
+
+
+
+    
+    <!-- Start - school servlets -->
+    <servlet>
+        <servlet-name>Login</servlet-name>
+        <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.Login</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>Logout</servlet-name>
+        <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.Logout</servlet-class>
+    </servlet>
+
+
+    <servlet>
+        <servlet-name>FontImageGenerator</servlet-name>
+        <servlet-class>ke.co.fastech.primaryschool.server.servlet.util.FontImageGenerator</servlet-class>
+    </servlet>
+
+
+
+    <servlet>
+      <servlet-name>ClassPerformanceList</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.exam.std4_8.ClassPerformanceList</servlet-class>
+    </servlet>
+
+
+     <servlet>
+      <servlet-name>ReportCard</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.exam.std4_8.ReportCard</servlet-class>
+    </servlet>
+
+
+     <servlet>
+      <servlet-name>StreamPerformanceList</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.exam.std4_8.StreamPerformanceList</servlet-class>
+    </servlet>
+
+
+
+    <!-- Start - money servlets -->
+
+     <servlet>
+      <servlet-name>FindStudentBalance</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.money.FindStudentBalance</servlet-class>
+    </servlet>
+
+     <servlet>
+      <servlet-name>FindStudentFee</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.money.FindStudentFee</servlet-class>
+    </servlet>
+
+     <servlet>
+      <servlet-name>NewFeePayment</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.money.NewFeePayment</servlet-class>
+    </servlet>
+
+     <servlet>
+      <servlet-name>NewOtherMoney</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.money.NewOtherMoney</servlet-class>
+    </servlet>
+
+     <servlet>
+      <servlet-name>NewOtherMoneyPerClass</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.money.NewOtherMoneyPerClass</servlet-class>
+    </servlet>
+
+     <servlet>
+      <servlet-name>RevertOtherMoney</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.money.RevertOtherMoney</servlet-class>
+    </servlet>
+
+     <servlet>
+      <servlet-name>UpdateStudentFee</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.money.UpdateStudentFee</servlet-class>
+    </servlet>
+
+     <servlet>
+      <servlet-name>UpdateTermFee</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.money.UpdateTermFee</servlet-class>
+    </servlet>
+
+
+    <!-- end - money servlets -->
+
+
+    <!-- start - pocket money servlets -->
+
+
+     <servlet>
+      <servlet-name>Deposit</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.pocketmoney.Deposit</servlet-class>
+    </servlet>
+
+     <servlet>
+      <servlet-name>FindStudentPM</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.pocketmoney.FindStudentPM</servlet-class>
+    </servlet>
+
+     <servlet>
+      <servlet-name>Withdraw</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.pocketmoney.Withdraw</servlet-class>
+    </servlet>
+
+    <!-- end - pocket money servlets -->
+
+
+    <!-- start - staff servlets -->
+
+    <servlet>
+      <servlet-name>DeleteClassTeacher</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.staff.DeleteClassTeacher</servlet-class>
+    </servlet>
+
+     <servlet>
+      <servlet-name>DeleteTeacherSubject</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.staff.DeleteTeacherSubject</servlet-class>
+    </servlet>
+
+     <servlet>
+      <servlet-name>NewClassTeacher</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.staff.NewClassTeacher</servlet-class>
+    </servlet>
+
+    <servlet>
+      <servlet-name>NewStaff</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.staff.NewStaff</servlet-class>
+    </servlet>
+
+     <servlet>
+      <servlet-name>NewTeacherSubject</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.staff.NewTeacherSubject</servlet-class>
+    </servlet>
+
+     <servlet>
+      <servlet-name>UpdateStaff</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.staff.UpdateStaff</servlet-class>
+    </servlet>
+
+
+    <!-- end -staff servlets -->
+
+
+    <!-- start -student servlets -->
+
+    <servlet>
+      <servlet-name>DeleteStudentHouse</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.student.DeleteStudentHouse</servlet-class>
+    </servlet>
+
+    <servlet>
+      <servlet-name>DeleteStudentSubject</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.student.DeleteStudentSubject</servlet-class>
+    </servlet>
+
+     <servlet>
+      <servlet-name>FindStudentHouse</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.student.FindStudentHouse</servlet-class>
+    </servlet>
+
+     <servlet>
+      <servlet-name>FindStudentSubject</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.student.FindStudentSubject</servlet-class>
+    </servlet>
+
+    <servlet>
+      <servlet-name>NewStudent</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.student.NewStudent</servlet-class>
+    </servlet>
+
+    <servlet>
+      <servlet-name>NewStudentHouse</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.student.NewStudentHouse</servlet-class>
+    </servlet>
+
+     <servlet>
+      <servlet-name>NewStudentSubject</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.student.NewStudentSubject</servlet-class>
+    </servlet>
+
+     <servlet>
+      <servlet-name>UpdateStudent</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.student.UpdateStudent</servlet-class>
+    </servlet>
+
+
+
+    <!-- end -student servlets -->
+
+    <!-- start -student parent servlets -->
+
+     <servlet>
+      <servlet-name>UpdateStudent</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.student.parent.FindStudentParent</servlet-class>
+    </servlet>
+
+     <servlet>
+      <servlet-name>NewStudentParent</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.student.parent.NewStudentParent</servlet-class>
+    </servlet>
+
+     <servlet>
+      <servlet-name>UpdateStudentParent</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.student.parent.UpdateStudentParent</servlet-class>
+    </servlet>
+
+    <!-- end -student parent servlets -->
+
+
+     <!-- start -export servlets -->
+
+     <servlet>
+      <servlet-name>FeeListPerClass</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.export.excel.FeeListPerClass</servlet-class>
+    </servlet>
+
+    <servlet>
+      <servlet-name>FeeStatement</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.export.pdf.FeeStatement</servlet-class>
+    </servlet>
+
+     <!-- end -export servlets -->
+
+
+     <!-- start -upload servlets -->
+
+      <servlet>
+      <servlet-name>StudentPerclass</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.upload.StudentPerclass</servlet-class>
+    </servlet>
+
+     <servlet>
+      <servlet-name>ScorePerClass</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.upload.ScorePerClass</servlet-class>
+    </servlet>
+
+    <servlet>
+      <servlet-name>SaveScore</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.upload.SaveScore</servlet-class>
+    </servlet>
+
+     <!-- end -upload servlets -->
+
+
+     
+
+
+     <!-- start admin  servlets -->
+
+      <servlet>
+      <servlet-name>AdminLogin</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.admin.Login</servlet-class>
+    </servlet>
+
+     <servlet>
+      <servlet-name>AdminLogout</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.admin.Logout</servlet-class>
+    </servlet>
+
+     <servlet>
+      <servlet-name>AddHeadTeacher</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.admin.school.AddHeadTeacher</servlet-class>
+    </servlet>
+
+     <servlet>
+      <servlet-name>AddSchool</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.admin.school.AddSchool</servlet-class>
+    </servlet>
+
+     <servlet>
+      <servlet-name>UpdateSchool</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.admin.school.UpdateSchool</servlet-class>
+    </servlet>
+
+
+
+
+
+     <!-- end admin servlets -->
+
+
+
+
+
+    <!-- Servlet mapping start -->
+
+     <!-- school mapping -->
+    
+    <servlet-mapping>
+        <servlet-name>Login</servlet-name>
+        <url-pattern>/login</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Logout</servlet-name>
+        <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping> 
+        <servlet-name>FontImageGenerator</servlet-name>
+        <url-pattern>/fontImageGenerator</url-pattern>
+    </servlet-mapping> 
+
+
+    <servlet-mapping>
+        <servlet-name>ClassPerformanceList</servlet-name>
+        <url-pattern>/primary/classPerformanceList</url-pattern>
+    </servlet-mapping>
+
+     <servlet-mapping>
+        <servlet-name>ReportCard</servlet-name>
+        <url-pattern>/primary/reportCard</url-pattern> 
+    </servlet-mapping>
+
+     <servlet-mapping>
+        <servlet-name>StreamPerformanceList</servlet-name>
+        <url-pattern>/primary/streamPerformanceList</url-pattern>
+    </servlet-mapping>
+
+
+    <!-- money mapping -->
+
+    <servlet-mapping>
+        <servlet-name>FindStudentBalance</servlet-name>
+        <url-pattern>/primary/findStudentBalance</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>FindStudentFee</servlet-name>
+        <url-pattern>/primary/findStudentFee</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>NewFeePayment</servlet-name>
+        <url-pattern>/primary/newFeePayment</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>NewOtherMoney</servlet-name>
+        <url-pattern>/primary/newOtherMoney</url-pattern>
+    </servlet-mapping>
+
+     <servlet-mapping>
+        <servlet-name>NewOtherMoneyPerClass</servlet-name>
+        <url-pattern>/primary/newOtherMoneyPerClass</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>RevertOtherMoney</servlet-name>
+        <url-pattern>/primary/revertOtherMoney</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>UpdateStudentFee</servlet-name>
+        <url-pattern>/primary/updateStudentFee</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>UpdateTermFee</servlet-name>
+        <url-pattern>/primary/updateTermFee</url-pattern>
+    </servlet-mapping>
+
+
+     <!-- money mapping end-->
+
+    <!-- pocket money mapping -->
+      
+      <servlet-mapping>
+        <servlet-name>Deposit</servlet-name>
+        <url-pattern>/primary/deposit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>FindStudentPM</servlet-name>
+        <url-pattern>/primary/findStudentPM</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Withdraw</servlet-name>
+        <url-pattern>/primary/withdraw</url-pattern>
+    </servlet-mapping>
+
+    <!--pocket money mapping  end-->
+
+    <!--staff mapping  start-->
+
+     <servlet-mapping>
+        <servlet-name>DeleteClassTeacher</servlet-name>
+        <url-pattern>/primary/deleteClassTeacher</url-pattern>
+    </servlet-mapping>
+
+     <servlet-mapping>
+        <servlet-name>DeleteTeacherSubject</servlet-name>
+        <url-pattern>/primary/deleteTeacherSubject</url-pattern>
+    </servlet-mapping>
+
+     <servlet-mapping>
+        <servlet-name>NewClassTeacher</servlet-name>
+        <url-pattern>/primary/newClassTeacher</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>NewStaff</servlet-name>
+        <url-pattern>/primary/newStaff</url-pattern>
+    </servlet-mapping>
+
+     <servlet-mapping>
+        <servlet-name>NewTeacherSubject</servlet-name>
+        <url-pattern>/primary/newTeacherSubject</url-pattern>
+    </servlet-mapping>
+
+     <servlet-mapping>
+        <servlet-name>UpdateStaff</servlet-name>
+        <url-pattern>/primary/updateStaff</url-pattern>
+    </servlet-mapping>
+
+
+    <!--staff mapping  end-->
+
+    <!--student mapping  start-->
+     <servlet-mapping>
+        <servlet-name>DeleteStudentHouse</servlet-name>
+        <url-pattern>/primary/deleteStudentHouse</url-pattern>
+    </servlet-mapping>
+
+     <servlet-mapping>
+        <servlet-name>DeleteStudentSubject</servlet-name>
+        <url-pattern>/primary/deleteStudentSubject</url-pattern>
+    </servlet-mapping>
+
+     <servlet-mapping>
+        <servlet-name>FindStudentHouse</servlet-name>
+        <url-pattern>/primary/findStudentHouse</url-pattern>
+    </servlet-mapping>
+
+     <servlet-mapping>
+        <servlet-name>FindStudentSubject</servlet-name>
+        <url-pattern>/primary/findStudentSubject</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>NewStudent</servlet-name>
+        <url-pattern>/primary/newStudent</url-pattern>
+    </servlet-mapping>
+
+     <servlet-mapping>
+        <servlet-name>NewStudentHouse</servlet-name>
+        <url-pattern>/primary/newStudentHouse</url-pattern>
+    </servlet-mapping>
+
+     <servlet-mapping>
+        <servlet-name>NewStudentSubject</servlet-name>
+        <url-pattern>/primary/newStudentSubject</url-pattern>
+    </servlet-mapping>
+
+     <servlet-mapping>
+        <servlet-name>UpdateStudent</servlet-name>
+        <url-pattern>/primary/updateStudent</url-pattern>
+    </servlet-mapping>
+
+
+    <!--student mapping  end-->
+
+
+     <!--student parent mapping  end-->
+
+     <servlet-mapping>
+        <servlet-name>FindStudentParent</servlet-name>
+        <url-pattern>/primary/findStudentParent</url-pattern>
+    </servlet-mapping>
+
+     <servlet-mapping>
+        <servlet-name>NewStudentParent</servlet-name>
+        <url-pattern>/primary/newStudentParent</url-pattern>
+    </servlet-mapping>
+
+     <servlet-mapping>
+        <servlet-name>UpdateStudentParent</servlet-name>
+        <url-pattern>/primary/updateStudentParent</url-pattern>
+    </servlet-mapping>
+
+
+     <!--student parent mapping  end-->
+
+
+     <!--export mapping  start-->
+
+     <servlet-mapping>
+        <servlet-name>FeeListPerClass</servlet-name>
+        <url-pattern>/primary/feeListPerClass</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>FeeStatement</servlet-name>
+        <url-pattern>/primary/feeStatement</url-pattern>
+    </servlet-mapping>
+
+     <!--export mapping  end-->
+
+
+      <!--export mapping  start-->
+
+      <servlet-mapping>
+        <servlet-name>StudentPerclass</servlet-name>
+        <url-pattern>/primary/studentPerclass</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ScorePerClass</servlet-name>
+        <url-pattern>/primary/scorePerClass</url-pattern>
+    </servlet-mapping>
+
+     <servlet-mapping>
+        <servlet-name>SaveScore</servlet-name>
+        <url-pattern>/primary/saveScore</url-pattern> 
+    </servlet-mapping>
+
+     <!--export mapping  end-->
+
+
+    <!-- school mapping end-->
+
+
+
+   
+
+
+
+
+     <!--admin mapping  start-->
+
+
+      <servlet-mapping>
+        <servlet-name>AdminLogin</servlet-name>
+        <url-pattern>/admin/login</url-pattern>      
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>AdminLogout</servlet-name>
+        <url-pattern>/admin/logout</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>AddHeadTeacher</servlet-name>
+        <url-pattern>/admin/addHeadTeacher</url-pattern>
+    </servlet-mapping>
+
+     <servlet-mapping>
+        <servlet-name>AddSchool</servlet-name>
+        <url-pattern>/admin/addSchool</url-pattern>
+    </servlet-mapping>
+
+     <servlet-mapping>
+        <servlet-name>UpdateSchool</servlet-name>
+        <url-pattern>/admin/updateSchool</url-pattern>
+    </servlet-mapping>
+
+
+
+
+
+
+      <!--admin mapping  end-->
+
+
+      
+       <error-page>
+        <error-code>404</error-code>
+        <location>/404.jsp</location>
+      </error-page>
+
+       <error-page>
+        <error-code>500</error-code>
+        <location>/500.jsp</location>
+      </error-page>
+
+
+     <!--
+    <session-config>
+        <session-timeout>500</session-timeout>
+    </session-config>  
+    -->
+
+
+
+
+
 
         
     

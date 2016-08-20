@@ -22,14 +22,12 @@ public class Performance extends StorableBean{
 	private String classUuid;
 	private String term;
 	private String year;
-	private double openner;
-	private double midterm;
-	private double endterm;
+	private double score;
 
 	/**
 	 * 
 	 */
-	public Performance() {
+	protected Performance() {
 		  super();
 		  studentUuid = "";
 		  subjectUuid = "";
@@ -37,9 +35,7 @@ public class Performance extends StorableBean{
 		  classUuid = "";
 		  term = "";
 		  year = "";
-		  openner = 0;
-		  midterm = 0;
-		  endterm = 0;
+		  score = 0;
 	}
 	
 	/**
@@ -125,47 +121,19 @@ public class Performance extends StorableBean{
 	public void setYear(String year) {
 		this.year = year;
 	}
-
+    
 	/**
-	 * @return the openner
+	 * @return the score
 	 */
-	public double getOpenner() {
-		return openner;
+	public double getScore() {
+		return score;
 	}
 
 	/**
-	 * @param openner the openner to set
+	 * @param score the score to set
 	 */
-	public void setOpenner(double openner) {
-		this.openner = openner;
-	}
-
-	/**
-	 * @return the midterm
-	 */
-	public double getMidterm() {
-		return midterm;
-	}
-
-	/**
-	 * @param midterm the midterm to set
-	 */
-	public void setMidterm(double midterm) {
-		this.midterm = midterm;
-	}
-
-	/**
-	 * @return the endterm
-	 */
-	public double getEndterm() {
-		return endterm;
-	}
-
-	/**
-	 * @param endterm the endterm to set
-	 */
-	public void setEndterm(double endterm) {
-		this.endterm = endterm;
+	public void setScore(double score) {
+		this.score = score;
 	}
 
 	/**
@@ -187,12 +155,8 @@ public class Performance extends StorableBean{
 		builder.append(term);
 		builder.append(", year =");
 		builder.append(year);
-		builder.append(", openner =");
-		builder.append(openner);
-		builder.append(", midterm =");
-		builder.append(midterm);
-		builder.append(", endterm =");
-		builder.append(endterm);
+		builder.append(", score =");
+		builder.append(score);
 		builder.append("]");
 		return builder.toString(); 
 		}

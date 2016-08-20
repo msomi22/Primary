@@ -8,101 +8,46 @@ package ke.co.fastech.primaryschool.bean.money.pocket;
 
 import java.util.Date;
 
-import ke.co.fastech.primaryschool.bean.StorableBean;
-
 /** used while withdrawing pocket money
  * 
  * @author <a href="mailto:mwendapeter72@gmail.com">Peter mwenda</a>
  *
  */
-public class Withdraw extends StorableBean{
+public class Withdraw extends PocketMoney{
 	
-	private String studentUuid;
-	private String term;
-	private String year;
-	private int amountWithdrawn;
-	private Date dateWithdrawn;
-
 	/**
 	 * 
 	 */
 	public Withdraw() {
 		super();
-		studentUuid = "";
-		term = "";
-		year = "";
-		amountWithdrawn = 0;
-		dateWithdrawn = new Date();
 	}
 	
-	/**
-	 * @return the studentUuid
-	 */
-	public String getStudentUuid() {
-		return studentUuid;
-	}
-
-	/**
-	 * @param studentUuid the studentUuid to set
-	 */
-	public void setStudentUuid(String studentUuid) {
-		this.studentUuid = studentUuid;
-	}
-
-	/**
-	 * @return the term
-	 */
-	public String getTerm() {
-		return term;
-	}
-
-	/**
-	 * @param term the term to set
-	 */
-	public void setTerm(String term) {
-		this.term = term;
-	}
-
-	/**
-	 * @return the year
-	 */
-	public String getYear() {
-		return year;
-	}
-
-	/**
-	 * @param year the year to set
-	 */
-	public void setYear(String year) {
-		this.year = year;
-	}
-
 	/**
 	 * @return the amountWithdrawn
 	 */
 	public int getAmountWithdrawn() {
-		return amountWithdrawn;
+		return getBalance();
 	}
 
 	/**
 	 * @param amountWithdrawn the amountWithdrawn to set
 	 */
 	public void setAmountWithdrawn(int amountWithdrawn) {
-		this.amountWithdrawn = amountWithdrawn;
+		setBalance(amountWithdrawn);
 	}
 
 	/**
 	 * @return the dateWithdrawn
 	 */
 	public Date getDateWithdrawn() {
-		return dateWithdrawn;
+		return getDate();
 	}
 
 	/**
 	 * @param dateWithdrawn the dateWithdrawn to set
 	 */
 	public void setDateWithdrawn(Date dateWithdrawn) {
-		this.dateWithdrawn = dateWithdrawn;
+		setDate(dateWithdrawn);
 	}
 
 	@Override
@@ -112,15 +57,15 @@ public class Withdraw extends StorableBean{
 		builder.append("[getUuid() = ");
 		builder.append(getUuid());
 		builder.append(", studentUuid = ");
-		builder.append(studentUuid);
+		builder.append(getStudentUuid());
 		builder.append(", term = ");
-		builder.append(term);
+		builder.append(getTerm());
 		builder.append(", year = ");
-		builder.append(year);
+		builder.append(getYear());
 		builder.append(", amountWithdrawn = ");
-		builder.append(amountWithdrawn);
+		builder.append(getBalance());
 		builder.append(", dateWithdrawn = ");
-		builder.append(dateWithdrawn);
+		builder.append(getDate());
 		builder.append("]");
 		return builder.toString(); 
 		}

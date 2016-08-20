@@ -1,2 +1,3 @@
-uuid|statusUuid|name|phone|email|gender|dob|country|county|ward|regDate
-83CD26E1-3E64-4969-9B98-9069ECDB757D|B2733AB2-9CDB-4361-89C5-86B175A2E828|Peter Mwenda|718953974|mp@gmail.com |M|1990|Kenya|Tharaka Nithi|Muiru|2016-05-07 11:28:43.101+03
+uuid|accountUuid|statusUuid|employeeNo|name|phone|email|gender|dob|country|county|ward|regDate
+83CD26E1-3E64-4969-9B98-9069ECDB757D|9DEDDC49-444E-499B-BDB9-D6625D2F79F4|B2733AB2-9CDB-4361-89C5-86B175A2E828|100|Peter Mwenda|718953974|petermwenda83@yahoo.com|M|1990|Kenya|Tharaka Nithi|Muiru|2016-05-07 11:28:43.101+03
+4BB37A08-D180-47DF-8401-B3162F84E23F|9DEDDC49-444E-499B-BDB9-D6625D2F79F4|B2733AB2-9CDB-4361-89C5-86B175A2E828|101|Denis Mugambi|729694935|dennismugambimurithi@gmail.com|M|1990|Kenya|Tharaka Nithi|Muiru|2016-05-07 11:28:43.101+03

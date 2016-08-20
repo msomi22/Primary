@@ -25,6 +25,20 @@ public class EndTermExam extends Performance{
 	public EndTermExam() {
 		super();
 	}
+	
+	/**
+	 * @return the score
+	 */
+	public double getEndTerm() {
+		return getScore();
+	}
+
+	/**
+	 * @param score the score to set
+	 */
+	public void setEndTerm(double score) {
+		setScore(score);
+	}
 
 	/**
 	 * @see java.lang.Object#toString()
@@ -41,12 +55,12 @@ public class EndTermExam extends Performance{
 		builder.append(getStreamUuid());
 		builder.append(", getClassUuid()="); 
 		builder.append(getClassUuid());
-		builder.append(", getEndterm()=");
-		builder.append(getEndterm());
 		builder.append(", getTerm()=");
 		builder.append(getTerm());
 		builder.append(", getYear()=");
 		builder.append(getYear());
+		builder.append(", Endterm =");
+		builder.append(getScore());
 		builder.append("]");
 		return builder.toString();
 	}

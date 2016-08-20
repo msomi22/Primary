@@ -9,7 +9,7 @@ package ke.co.fastech.primaryschool.bean.school;
 import ke.co.fastech.primaryschool.bean.StorableBean;
 
 /**
- * a hpuse in the school
+ * a house in the school
  * 
  * @author <a href="mailto:mwendapeter72@gmail.com">Peter mwenda</a>
  *

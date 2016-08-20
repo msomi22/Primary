@@ -1,8 +1,11 @@
 /**
- * Primary School Management system
- *  This software is a product of FasTech Solutions Ltd
- *  You can no copy,distribute,sell or use this software.
- *  please read the license
+ * Copy Right 2016. FasTech Solutions Ltd.
+ * 
+ * Licensed under the Open Software License, Version 3.0 (the “License”); you may
+ * not use this file except in compliance with the License. You may obtain a copy
+ * of the License at:
+ * http://opensource.org/licenses/OSL-3.0
+ * 
  */
 package ke.co.fastech.primaryschool.persistence.student;
 
@@ -21,7 +24,7 @@ import org.apache.log4j.Logger;
 import ke.co.fastech.primaryschool.bean.student.Student;
 import ke.co.fastech.primaryschool.persistence.GenericDAO;
 
-/**
+/** 
  * Persistence abstraction for {@link Student}
  * 
  *@author <a href="mailto:mwendapeter72@gmail.com">Peter mwenda</a>
@@ -59,23 +62,23 @@ public class StudentDAO extends GenericDAO implements SchoolStudentDAO {
 	 * @see ke.co.fastech.primaryschool.persistence.student.SchoolStudentDAO#getStudentByUuid(java.lang.String)
 	 */
 	@Override
-	public Student getStudentByUuid(String studentUuid) {
+	public Student getStudentByUuid(String Uuid) {
 		Student student = null;
         ResultSet rset = null;
      try(
      		 Connection conn = dbutils.getConnection();
-        	      PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM Student WHERE studentUuid = ?;");       
+        	      PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM Student WHERE Uuid = ?;");       
      		
      		){
      	
-     	 pstmt.setString(1, studentUuid);
+     	 pstmt.setString(1, Uuid);
 	         rset = pstmt.executeQuery();
 	     while(rset.next()){
 	    	 student  = beanProcessor.toBean(rset,Student.class);
 	   }
      	
      }catch(SQLException e){
-     	  logger.error("SQL Exception when getting Student with studentUuid: " + studentUuid);
+     	  logger.error("SQL Exception when getting Student with studentUuid " + Uuid);
           logger.error(ExceptionUtils.getStackTrace(e));
           System.out.println(ExceptionUtils.getStackTrace(e));
      }
@@ -102,7 +105,7 @@ public class StudentDAO extends GenericDAO implements SchoolStudentDAO {
 	   }
      	
      }catch(SQLException e){
-     	  logger.error("SQL Exception when getting Student with admmissinNo: " + admmissinNo);
+     	  logger.error("SQL Exception when getting Student with admmissinNo " + admmissinNo);
           logger.error(ExceptionUtils.getStackTrace(e));
           System.out.println(ExceptionUtils.getStackTrace(e));
      }
@@ -118,9 +121,9 @@ public class StudentDAO extends GenericDAO implements SchoolStudentDAO {
 		  
 		 try(   Connection conn = dbutils.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Student" 
-			        		+"(uuid,statusUuid,streamUuid,admmissinNo,firstname,middlename,lastname,gender"
-			        		+ "dateofbirth,birthcertificateNo,country,county,ward,regTerm"
-			        		+ "regYear,finalTerm,finalYear,admissiondate) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?.?,?);");
+			        		+"(uuid,statusUuid,streamUuid,admmissinNo,firstname,middlename,lastname,gender,"
+			        		+ "dateofbirth,birthcertificateNo,country,county,ward,regTerm,"
+			        		+ "regYear,finalTerm,finalYear,studentType,studentLevel,admissiondate) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);");
    		){
 	            pstmt.setString(1, student.getUuid());
 	            pstmt.setString(2, student.getStatusUuid());
@@ -139,7 +142,9 @@ public class StudentDAO extends GenericDAO implements SchoolStudentDAO {
 	            pstmt.setInt(15, student.getRegYear());
 	            pstmt.setInt(16, student.getFinalTerm());
 	            pstmt.setInt(17, student.getFinalYear());
-	            pstmt.setTimestamp(18, new Timestamp(student.getAdmissiondate().getTime()));
+	            pstmt.setString(18, student.getStudentType()); 
+	            pstmt.setString(19, student.getStudentLevel()); 
+	            pstmt.setTimestamp(20, new Timestamp(student.getAdmissiondate().getTime()));
 	            pstmt.executeUpdate();
 			 
 		 }catch(SQLException e){
@@ -164,7 +169,7 @@ public class StudentDAO extends GenericDAO implements SchoolStudentDAO {
 				PreparedStatement pstmt = conn.prepareStatement("UPDATE Student SET StatusUuid =?, StreamUuid =?," 
 			        +"AdmmissinNo =?,Firstname =?,Middlename =?,Lastname =?,"
 			        + "Gender =?,Dateofbirth =?,BirthcertificateNo=?,Country =?,"
-			        + "County =?,Ward =?,RegTerm =?,RegYear =?,FinalTerm =?,FinalYear =? WHERE Uuid = ?;");
+			        + "County =?,Ward =?,RegTerm =?,RegYear =?,FinalTerm =?,FinalYear =?,StudentType =?, StudentLevel =? WHERE Uuid = ?;");
 		){
 			  
 			 
@@ -184,7 +189,9 @@ public class StudentDAO extends GenericDAO implements SchoolStudentDAO {
 	            pstmt.setInt(14, student.getRegYear());
 	            pstmt.setInt(15, student.getFinalTerm());
 	            pstmt.setInt(16, student.getFinalYear());
-	            pstmt.setString(17, student.getUuid());
+	            pstmt.setString(17, student.getStudentType()); 
+	            pstmt.setString(18, student.getStudentLevel()); 
+	            pstmt.setString(19, student.getUuid());
 	            pstmt.executeUpdate();
 			 
 		 }catch(SQLException e){

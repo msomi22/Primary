@@ -6,6 +6,8 @@
  */
 package ke.co.fastech.primaryschool.bean.money.pocket;
 
+import java.util.Date;
+
 import ke.co.fastech.primaryschool.bean.StorableBean;
 
 /**
@@ -17,7 +19,10 @@ import ke.co.fastech.primaryschool.bean.StorableBean;
 public class PocketMoney extends StorableBean{
 	
 	private String studentUuid;
+	private String term;
+	private String year;
 	private int balance;
+	private Date date;
 
 	/**
 	 * 
@@ -25,8 +30,12 @@ public class PocketMoney extends StorableBean{
 	public PocketMoney() {
 		super();
 		studentUuid = "";
+		term = "";
+		year = "";
 		balance = 0;
+		date = new Date();
 	}
+	
 	
 	/**
 	 * @return the studentUuid
@@ -35,12 +44,46 @@ public class PocketMoney extends StorableBean{
 		return studentUuid;
 	}
 
+
 	/**
 	 * @param studentUuid the studentUuid to set
 	 */
 	public void setStudentUuid(String studentUuid) {
 		this.studentUuid = studentUuid;
 	}
+
+
+	/**
+	 * @return the term
+	 */
+	public String getTerm() {
+		return term;
+	}
+
+
+	/**
+	 * @param term the term to set
+	 */
+	public void setTerm(String term) {
+		this.term = term;
+	}
+
+
+	/**
+	 * @return the year
+	 */
+	public String getYear() {
+		return year;
+	}
+
+
+	/**
+	 * @param year the year to set
+	 */
+	public void setYear(String year) {
+		this.year = year;
+	}
+
 
 	/**
 	 * @return the balance
@@ -49,12 +92,30 @@ public class PocketMoney extends StorableBean{
 		return balance;
 	}
 
+
 	/**
 	 * @param balance the balance to set
 	 */
 	public void setBalance(int balance) {
 		this.balance = balance;
 	}
+
+
+	/**
+	 * @return the date
+	 */
+	public Date getDate() {
+		return date;
+	}
+
+
+	/**
+	 * @param date the date to set
+	 */
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
 
 	@Override
 	public String toString(){

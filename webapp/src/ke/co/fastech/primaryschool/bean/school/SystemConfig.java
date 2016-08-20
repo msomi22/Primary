@@ -16,6 +16,7 @@ import ke.co.fastech.primaryschool.bean.StorableBean;
  */
 public class SystemConfig extends StorableBean{
 	
+	private String accountUuid;
 	private String term;
 	private String year;
 	private String smsSend;
@@ -30,6 +31,7 @@ public class SystemConfig extends StorableBean{
 	 */
 	public SystemConfig() {
 		super();
+		accountUuid = "";
 		term = "";
 		year = "";
 		smsSend = "";
@@ -41,6 +43,24 @@ public class SystemConfig extends StorableBean{
 	}
 	
 	
+
+	/**
+	 * @return the accountUuid
+	 */
+	public String getAccountUuid() {
+		return accountUuid;
+	}
+
+
+
+	/**
+	 * @param accountUuid the accountUuid to set
+	 */
+	public void setAccountUuid(String accountUuid) {
+		this.accountUuid = accountUuid;
+	}
+
+
 
 	/**
 	 * @return the term
@@ -192,6 +212,8 @@ public class SystemConfig extends StorableBean{
 		builder.append("SystemConfig");
 		builder.append("[getUuid() = ");
 		builder.append(getUuid());
+		builder.append(", accountUuid = ");
+		builder.append(accountUuid);
 		builder.append(", term = ");
 		builder.append(term);
 		builder.append(", year = ");

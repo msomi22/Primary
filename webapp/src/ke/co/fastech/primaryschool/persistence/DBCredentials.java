@@ -15,7 +15,8 @@ import org.apache.log4j.Logger;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-import ke.co.fastech.primaryschool.util.PropertiesConfig;
+import ke.co.fastech.primaryschool.server.servlet.util.PropertiesConfig;
+
 
 /**
  * Information on logging into the database. Also has does pooling of JDBC. This
@@ -25,6 +26,7 @@ import ke.co.fastech.primaryschool.util.PropertiesConfig;
  * configuration file.
  * <p>
  * @author <a href="mailto:mwendapeter72@gmail.com">Peter mwenda</a>
+ * @author <a href="mailto:michael@tawi.mobi">Michael Wakahe</a>
  *
  */
 

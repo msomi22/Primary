@@ -64,7 +64,7 @@ public class StudentUtils extends GenericDAO {
  	       	
  	       	while(rset.next()){
  	       		count = count + 1;
- 	            System.out.println(count);
+ 	            //System.out.println(count);
  	       	}
 
  	       
@@ -92,7 +92,7 @@ public class StudentUtils extends GenericDAO {
 	            
 	            rset.next();
 	            count = count + rset.getInt(1);
-	            System.out.println(count);
+	            //System.out.println(count);
 	                }
 
 	        } catch (SQLException e) {

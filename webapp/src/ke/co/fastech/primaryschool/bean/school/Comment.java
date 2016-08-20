@@ -16,8 +16,7 @@ import ke.co.fastech.primaryschool.bean.StorableBean;
  */
 public class Comment extends StorableBean{
 	
-	private String term;
-	private String year;
+	private String accountUuid;
 	private String headTeacherCom;
 	private String gradeAplaincom;
 	private String gradeAminuscom;
@@ -37,8 +36,7 @@ public class Comment extends StorableBean{
 	 */
 	public Comment() {
 		super();
-		term = "";
-		year = "";
+		accountUuid = "";
 		headTeacherCom = "";
 		gradeAplaincom = "";
 		gradeAminuscom = "";
@@ -54,33 +52,22 @@ public class Comment extends StorableBean{
 		gradeEcom = "";
 	}
 	
-	/**
-	 * @return the term
-	 */
-	public String getTerm() {
-		return term;
-	}
 
 	/**
-	 * @param term the term to set
+	 * @return the accountUuid
 	 */
-	public void setTerm(String term) {
-		this.term = term;
+	public String getAccountUuid() {
+		return accountUuid;
 	}
 
-	/**
-	 * @return the year
-	 */
-	public String getYear() {
-		return year;
-	}
 
 	/**
-	 * @param year the year to set
+	 * @param accountUuid the accountUuid to set
 	 */
-	public void setYear(String year) {
-		this.year = year;
+	public void setAccountUuid(String accountUuid) {
+		this.accountUuid = accountUuid;
 	}
+
 
 	/**
 	 * @return the headTeacherCom
@@ -270,10 +257,8 @@ public class Comment extends StorableBean{
 		builder.append("Comment");
 		builder.append("[getUuid() = ");
 		builder.append(getUuid());
-		builder.append(", term = ");
-		builder.append(term);
-		builder.append(", year = ");
-		builder.append(year);
+		builder.append(", accountUuid = ");
+		builder.append(accountUuid);
 		builder.append(", headTeacherCom = ");
 		builder.append(headTeacherCom);
 		builder.append(", gradeAplaincom = ");
