@@ -20,6 +20,14 @@ public interface SchoolTeacherSubjectDAO {
 	
 	/**
 	 * 
+	 * @param subjectUuid
+	 * @param streamUuid
+	 * @return
+	 */
+	public TeacherSubject getTeacherSubject(String subjectUuid,String streamUuid);
+	
+	/**
+	 * 
 	 * @param teacherUuid
 	 * @param subjectUuid
 	 * @param streamUuid

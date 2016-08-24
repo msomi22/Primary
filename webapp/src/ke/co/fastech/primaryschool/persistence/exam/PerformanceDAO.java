@@ -35,7 +35,7 @@ public class PerformanceDAO extends GenericDAO implements SchoolPerformanceDAO {
 	/**
 	 * @return {@link PerformanceDAO} Instance
 	 */
-	public PerformanceDAO getInstance(){
+	public static PerformanceDAO getInstance(){
 		if(performanceDAO == null){
 			performanceDAO = new PerformanceDAO();
 		}
@@ -66,20 +66,18 @@ public class PerformanceDAO extends GenericDAO implements SchoolPerformanceDAO {
 	 * @see ke.co.fastech.primaryschool.persistence.exam.SchoolPerformanceDAO#getStudentPerformanceByStreamId(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	
-	public List<ExamResult> getStudentPerformanceByStreamId(String studentUuid, String subjectUuid, String streamUuid,
+	public List<ExamResult> getStudentPerformanceByStreamId(String studentUuid,String streamUuid,
 			String term, String year) {
 		List<ExamResult> list = null;
 
         try (
         		 Connection conn = dbutils.getConnection();
-     	         PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM Performance WHERE studentUuid = ? AND"
-     	         		+ " subjectUuid = ? AND streamUuid = ? AND term = ? AND year = ?;");    		   
+     	         PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM Performance WHERE studentUuid = ? AND streamUuid = ? AND term = ? AND year = ?;");    		   
      	   ) {
          	   pstmt.setString(1, studentUuid);      
-         	   pstmt.setString(2, subjectUuid);  
-         	   pstmt.setString(3, streamUuid);  
-         	   pstmt.setString(4, term); 
-       	       pstmt.setString(5, year); 
+         	   pstmt.setString(2, streamUuid);  
+         	   pstmt.setString(3, term); 
+       	       pstmt.setString(4, year); 
          	   try( ResultSet rset = pstmt.executeQuery();){
      	       
      	       list = beanProcessor.toBeanList(rset, ExamResult.class);
@@ -97,20 +95,18 @@ public class PerformanceDAO extends GenericDAO implements SchoolPerformanceDAO {
 	 * @see ke.co.fastech.primaryschool.persistence.exam.SchoolPerformanceDAO#getStudentPerformanceByClassId(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	
-	public List<ExamResult> getStudentPerformanceByClassId(String studentUuid, String subjectUuid, String classUuid,
+	public List<ExamResult> getStudentPerformanceByClassId(String studentUuid, String classUuid,
 			String term, String year) {
 		List<ExamResult> list = null;
 
         try (
         		 Connection conn = dbutils.getConnection();
-     	         PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM Performance WHERE studentUuid = ? AND"
-     	         		+ " subjectUuid = ? AND classUuid = ? AND term = ? AND year = ?;");    		   
+     	         PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM Performance WHERE studentUuid = ? AND classUuid = ? AND term = ? AND year = ?;");    		   
      	   ) {
          	   pstmt.setString(1, studentUuid);      
-         	   pstmt.setString(2, subjectUuid);  
-         	   pstmt.setString(3, classUuid);  
-         	   pstmt.setString(4, term); 
-       	       pstmt.setString(5, year); 
+         	   pstmt.setString(2, classUuid);  
+         	   pstmt.setString(3, term); 
+       	       pstmt.setString(4, year); 
          	   try( ResultSet rset = pstmt.executeQuery();){
      	       
      	       list = beanProcessor.toBeanList(rset, ExamResult.class);
@@ -180,58 +176,5 @@ public class PerformanceDAO extends GenericDAO implements SchoolPerformanceDAO {
         return list;
 	}
 
-	/**
-	 * @see ke.co.fastech.primaryschool.persistence.exam.SchoolPerformanceDAO#getStreamPerformance(java.lang.String, java.lang.String, java.lang.String)
-	 */
-	@Override
-	public List<ExamResult> getStreamPerformance(String streamUuid, String term, String year) {
-		List<ExamResult> list = null;
-
-        try (
-        		 Connection conn = dbutils.getConnection();
-     	         PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM Performance WHERE streamUuid = ?  AND term = ? AND year = ?;");    		   
-     	   ) {
-         	   pstmt.setString(1, streamUuid);       
-         	   pstmt.setString(2, term); 
-       	       pstmt.setString(3, year); 
-         	   try( ResultSet rset = pstmt.executeQuery();){
-     	       
-     	       list = beanProcessor.toBeanList(rset, ExamResult.class);
-         	   }
-        } catch (SQLException e) {
-            logger.error("SQLException when getting ExamResult List for streamUuid" + streamUuid +
-            		"and term " + term + " and year " + year); 
-            logger.error(ExceptionUtils.getStackTrace(e));
-            System.out.println(ExceptionUtils.getStackTrace(e));
-        }
-        return list;
-	}
-
-	/**
-	 * @see ke.co.fastech.primaryschool.persistence.exam.SchoolPerformanceDAO#getClassPerformance(java.lang.String, java.lang.String, java.lang.String)
-	 */
-	@Override
-	public List<ExamResult> getClassPerformance(String classUuid, String term, String year) {
-		List<ExamResult> list = null;
-
-        try (
-        		 Connection conn = dbutils.getConnection();
-     	         PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM Performance WHERE classUuid = ?  AND term = ? AND year = ?;");    		   
-     	   ) {
-         	   pstmt.setString(1, classUuid);       
-         	   pstmt.setString(2, term); 
-       	       pstmt.setString(3, year); 
-         	   try( ResultSet rset = pstmt.executeQuery();){
-     	       
-     	       list = beanProcessor.toBeanList(rset, ExamResult.class);
-         	   }
-        } catch (SQLException e) {
-            logger.error("SQLException when getting ExamResult List for classUuid" + classUuid +
-            		"and term " + term + " and year " + year); 
-            logger.error(ExceptionUtils.getStackTrace(e));
-            System.out.println(ExceptionUtils.getStackTrace(e));
-        }
-        return list;
-	}
 
 }

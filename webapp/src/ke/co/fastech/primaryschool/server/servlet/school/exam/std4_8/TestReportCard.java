@@ -36,12 +36,13 @@ public class TestReportCard {
 	public final void testDoPostHttpServletRequestHttpServletResponse()  { 
 		    try {
 				System.out.println("response is :\n" + 
-				getResponse(CGI_URL + "?" +	"accountuuid=" + URLEncoder.encode(ACCOUNTUUID, "UTF-8") + "?" +	"streamuuid=" + URLEncoder.encode(STREAMUUID, "UTF-8"))); // +	"streamID=" + URLEncoder.encode(STREAMUUID, "UTF-8")
+				getResponse(CGI_URL + "?" + "accountuuid=" + URLEncoder.encode(ACCOUNTUUID,"UTF-8") + "&" +"streamuuid=" + URLEncoder.encode(STREAMUUID,"UTF-8") )); 
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 				fail("Test to get result for account uuid " + ACCOUNTUUID + " and stream " + STREAMUUID);
 	        	
 			}
+		    //file:///home/peter/test/form.html?phone=0718953974&email=mwendapeter72%40gmail.com&major=computer+science&units=7&submit=Register
 	}
 
 	private String getResponse(String urlStr) {		

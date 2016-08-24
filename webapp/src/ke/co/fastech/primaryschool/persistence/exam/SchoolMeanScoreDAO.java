@@ -15,6 +15,14 @@ import ke.co.fastech.primaryschool.bean.exam.MeanScore;
  *
  */
 public interface SchoolMeanScoreDAO {
+	
+	/**
+	 * 
+	 * @param studentUuid
+	 * @param year
+	 * @return
+	 */
+	public MeanScore getMeanScore(String studentUuid,String year);
 	/**
 	 * 
 	 * @param studentUuid The student ID

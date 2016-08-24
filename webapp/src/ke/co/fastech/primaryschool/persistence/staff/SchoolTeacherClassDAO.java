@@ -24,6 +24,13 @@ public interface SchoolTeacherClassDAO {
 	 * @return
 	 */
 	public ClassTeacher getTeacherClass(String teacherUuid);
+	
+	/**
+	 * 
+	 * @param streamUuid
+	 * @return
+	 */
+	public ClassTeacher getTeacherClassByClassid(String streamUuid);
 	/**
 	 * 
 	 * @param teacherUuid

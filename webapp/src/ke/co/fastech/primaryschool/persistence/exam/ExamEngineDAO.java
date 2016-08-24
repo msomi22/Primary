@@ -35,7 +35,7 @@ public class ExamEngineDAO extends GenericDAO implements SchoolExamEngineDAO {
 	/**
 	 * @return {@link ExamEngineDAO} Instance 
 	 */
-	public ExamEngineDAO getInstance(){
+	public static ExamEngineDAO getInstance(){
 		if(examEngineDAO == null){
 			examEngineDAO = new ExamEngineDAO();
 		}

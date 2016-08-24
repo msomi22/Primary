@@ -63,6 +63,41 @@ public class TeacherSubjectDAO extends GenericDAO  implements SchoolTeacherSubje
 	public TeacherSubjectDAO(String databaseName, String Host, String databaseUsername, String databasePassword, int databasePort) {
 		super(databaseName, Host, databaseUsername, databasePassword, databasePort);
 	}
+	
+	
+	/**
+	 * @see ke.co.fastech.primaryschool.persistence.staff.SchoolTeacherSubjectDAO#getTeacherSubject(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public TeacherSubject getTeacherSubject(String subjectUuid, String streamUuid) {
+		TeacherSubject teacherSubject = null;
+        ResultSet rset = null;
+     try(
+     		      Connection conn = dbutils.getConnection();
+        	      PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM TeacherSubject WHERE subjectUuid = ? AND streamUuid = ?;");       
+     		
+     		){
+     	
+     	     pstmt.setString(1, subjectUuid);
+     	     pstmt.setString(2, streamUuid);
+	         rset = pstmt.executeQuery();
+	        while(rset.next()){
+	
+	        	teacherSubject  = beanProcessor.toBean(rset,TeacherSubject.class);
+	   }
+     	
+     	
+     	
+     }catch(SQLException e){ 
+     	  logger.error("SQL Exception when getting Teacher with " +  
+     			  "  subjectUuid " + subjectUuid + " and streamUuid" + streamUuid);
+          logger.error(ExceptionUtils.getStackTrace(e));
+          System.out.println(ExceptionUtils.getStackTrace(e));
+     }
+     
+		return teacherSubject; 
+	}
+	
 
 	/**
 	 * @see ke.co.fastech.primaryschool.persistence.staff.SchoolTeacherSubjectDAO#getTeacherSubject(java.lang.String, java.lang.String, java.lang.String)

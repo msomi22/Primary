@@ -27,7 +27,7 @@ public interface SchoolPerformanceDAO {
 	 * @return A List of type {@link ExamResult}
 	 */
 	 
-	public List<ExamResult> getStudentPerformanceByStreamId(String studentUuid,String subjectUuid,String streamUuid,String term,String year);
+	public List<ExamResult> getStudentPerformanceByStreamId(String studentUuid,String streamUuid,String term,String year);
 	/**
 	 * 
 	 * @param studentUuid The student ID
@@ -39,7 +39,7 @@ public interface SchoolPerformanceDAO {
 	 */
 	 
 	 
-	public List<ExamResult> getStudentPerformanceByClassId(String studentUuid,String subjectUuid,String classUuid,String term,String year);
+	public List<ExamResult> getStudentPerformanceByClassId(String studentUuid,String classUuid,String term,String year);
 	/**
 	 * 
 	 * @param studentUuid The student ID
@@ -61,21 +61,6 @@ public interface SchoolPerformanceDAO {
      */
      
 	public List<ExamResult> getStudentDistinctByClassId(String classUuid,String term,String year);
-	/**
-	 * 
-	 * @param streamUuid The stream ID
-	 * @param term The term
-	 * @param year The year
-	 * @return A List of type {@link ExamResult}
-	 */
-    public List<ExamResult> getStreamPerformance(String streamUuid,String term,String year);
-    /**
-     * 
-     * @param classUuid The class ID
-     * @param term The term
-     * @param year The year
-     * @return A List of type {@link ExamResult}
-     */
-	public List<ExamResult> getClassPerformance(String classUuid,String term,String year);
+	
 
 }

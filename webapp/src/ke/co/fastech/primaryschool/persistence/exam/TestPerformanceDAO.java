@@ -46,7 +46,7 @@ public class TestPerformanceDAO {
 	@Test
 	public final void testGetStudentPerformanceByStreamId() {
 		store = new PerformanceDAO(databaseName, Host, databaseUsername, databasePassword, databasePort);
-		List<ExamResult> resultList = store.getStudentPerformanceByStreamId(STUDENT_UUID, SUBJECT_UUID, STREAM_UUID, TERM, YEAR);
+		List<ExamResult> resultList = store.getStudentPerformanceByStreamId(STUDENT_UUID, STREAM_UUID, TERM, YEAR);
 		for(ExamResult result : resultList){
 			System.out.println(result);
 		}
@@ -59,7 +59,7 @@ public class TestPerformanceDAO {
 	@Test
 	public final void testGetStudentPerformanceByClassId() {
 		store = new PerformanceDAO(databaseName, Host, databaseUsername, databasePassword, databasePort);
-		List<ExamResult> resultList = store.getStudentPerformanceByClassId(STUDENT_UUID, SUBJECT_UUID, CLASS_UUID, TERM, YEAR);
+		List<ExamResult> resultList = store.getStudentPerformanceByClassId(STUDENT_UUID, CLASS_UUID, TERM, YEAR);
 		for(ExamResult result : resultList){
 			System.out.println(result);
 		}
@@ -91,30 +91,5 @@ public class TestPerformanceDAO {
 		}
 	}
 
-	/**
-	 * Test method for {@link ke.co.fastech.primaryschool.persistence.exam.PerformanceDAO#getStreamPerformance(java.lang.String, java.lang.String, java.lang.String)}.
-	 */
-	@Ignore
-	@Test
-	public final void testGetStreamPerformance() {
-		store = new PerformanceDAO(databaseName, Host, databaseUsername, databasePassword, databasePort);
-		List<ExamResult> resultList = store.getStreamPerformance(STREAM_UUID, TERM, YEAR);
-		for(ExamResult result : resultList){
-			System.out.println(result);
-		}
-	}
-
-	/**
-	 * Test method for {@link ke.co.fastech.primaryschool.persistence.exam.PerformanceDAO#getClassPerformance(java.lang.String, java.lang.String, java.lang.String)}.
-	 */
-	@Ignore
-	@Test
-	public final void testGetClassPerformance() {
-		store = new PerformanceDAO(databaseName, Host, databaseUsername, databasePassword, databasePort);
-		List<ExamResult> resultList = store.getClassPerformance(CLASS_UUID, TERM, YEAR);
-		for(ExamResult result : resultList){
-			System.out.println(result);
-		}
-	}
 
 }

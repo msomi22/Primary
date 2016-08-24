@@ -21,7 +21,6 @@
 <%@page import="java.util.Iterator"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.HashMap"%>
-<%@page import="java.net.URLEncoder"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Calendar"%>
 

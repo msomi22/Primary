@@ -13,12 +13,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import org.apache.commons.dbutils.BeanProcessor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 
 import ke.co.fastech.primaryschool.bean.exam.BarWeight;
+import ke.co.fastech.primaryschool.bean.staff.TeacherSubject;
 import ke.co.fastech.primaryschool.persistence.GenericDAO;
 
 /**
@@ -36,7 +38,7 @@ public class BarWeightDAO extends GenericDAO implements SchoolBarWeightDAO {
 	 * 
 	 * @return {@link BarWeightDAO} Instance
 	 */
-	public BarWeightDAO getInstance(){
+	public static BarWeightDAO getInstance(){
 		if(barWeightDAO == null){
 				barWeightDAO = new BarWeightDAO();
 		}
@@ -92,6 +94,31 @@ public class BarWeightDAO extends GenericDAO implements SchoolBarWeightDAO {
 		}
      
 		return barWeight; 
+	}
+	
+
+	/**
+	 * @see ke.co.fastech.primaryschool.persistence.exam.SchoolBarWeightDAO#getBarWeight(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public List<BarWeight> getBarWeightList(String studentuuid, String year) {
+		List<BarWeight> list = null;
+        try (
+        		 Connection conn = dbutils.getConnection();
+     	         PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM BarWeight WHERE studentuuid = ? AND year =?;");    		   
+     	   ) {
+         	   pstmt.setString(1, studentuuid);
+         	   pstmt.setString(2, year);
+         	   try( ResultSet rset = pstmt.executeQuery();){
+     	       
+     	       list = beanProcessor.toBeanList(rset, BarWeight.class);
+         	   }
+        } catch (SQLException e) {
+            logger.error("SQLException when getting BarWeight List for studentuuid " + studentuuid + " and year" + year); 
+            logger.error(ExceptionUtils.getStackTrace(e));
+            System.out.println(ExceptionUtils.getStackTrace(e));
+        }
+        return list;
 	}
 
 	/**
@@ -188,5 +215,6 @@ public class BarWeightDAO extends GenericDAO implements SchoolBarWeightDAO {
 		
 		return success;
 	}
+
 
 }

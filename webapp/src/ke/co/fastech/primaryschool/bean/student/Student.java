@@ -109,7 +109,7 @@ public class Student extends StorableBean implements Comparable<Student>{
 	 * @return the firstname
 	 */
 	public String getFirstname() {
-		return firstname;
+		return firstname.substring(0, Math.min(firstname.length(), 10));
 	}
 
 	/**
@@ -123,7 +123,7 @@ public class Student extends StorableBean implements Comparable<Student>{
 	 * @return the middlename
 	 */
 	public String getMiddlename() {
-		return middlename;
+		return middlename.substring(0, Math.min(middlename.length(), 10));
 	}
 
 	/**
@@ -137,7 +137,7 @@ public class Student extends StorableBean implements Comparable<Student>{
 	 * @return the lastname
 	 */
 	public String getLastname() {
-		return lastname;
+		return lastname.substring(0, Math.min(lastname.length(), 10));
 	}
 
 	/**

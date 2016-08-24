@@ -6,6 +6,8 @@
  */
 package ke.co.fastech.primaryschool.persistence.exam;
 
+import java.util.List;
+
 import ke.co.fastech.primaryschool.bean.exam.BarWeight;
 
 /**
@@ -15,6 +17,14 @@ import ke.co.fastech.primaryschool.bean.exam.BarWeight;
  *
  */
 public interface SchoolBarWeightDAO {
+	
+	/**
+	 * 
+	 * @param studentuuid
+	 * @param year
+	 * @return
+	 */
+	public List<BarWeight> getBarWeightList(String studentuuid,String year);
 	/**
 	 * 
 	 * @param studentUuid The student ID

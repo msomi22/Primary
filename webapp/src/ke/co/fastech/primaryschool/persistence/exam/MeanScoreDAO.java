@@ -35,7 +35,7 @@ public class MeanScoreDAO extends GenericDAO implements SchoolMeanScoreDAO {
 	/**
 	 * @return {@link MeanScoreDAO} Instance
 	 */
-	public MeanScoreDAO getInstance(){
+	public static MeanScoreDAO getInstance(){
 		if(meanScoreDAO == null){
 			meanScoreDAO = new MeanScoreDAO();
 		}
@@ -60,6 +60,36 @@ public class MeanScoreDAO extends GenericDAO implements SchoolMeanScoreDAO {
 	 
 	public MeanScoreDAO(String databaseName, String Host, String databaseUsername, String databasePassword, int databasePort) {
 		super(databaseName, Host, databaseUsername, databasePassword, databasePort);
+	}
+	
+	/**
+	 * @see ke.co.fastech.primaryschool.persistence.exam.SchoolMeanScoreDAO#getMeanScore(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public MeanScore getMeanScore(String studentUuid, String year) {
+		MeanScore meanscore = null;
+		ResultSet rset = null;
+		try(
+				Connection conn = dbutils.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM MeanScore"
+						+ " WHERE studentUuid =? AND year =?;");       
+
+				){
+			pstmt.setString(1, studentUuid); 
+			pstmt.setString(2, year); 
+			rset = pstmt.executeQuery();
+			while(rset.next()){
+
+				meanscore  = beanProcessor.toBean(rset,MeanScore.class);
+			}
+
+		}catch(SQLException e){
+			logger.error("SQL Exception when getting MeanScore for studentUuid " + studentUuid  + "and year " + year);
+			logger.error(ExceptionUtils.getStackTrace(e));
+
+		}
+     
+		return meanscore; 
 	}
 
 	/**
@@ -192,5 +222,6 @@ public class MeanScoreDAO extends GenericDAO implements SchoolMeanScoreDAO {
 		
 		return success;
 	}
+	
 
 }

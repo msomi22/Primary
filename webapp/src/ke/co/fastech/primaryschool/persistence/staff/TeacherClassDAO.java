@@ -91,6 +91,35 @@ public class TeacherClassDAO extends GenericDAO  implements SchoolTeacherClassDA
 
 		return classTeacher; 
 	}
+	
+	/**
+	 * @see ke.co.fastech.primaryschool.persistence.staff.SchoolTeacherClassDAO#getTeacherClassByClassid(java.lang.String)
+	 */
+	@Override
+	public ClassTeacher getTeacherClassByClassid(String streamUuid) {
+		ClassTeacher classTeacher =null;
+		ResultSet rset = null;
+		try(
+				Connection conn = dbutils.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM ClassTeacher WHERE streamUuid = ?;");       
+
+				){
+			pstmt.setString(1, streamUuid);
+			rset = pstmt.executeQuery();
+			while(rset.next()){
+
+				classTeacher  = beanProcessor.toBean(rset,ClassTeacher.class);
+			}
+
+		}catch(SQLException e){
+			logger.error("SQL Exception when getting classTeacher with streamUuid " + streamUuid);
+			logger.error(ExceptionUtils.getStackTrace(e));
+			System.out.println(ExceptionUtils.getStackTrace(e));
+		}
+
+		return classTeacher; 
+	}
+	
 
 
 	/**
