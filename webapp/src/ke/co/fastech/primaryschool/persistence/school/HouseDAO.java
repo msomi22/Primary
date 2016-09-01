@@ -13,6 +13,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.dbutils.BeanProcessor;
@@ -88,16 +89,17 @@ public class HouseDAO extends GenericDAO implements SchoolHouseDAO {
 	 * @see ke.co.fastech.primaryschool.persistence.school.SchoolHouseDAO#getHouseByName(java.lang.String)
 	 */
 	@Override
-	public House getHouseByName(String houseName) {
+	public House getHouseByName(String houseName,String accountUuid) {
 		House house = null;
 		ResultSet rset = null;
 		try(
 				Connection conn = dbutils.getConnection();
-				PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM House WHERE houseName = ?;");       
+				PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM House WHERE houseName = ? AND accountUuid =?;");       
 
 				){
 
 			pstmt.setString(1, houseName);
+			pstmt.setString(2, accountUuid);
 			rset = pstmt.executeQuery();
 			while(rset.next()){
 
@@ -121,11 +123,12 @@ public class HouseDAO extends GenericDAO implements SchoolHouseDAO {
 
 		try(   Connection conn = dbutils.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement("INSERT INTO House" 
-						+"(Uuid, HouseName) VALUES (?,?);");
+						+"(Uuid,AccountUuid,HouseName) VALUES (?,?,?);");
 				){
 
 			pstmt.setString(1, house.getUuid());
-			pstmt.setString(2, house.getHouseName());
+			pstmt.setString(2, house.getAccountUuid());
+			pstmt.setString(3, house.getHouseName());
 			pstmt.executeUpdate();
 
 		}catch(SQLException e){
@@ -147,10 +150,11 @@ public class HouseDAO extends GenericDAO implements SchoolHouseDAO {
 
 		try (  Connection conn = dbutils.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement("UPDATE House SET HouseName = ?"
-						+ "WHERE Uuid = ?;");
+						+ "WHERE Uuid = ? AND AccountUuid = ?;");
 				) {           			 	            
 			pstmt.setString(1, house.getHouseName());
 			pstmt.setString(2, house.getUuid());
+			pstmt.setString(3, house.getAccountUuid());
 			pstmt.executeUpdate();
 
 		} catch (SQLException e) {
@@ -167,22 +171,23 @@ public class HouseDAO extends GenericDAO implements SchoolHouseDAO {
 	 * @see ke.co.fastech.primaryschool.persistence.school.SchoolHouseDAO#getHouseList()
 	 */
 	@Override
-	public List<House> getHouseList() {
-		List<House>  list = null;
-		try(   
-				Connection conn = dbutils.getConnection();
-				PreparedStatement  pstmt = conn.prepareStatement("SELECT * FROM House ;");   
-				ResultSet rset = pstmt.executeQuery();
-				) {
-
-			list = beanProcessor.toBeanList(rset, House.class);
-
-		} catch(SQLException e){
-			logger.error("SQL Exception when getting all House");
-			logger.error(ExceptionUtils.getStackTrace(e));
-			System.out.println(ExceptionUtils.getStackTrace(e));
+	public List<House> getHouseList(String accountUuid) {
+	     List<House> list = new ArrayList<>();
+			try(
+					Connection conn = dbutils.getConnection();
+					PreparedStatement psmt= conn.prepareStatement("SELECT * FROM House WHERE accountUuid =?;");
+					) {
+				   psmt.setString(1,accountUuid);
+				  try(ResultSet rset = psmt.executeQuery();){
+						
+					  list = beanProcessor.toBeanList(rset, House.class);
+					}
+			} catch (SQLException e) {
+				logger.error("SQLException when trying to get House List");
+	            logger.error(ExceptionUtils.getStackTrace(e));
+	            System.out.println(ExceptionUtils.getStackTrace(e)); 
+		    }
+			return list;
 		}
-		return list;
-	}
 
 }

@@ -13,6 +13,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.dbutils.BeanProcessor;
@@ -22,7 +23,7 @@ import org.apache.log4j.Logger;
 import ke.co.fastech.primaryschool.bean.staff.ClassTeacher;
 import ke.co.fastech.primaryschool.persistence.GenericDAO;
 
-/**
+/** 
  * Persistence abstraction for {@link ClassTeacher}
  * 
  * @author <a href="mailto:mwendapeter72@gmail.com">Peter mwenda</a>
@@ -160,11 +161,12 @@ public class TeacherClassDAO extends GenericDAO  implements SchoolTeacherClassDA
 
 		try(   Connection conn = dbutils.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement("INSERT INTO ClassTeacher" 
-						+"(Uuid,TeacherUuid,StreamUuid) VALUES (?,?,?);");
+						+"(Uuid,accountUuid,TeacherUuid,StreamUuid) VALUES (?,?,?,?);");
 				){
 			pstmt.setString(1, classTeacher.getUuid());
-			pstmt.setString(2, classTeacher.getTeacherUuid());
-			pstmt.setString(3, classTeacher.getStreamUuid());	                      
+			pstmt.setString(2, classTeacher.getAccountUuid());
+			pstmt.setString(3, classTeacher.getTeacherUuid());
+			pstmt.setString(4, classTeacher.getStreamUuid());	                      
 			pstmt.executeUpdate();
 
 		}catch(SQLException e){
@@ -210,25 +212,24 @@ public class TeacherClassDAO extends GenericDAO  implements SchoolTeacherClassDA
 	 * @see ke.co.fastech.primaryschool.persistence.staff.SchoolTeacherClassDAO#getClassTeacherList()
 	 */
 	@Override
-	public List<ClassTeacher> getClassTeacherList() {
-		List<ClassTeacher> list = null;
-		try(   
-				Connection conn = dbutils.getConnection();
-				PreparedStatement  pstmt = conn.prepareStatement("SELECT * FROM ClassTeacher;");   
-				) {
+	public List<ClassTeacher> getClassTeacherList(String accountUuid) {
 
-			try(ResultSet rset = pstmt.executeQuery();){
-
-				list = beanProcessor.toBeanList(rset, ClassTeacher.class);
-			}
-
-
-		} catch(SQLException e){
-			logger.error("SQL Exception when getting all ClassTeachers ");
-			logger.error(ExceptionUtils.getStackTrace(e));
-			System.out.println(ExceptionUtils.getStackTrace(e)); 
-		}
-
+	     List<ClassTeacher> list = new ArrayList<>();
+			try(
+					Connection conn = dbutils.getConnection();
+					PreparedStatement psmt= conn.prepareStatement("SELECT * FROM ClassTeacher WHERE accountUuid =?;");
+					) {
+				   psmt.setString(1,accountUuid);
+				  try(ResultSet rset = psmt.executeQuery();){
+						
+					  list = beanProcessor.toBeanList(rset, ClassTeacher.class);
+					}
+			} catch (SQLException e) {
+				logger.error("SQLException when trying to get ClassTeacher List");
+	            logger.error(ExceptionUtils.getStackTrace(e));
+	            System.out.println(ExceptionUtils.getStackTrace(e)); 
+		    }
+			
 		return list;
 	}
 	

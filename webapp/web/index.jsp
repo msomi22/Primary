@@ -81,6 +81,10 @@
       <section class="register">
       <h1>Login to Your School</h1>
       <form autocomplete="off" method="POST" action="login" >
+      <div class="reg_section personal_info">
+      <h3>School Username</h3>
+      <input type="text" name="schoolusername" value=""  placeholder="School Username" >
+      </div>
       <div class="reg_section password">
       <h3>Your Position</h3>
 

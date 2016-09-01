@@ -21,7 +21,7 @@ import org.apache.log4j.Logger;
 import ke.co.fastech.primaryschool.bean.exam.GradingSystem;
 import ke.co.fastech.primaryschool.persistence.GenericDAO;
 
-/**
+/** 
  * Persistence abstraction for {@link GradingSystem}
  * 
  * @author <a href="mailto:mwendapeter72@gmail.com">Peter mwenda</a>
@@ -104,7 +104,7 @@ public class GradingSystemDAO extends GenericDAO implements SchoolGradingSystemD
 				PreparedStatement pstmt = conn.prepareStatement("INSERT INTO GradingSystem" 
 			        		+"(Uuid,accountUuid,GradeAplain,GradeAminus,GradeBplus,GradeBplain,"
 			        		+ "GradeBminus,GradeCplus,GradeCplain,GradeCminus,GradeDplus,GradeDplain,"
-			        		+ "GradeDminus,GradeE) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);");
+			        		+ "GradeDminus,GradeE) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?);");
      		){
 			   
 			    pstmt.setString(1, gradingSystem.getUuid());
@@ -145,7 +145,7 @@ public class GradingSystemDAO extends GenericDAO implements SchoolGradingSystemD
         	PreparedStatement pstmt = conn.prepareStatement("UPDATE GradingSystem SET GradeAplain =?,"
         			+ "GradeAminus =?,GradeBplus =?,GradeBplain=?,GradeBminus =?,GradeCplus =?,"
         			+ "GradeCplain =?,GradeCminus =?,GradeDplus =?,GradeDplain =?,GradeDminus =?,"
-        			+ "GradeE =?  WHERE Uuid =?;");
+        			+ "GradeE =?  WHERE accountUuid =?;");
         	) { 
         	   
 			    pstmt.setInt(1, gradingSystem.getGradeAplain());
@@ -160,7 +160,7 @@ public class GradingSystemDAO extends GenericDAO implements SchoolGradingSystemD
 	            pstmt.setInt(10, gradingSystem.getGradeDplain());
 	            pstmt.setInt(11, gradingSystem.getGradeDminus());
 	            pstmt.setInt(12, gradingSystem.getGradeE());	            
-			    pstmt.setString(13, gradingSystem.getUuid());
+			    pstmt.setString(13, gradingSystem.getAccountUuid());
                 pstmt.executeUpdate(); 
 
         } catch (SQLException e) {

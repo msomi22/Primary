@@ -124,7 +124,7 @@ public class TestAcountDAO {
 		assertTrue(store.update(account));
 	}
 	
-	@Ignore
+	//@Ignore
 	@Test
 	public final void testgetAllAccounts() {
 		store = new AcountDAO(databaseName, Host, databaseUsername, databasePassword, databasePort);

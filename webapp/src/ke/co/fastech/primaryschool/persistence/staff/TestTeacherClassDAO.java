@@ -26,6 +26,7 @@ public class TestTeacherClassDAO {
 	
 	private TeacherClassDAO store;
 	
+	 private String ACCOUNT_UUID = "9DEDDC49-444E-499B-BDB9-D6625D2F79F4";
 	 private String UUID ="DE8F8DFE-BFF1-4A33-BBC0-8F834ED148F6",UUID_NEW ="0201DDCE-94FC-41CE-8EC8-71DF29C1BD02";
 	 private String TEACHER_UUID ="83CD26E1-3E64-4969-9B98-9069ECDB757D",TEACHER_UUID_NEW ="4BB37A08-D180-47DF-8401-B3162F84E23F";
 	 private String STREAM_UUID ="2B0F8F79-DEF2-419D-9A76-17450B5CF768",STREAM_UUID_NEW = "57348359-C425-4320-9BCE-AD95D4E9A228";
@@ -90,7 +91,7 @@ public class TestTeacherClassDAO {
 	@Test
 	public final void testGetClassTeacherList() {
 		store = new TeacherClassDAO(databaseName, Host, databaseUsername, databasePassword, databasePort);
-		List<ClassTeacher> list = store.getClassTeacherList();
+		List<ClassTeacher> list = store.getClassTeacherList(ACCOUNT_UUID);
 		for(ClassTeacher ct : list){
 			System.out.println(ct);
 		}

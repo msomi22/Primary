@@ -66,18 +66,19 @@ public class OtherMoneyDAO extends GenericDAO implements SchoolOtherMoneyDAO {
 	 * @see ke.co.fastech.primaryschool.persistence.money.SchoolOtherMoneyDAO#getOtherMoney(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public OtherMoney getOtherMoney(String description, String term, String year) {
+	public OtherMoney getOtherMoney(String description, String term, String year,String accountUuid) {
 		OtherMoney otherMoney = null;
 		ResultSet rset = null;
 		try(
 				Connection conn = dbutils.getConnection();
-				PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM OtherMoney WHERE description = ? AND term =? AND year =?;");       
+				PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM OtherMoney WHERE description = ? AND term =? AND year =? AND accountUuid =?;");       
 
 				){
 
 			pstmt.setString(1, description);
 			pstmt.setString(2, term);
 			pstmt.setString(3, year);
+			pstmt.setString(4, accountUuid);
 			rset = pstmt.executeQuery();
 			while(rset.next()){
 				otherMoney  = beanProcessor.toBean(rset,OtherMoney.class);
@@ -98,14 +99,15 @@ public class OtherMoneyDAO extends GenericDAO implements SchoolOtherMoneyDAO {
 		boolean success = true;
 		try(   Connection conn = dbutils.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement("INSERT INTO OtherMoney" 
-						+"(Uuid,description,term,year,amount) VALUES (?,?,?,?,?);");
+						+"(Uuid,accountUuid,description,term,year,amount) VALUES (?,?,?,?,?,?);");
 				){
 
 			pstmt.setString(1, otherMoney.getUuid());
-			pstmt.setString(2, otherMoney.getDescription());
-			pstmt.setString(3, otherMoney.getTerm());
-			pstmt.setString(4, otherMoney.getYear());
-			pstmt.setInt(5, otherMoney.getAmount());
+			pstmt.setString(2, otherMoney.getAccountUuid());
+			pstmt.setString(3, otherMoney.getDescription());
+			pstmt.setString(4, otherMoney.getTerm());
+			pstmt.setString(5, otherMoney.getYear());
+			pstmt.setInt(6, otherMoney.getAmount());
 			pstmt.executeUpdate();
 
 		}catch(SQLException e){
@@ -158,14 +160,15 @@ public class OtherMoneyDAO extends GenericDAO implements SchoolOtherMoneyDAO {
 	 * @see ke.co.fastech.primaryschool.persistence.money.SchoolOtherMoneyDAO#getOtherMoneyList(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public List<OtherMoney> getOtherMoneyList(String term, String year) {
+	public List<OtherMoney> getOtherMoneyList(String term, String year,String accountUuid) {
 		List<OtherMoney> list = null;
 		try (
 				Connection conn = dbutils.getConnection();
-				PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM OtherMoney WHERE Term = ? AND Year = ?;");
+				PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM OtherMoney WHERE Term = ? AND Year = ? AND accountUuid =?;");
 				) {      
 			pstmt.setString(1, term); 
 			pstmt.setString(2, year); 
+			pstmt.setString(3, accountUuid); 
 			try( ResultSet rset = pstmt.executeQuery();){
 
 				list = beanProcessor.toBeanList(rset, OtherMoney.class);
@@ -183,12 +186,13 @@ public class OtherMoneyDAO extends GenericDAO implements SchoolOtherMoneyDAO {
 	 * @see ke.co.fastech.primaryschool.persistence.money.SchoolOtherMoneyDAO#getOtherMoneyList()
 	 */
 	@Override
-	public List<OtherMoney> getOtherMoneyList() {
+	public List<OtherMoney> getOtherMoneyList(String accountUuid) {
 		List<OtherMoney> list = null;
 		try (
 				Connection conn = dbutils.getConnection();
-				PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM OtherMoney;");
+				PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM OtherMoney WHERE accountUuid =?;");
 				) {      
+			pstmt.setString(1, accountUuid); 
 			try( ResultSet rset = pstmt.executeQuery();){
 
 				list = beanProcessor.toBeanList(rset, OtherMoney.class);

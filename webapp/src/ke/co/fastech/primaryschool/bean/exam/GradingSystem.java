@@ -8,7 +8,7 @@ package ke.co.fastech.primaryschool.bean.exam;
 
 import ke.co.fastech.primaryschool.bean.StorableBean;
 
-/**
+/** 
  * The grading criteria used in exam 
  * 
  * @author <a href="mailto:mwendapeter72@gmail.com">Peter mwenda</a>

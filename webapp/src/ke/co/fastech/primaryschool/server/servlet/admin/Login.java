@@ -69,7 +69,7 @@ public class Login extends HttpServlet{
          
          }
           else if (!StringUtils.equals(password, PropertiesConfig.getConfigValue("ADMIN_PASSWORD"))) {
-             session.setAttribute(AdminSessionConstants.ADMIN_SIGN_IN_ERROR_KEY, AdminSessionConstants.ADMIN_SIGN_IN_ERROR_VALUE);
+             session.setAttribute(AdminSessionConstants.ADMIN_SIGN_IN_ERROR_KEY, "Incorect admin password");
              response.sendRedirect("index.jsp");
 
          } else if (!validateCaptcha(hiddenCaptchaStr, captchaAnswer)) {

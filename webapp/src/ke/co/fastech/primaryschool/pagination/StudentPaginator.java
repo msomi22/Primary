@@ -22,14 +22,16 @@ public class StudentPaginator {
 	public final int PAGESIZE = 15;
 	private static StudentUtils studentUtils;
 	private static StudentDAO studentDAO;
+	String accountUuid = "";
 	
 	/**
 	 * @param SchoolAccountUuid 
 	 * 
 	 */
-	public StudentPaginator() {
+	public StudentPaginator(String accountUuid) {
 	    studentUtils = StudentUtils.getInstance();
 		studentDAO = StudentDAO.getInstance();
+		this.accountUuid = accountUuid; 
 	}
 	
 	    /**
@@ -52,7 +54,7 @@ public class StudentPaginator {
     */
    public StudentPage getFirstPage() {
 	   StudentPage page = new StudentPage();
-       List<Student> stuList = studentDAO.getStudentsListByLimit(0, PAGESIZE);
+       List<Student> stuList = studentDAO.getStudentsListByLimit(0, PAGESIZE,accountUuid);
        page = new StudentPage(1, getTotalPage(), PAGESIZE, stuList);	    
        return page;
    }
@@ -72,7 +74,7 @@ public class StudentPaginator {
        int totalPage = getTotalPage();
        startIndex = (totalPage - 1) * PAGESIZE;
        sessionCount = studentUtils.getIncomingCount();
-       stuList = studentDAO.getStudentsListByLimit(startIndex, sessionCount); 
+       stuList = studentDAO.getStudentsListByLimit(startIndex, sessionCount,accountUuid); 
        page = new StudentPage(totalPage, totalPage, PAGESIZE, stuList);
        return page;
    }
@@ -89,7 +91,7 @@ public class StudentPaginator {
        int totalPage = getTotalPage();
        StudentPage page = new StudentPage();
        List<Student> smsList = studentDAO.getStudentsListByLimit(currentPage.getPageNum() * PAGESIZE, 
-       		((currentPage.getPageNum() * PAGESIZE) + PAGESIZE));
+       		((currentPage.getPageNum() * PAGESIZE) + PAGESIZE),accountUuid);
 
        page = new StudentPage(currentPage.getPageNum() + 1, totalPage, PAGESIZE, smsList);
 
@@ -110,7 +112,7 @@ public class StudentPaginator {
        StudentPage page = new StudentPage();
        
        List<Student> smsList = studentDAO.getStudentsListByLimit((currentPage.getPageNum() - 2) * PAGESIZE, 
-       		((currentPage.getPageNum() - 1) * PAGESIZE));
+       		((currentPage.getPageNum() - 1) * PAGESIZE),accountUuid);
 
        page = new StudentPage(currentPage.getPageNum() - 1, totalPage, PAGESIZE, smsList);
 

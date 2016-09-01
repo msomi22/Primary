@@ -67,7 +67,7 @@ import net.sf.ehcache.CacheManager;
  */
 public class StreamPerformanceList  extends HttpServlet{
 
-	
+
 	private Font boldCourierText10 = new Font(Font.FontFamily.COURIER, 10,Font.BOLD);
 	private Font boldCourierText14 = new Font(Font.FontFamily.COURIER, 14,Font.BOLD);
 	private Font boldNewRoman7 = new Font(Font.FontFamily.TIMES_ROMAN, 7, Font.BOLD);
@@ -85,7 +85,7 @@ public class StreamPerformanceList  extends HttpServlet{
 
 	private Cache accountCache;
 	private Logger logger;
-	
+
 	private String schoolname = "";
 	private String title = "";
 
@@ -98,7 +98,7 @@ public class StreamPerformanceList  extends HttpServlet{
 	private static ClassroomDAO classroomDAO;
 	private static StreamDAO streamDAO;
 	private ComputationEngine computationEngine;
-	
+
 	private HashMap<String, String> studentAdmNoHash = new HashMap<String, String>();
 	private HashMap<String, String> studNameHash = new HashMap<String, String>();
 	private HashMap<String, String> streamHash = new HashMap<String, String>();
@@ -131,19 +131,15 @@ public class StreamPerformanceList  extends HttpServlet{
 	 * @param response
 	 * @throws ServletException, IOException
 	 */
-	
+
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
 		response.setContentType("application/pdf");
 
-		String accountuuid = "9DEDDC49-444E-499B-BDB9-D6625D2F79F4";
-		String streamuuid = "2B0F8F79-DEF2-419D-9A76-17450B5CF768";
-		String examType = "EndTerm";//MidTerm,EndTerm
-
-		/*accountuuid =request.getParameter("accountuuid");
-		 streamuuid = request.getParameter("streamuuid");*/
+		String accountuuid =request.getParameter("accountuuid");
+		String streamuuid = request.getParameter("streamuuid");
 
 		Account school = new Account();
 
@@ -151,39 +147,45 @@ public class StreamPerformanceList  extends HttpServlet{
 		if ((element = accountCache.get(accountuuid)) != null) {
 			school = (Account) element.getObjectValue();
 		}
-		
+
 		SystemConfig systemConfig = systemConfigDAO.getSystemConfig(school.getUuid()); 
 		Stream stream = streamDAO.getStreamById(streamuuid); 
 		
-		systemConfig.getTerm();
-		systemConfig.getYear();
+		String examType = systemConfig.getExamcode();
 
 		streamHash.put(streamuuid, stream.getStreamName());
 		String classuuid = "";
 		gradingSystem = gradingSystemDAO.getGradingSystem(school.getUuid()); 
 		
+		String fileName = new StringBuffer(StringUtils.trimToEmpty("PerformanceList")) 
+				.append("_")
+				.append(stream.getStreamName().replaceAll(" ", "_"))
+				.append(".pdf")
+				.toString();
+		response.setHeader("Content-Disposition", "inline; filename=\""+fileName);
+
 		schoolname = school.getSchoolName().toUpperCase()+"\n";
 		PDF_SUBTITLE =  "P.O BOX "+school.getSchoolAddres()+"\n" 
 				+ ""+school.getSchoolHomeTown()+" - Kenya\n" 
 				+ "" + school.getSchoolPhone()+"\n"
 				+ "" + school.getSchoolEmail()+"\n"
 				+ "" + school.getSchoolMotto()+"\n";
-		
-		if(StringUtils.equals(examType, "Opener")){
+
+		if(StringUtils.equals(examType, "OPENER")){
 			title = "_____________________________________ \n"
-					+ " Opener Exam Result for : " + stream.getStreamName() + " "+"\n"; 
-			
-		}if(StringUtils.equals(examType, "MidTerm")){
+					+ " Opener Exam Result for : " + stream.getStreamName() + " \nTERM : " + systemConfig.getTerm() + " YEAR : " + systemConfig.getYear() + " "+"\n"; 
+
+		}if(StringUtils.equals(examType, "MIDTERM")){
 			title = "_____________________________________ \n"
-					+ " Mid-Term Exam Result for : " + stream.getStreamName() + " "+"\n";
-			
-		}if(StringUtils.equals(examType, "EndTerm")){
+					+ " Mid-Term Exam Result for : " + stream.getStreamName() + " \nTERM : " + systemConfig.getTerm() + " YEAR : " + systemConfig.getYear() + " "+"\n";
+
+		}if(StringUtils.equals(examType, "ENDTERM")){
 			title = "_____________________________________ \n"
-					+ " End of Term Exam Result for : " + stream.getStreamName() + " "+"\n";
-			
+					+ " End of Term Exam Result for : " + stream.getStreamName() + " \nTERM : " + systemConfig.getTerm() + " YEAR : " + systemConfig.getYear() + " "+"\n";
+
 		}
 
-		
+
 
 		List<Classroom>  list = classroomDAO.getClassroomList();
 		for(Classroom room : list){
@@ -193,24 +195,24 @@ public class StreamPerformanceList  extends HttpServlet{
 		}
 
 		List<Student> studentList  = new ArrayList<Student>(); 
-		studentList = studentDAO.getStudentsList();
+		studentList = studentDAO.getStudentsList(accountuuid);
 		for(Student stu : studentList){
-			studentAdmNoHash.put(stu.getUuid(),stu.getAdmmissinNo()); 
+			studentAdmNoHash.put(stu.getUuid(),stu.getAdmmissinNo().substring(0, Math.min(stu.getAdmmissinNo().length(), 4))); 
 
 			String formatedFirstname = StringUtils.capitalize(stu.getFirstname().toLowerCase());
 			String formatedmiddle = StringUtils.capitalize(stu.getMiddlename().toLowerCase());
 			String formatedlastname = StringUtils.capitalize(stu.getLastname().toLowerCase());
 
-			formatedFirstname = formatedFirstname.substring(0, Math.min(formatedFirstname.length(), 10));
-			formatedmiddle = formatedmiddle.substring(0, Math.min(formatedmiddle.length(), 10));
-			formatedlastname = formatedlastname.substring(0, Math.min(formatedlastname.length(), 10));
+			formatedFirstname = formatedFirstname.substring(0, Math.min(formatedFirstname.length(), 7));
+			formatedmiddle = formatedmiddle.substring(0, Math.min(formatedmiddle.length(), 7));
+			formatedlastname = formatedlastname.substring(0, Math.min(formatedlastname.length(), 7));
 
 			studNameHash.put(stu.getUuid(),formatedFirstname + " " + formatedmiddle); 
 		}
 
 
-		List<ExamResult> classdistinctlist = performanceDAO.getStudentDistinctByClassId(classuuid, systemConfig.getTerm(), systemConfig.getYear());
-		List<ExamResult> streamdistinctlist = performanceDAO.getStudentDistinctByStreamId(streamuuid, systemConfig.getTerm(), systemConfig.getYear());
+		List<ExamResult> classdistinctlist = performanceDAO.getStudentDistinctByClassId(school.getUuid(),classuuid, systemConfig.getTerm(), systemConfig.getYear());
+		List<ExamResult> streamdistinctlist = performanceDAO.getStudentDistinctByStreamId(school.getUuid(),streamuuid, systemConfig.getTerm(), systemConfig.getYear());
 
 		document = new Document(PageSize.A4, 46, 46, 64, 64);
 
@@ -242,9 +244,9 @@ public class StreamPerformanceList  extends HttpServlet{
 			prefaceTable.setWidths(new int[]{70,130}); 
 
 			Paragraph content = new Paragraph();
-			content.add(new Paragraph((schoolname +"") , boldCourierText14));
-			content.add(new Paragraph((PDF_SUBTITLE +"") , boldCourierText10));
-			content.add(new Paragraph((title) , boldNewRoman8));
+			content.add(new Paragraph((schoolname +"") , boldCourierText14));//
+			content.add(new Paragraph((PDF_SUBTITLE +"") , boldNewRoman8));
+			content.add(new Paragraph((title +" \n") , boldCourierText10));
 
 			PdfPCell contentcell = new PdfPCell(content);
 			contentcell.setBorder(Rectangle.NO_BORDER); 
@@ -272,7 +274,7 @@ public class StreamPerformanceList  extends HttpServlet{
 			prefaceTable.addCell(logo); 
 			prefaceTable.addCell(contentcell);
 			document.add(prefaceTable);
-			
+
 
 			PdfPCell countHeader = new PdfPCell(new Paragraph("No",boldNewRoman7));
 			countHeader.setBackgroundColor(baseColor);
@@ -309,36 +311,38 @@ public class StreamPerformanceList  extends HttpServlet{
 			PdfPCell creHeader = new PdfPCell(new Paragraph("CRE",boldNewRoman7));
 			creHeader.setBackgroundColor(baseColor);
 			creHeader.setHorizontalAlignment(Element.ALIGN_LEFT);
-			
+
 			PdfPCell sscreHeader = new PdfPCell(new Paragraph("SS-CRE",boldNewRoman7));
 			sscreHeader.setBackgroundColor(baseColor);
 			sscreHeader.setHorizontalAlignment(Element.ALIGN_LEFT);
-			
+
 			PdfPCell totalHeader = new PdfPCell(new Paragraph("TOTAL",boldNewRoman7));
 			totalHeader.setBackgroundColor(baseColor);
 			totalHeader.setHorizontalAlignment(Element.ALIGN_LEFT);
-			
+
 			PdfPCell meanHeader = new PdfPCell(new Paragraph("MEAN",boldNewRoman7));
 			meanHeader.setBackgroundColor(baseColor);
 			meanHeader.setHorizontalAlignment(Element.ALIGN_LEFT);
-			
+
 			PdfPCell gradeHeader = new PdfPCell(new Paragraph("GRADE",boldNewRoman7));
 			gradeHeader.setBackgroundColor(baseColor);
 			gradeHeader.setHorizontalAlignment(Element.ALIGN_LEFT);
-			
+
 			PdfPCell devHeader = new PdfPCell(new Paragraph("DEV",boldNewRoman7));
 			devHeader.setBackgroundColor(baseColor);
 			devHeader.setHorizontalAlignment(Element.ALIGN_LEFT);
-			
+
 			PdfPCell streamPosHeader = new PdfPCell(new Paragraph("S-POS",boldNewRoman7));
 			streamPosHeader.setBackgroundColor(baseColor);
 			streamPosHeader.setHorizontalAlignment(Element.ALIGN_LEFT);
-			
+
 			PdfPCell classPosHeader = new PdfPCell(new Paragraph("C-POS",boldNewRoman7));
 			classPosHeader.setBackgroundColor(baseColor);
 			classPosHeader.setHorizontalAlignment(Element.ALIGN_LEFT);
 
-			PdfPTable subjectScoreTable = new PdfPTable(16);  
+			PdfPTable subjectScoreTable = new PdfPTable(16); 
+			PdfPTable subAnalysisTable = new PdfPTable(10); 
+
 			subjectScoreTable.addCell(countHeader);
 			subjectScoreTable.addCell(admnoHeader);
 			subjectScoreTable.addCell(nameHeader);
@@ -359,13 +363,32 @@ public class StreamPerformanceList  extends HttpServlet{
 			subjectScoreTable.setWidths(new int[]{10,15,35,12,12,13,12,12,12,18,20,15,15,15,15,15});   
 			subjectScoreTable.setHorizontalAlignment(Element.ALIGN_LEFT);
 
+			subAnalysisTable.addCell(new Paragraph("ENTRY",boldNewRoman7));
+			subAnalysisTable.addCell(new Paragraph(" ",boldNewRoman7));
+			subAnalysisTable.addCell(new Paragraph("ENG :\nEntry " + performanceDAO.getSubjectCountPerStream(school.getUuid(),ExamConstants.SUB_ENG,streamuuid,systemConfig.getTerm(),systemConfig.getYear()),boldNewRoman7));
+			subAnalysisTable.addCell(new Paragraph("KISW :\nEntry " + performanceDAO.getSubjectCountPerStream(school.getUuid(),ExamConstants.SUB_KIS,streamuuid,systemConfig.getTerm(),systemConfig.getYear()),boldNewRoman7));
+
+			subAnalysisTable.addCell(new Paragraph("MATH : Entry " + performanceDAO.getSubjectCountPerStream(school.getUuid(),ExamConstants.SUB_MATH,streamuuid,systemConfig.getTerm(),systemConfig.getYear()),boldNewRoman7));
+			subAnalysisTable.addCell(new Paragraph("SCI :\nEntry " + performanceDAO.getSubjectCountPerStream(school.getUuid(),ExamConstants.SUB_SCI,streamuuid,systemConfig.getTerm(),systemConfig.getYear()),boldNewRoman7));
+			subAnalysisTable.addCell(new Paragraph("SS :\nEntry " + performanceDAO.getSubjectCountPerStream(school.getUuid(),ExamConstants.SUB_SST,streamuuid,systemConfig.getTerm(),systemConfig.getYear()),boldNewRoman7));
+
+			subAnalysisTable.addCell(new Paragraph("CRE :\nEntry " + performanceDAO.getSubjectCountPerStream(school.getUuid(),ExamConstants.SUB_CRE,streamuuid,systemConfig.getTerm(),systemConfig.getYear()),boldNewRoman7));
+			subAnalysisTable.addCell(new Paragraph("SS-CRE : Entry " + performanceDAO.getSubjectCountPerStream(school.getUuid(),ExamConstants.SUB_SST,streamuuid,systemConfig.getTerm(),systemConfig.getYear()),boldNewRoman7));
+			subAnalysisTable.addCell(new Paragraph("TOTAL",boldNewRoman7));
+
+			subAnalysisTable.setWidthPercentage(100); 
+			subAnalysisTable.setWidths(new int[]{15,20,23,23,20,20,20,25,20,25});    
+			subAnalysisTable.setHorizontalAlignment(Element.ALIGN_LEFT);
+
 			String subject = "";
-		
+
 			Map<String,Double> examScoremap = new LinkedHashMap<String,Double>();
-			
+
 			double classOTotal = 0,classMTotal = 0,classETotal = 0;
 			double classOscore = 0,classMscore = 0,classEscore = 0;
-			
+
+			int classposition = 0;
+			String classStudentTotal = "";
 			for(ExamResult studentDis : classdistinctlist){
 				List<ExamResult> classperformancelist = performanceDAO.getStudentPerformanceByClassId(studentDis.getStudentUuid(),
 						classuuid, systemConfig.getTerm(), systemConfig.getYear());
@@ -373,35 +396,35 @@ public class StreamPerformanceList  extends HttpServlet{
 				for(ExamResult classscores : classperformancelist){
 
 					subject = classscores.getSubjectUuid();
-                    
-					if(StringUtils.equalsIgnoreCase(examType, "Opener")){
+
+					if(StringUtils.equalsIgnoreCase(examType, "OPENER")){
 						classOscore = classscores.getOpenner();
 						classOTotal += computationEngine.computeOpener(subject,classOscore);
 						examScoremap.put(studentDis.getStudentUuid(), classOTotal);
-						
-					}if(StringUtils.equalsIgnoreCase(examType, "MidTerm")){
+
+					}if(StringUtils.equalsIgnoreCase(examType, "MIDTERM")){
 						classMscore = classscores.getMidterm();
 						classMTotal += computationEngine.computeMidterm(subject,classMscore); 
 						examScoremap.put(studentDis.getStudentUuid(), classMTotal);
-						
-					}if(StringUtils.equalsIgnoreCase(examType, "EndTerm")){
+
+					}if(StringUtils.equalsIgnoreCase(examType, "ENDTERM")){
 						classEscore = classscores.getEndterm();
 						classETotal += computationEngine.computeEndterm(subject,classEscore); 
 						examScoremap.put(studentDis.getStudentUuid(), classETotal);
 					}
-					
-				}
-              
- 			 classOTotal = 0;classMTotal  = 0;classETotal = 0;
- 			 classOscore  = 0;classMscore  = 0;classEscore = 0;
 
+				}
+
+				classOTotal = 0;classMTotal  = 0;classETotal = 0;
+				classOscore  = 0;classMscore  = 0;classEscore = 0;
+				classposition++;
 			}
-			
-			
+			classStudentTotal = Integer.toString(classposition); 
+
 
 			Map<String,String> classPositionmap = new LinkedHashMap<String,String>(); // C class
-			Map<String,Integer> classPositionmap2 = new LinkedHashMap<String,Integer>(); // C class
-			
+			//Map<String,Integer> classPositionmap2 = new LinkedHashMap<String,Integer>(); // C class
+
 			@SuppressWarnings("unchecked")
 			ArrayList<?> examList = new ArrayList(examScoremap.entrySet());
 			Collections.sort(examList,new Comparator(){
@@ -419,10 +442,10 @@ public class StreamPerformanceList  extends HttpServlet{
 			String totalmark  = "";
 			String theposition = "";
 			int ositionInt = 1;
-			int mypositionInt = 0;
+			//int mypositionInt = 0;
 			double mean = 0;
 			double number = 0.0;
-			int classPosition1 = 0;
+			//int classPosition1 = 0;
 			for(Object o : examList){
 				String items = String.valueOf(o);
 				String [] item = items.split("=");
@@ -432,26 +455,28 @@ public class StreamPerformanceList  extends HttpServlet{
 				mean = Double.parseDouble(totalmark)/5;
 				if(mean==number){
 					theposition = (" " +(examcount-ositionInt++)+ " " );//+ classStudentTotal
-					mypositionInt = (examcount-ositionInt++);
+					//mypositionInt = (examcount-ositionInt++);
 				}else{
 					ositionInt=1;
 					theposition = (" " +examcount+ " " );//+ classStudentTotal
-					mypositionInt = examcount;
+					//mypositionInt = examcount;
 				}
 				classPositionmap.put(studentuuid, theposition);
-				classPositionmap2.put(studentuuid, mypositionInt);
-				
+				//classPositionmap2.put(studentuuid, mypositionInt);
+
 				//save mean and positions
 				double weight = 0;
 				weight = (mean/100)*12; 
-				meanScoreDAO.putMeanScore(mean, 0, classPosition1, studentuuid, systemConfig.getTerm(), systemConfig.getYear());
-				barWeightDAO.putWeight(weight, studentuuid, systemConfig.getTerm(), systemConfig.getYear());
-				
+				if(StringUtils.equalsIgnoreCase(examType, "ENDTERM")){
+					meanScoreDAO.putMeanScore(mean,"0", theposition, studentuuid, systemConfig.getTerm(), systemConfig.getYear());
+					barWeightDAO.putWeight(weight, studentuuid, systemConfig.getTerm(), systemConfig.getYear());
+				}
+
 
 				examcount++;
 				number=mean;
 			}
-			
+
 
 
 
@@ -460,9 +485,12 @@ public class StreamPerformanceList  extends HttpServlet{
 
 
 			Map<String,Double> streamScoremap = new LinkedHashMap<String,Double>();
-			
+
 			double streamOT=0,streamMT=0,streamET=0;//total
 			double streamOS=0,streamMS=0,streamES=0;//score
+
+			int streamStudentcount = 0;
+			String streamStudentTotal = "";
 			for(ExamResult studentDis : streamdistinctlist){
 				List<ExamResult> streamperformancelist = performanceDAO.getStudentPerformanceByStreamId(studentDis.getStudentUuid(),
 						streamuuid, systemConfig.getTerm(), systemConfig.getYear());
@@ -471,34 +499,35 @@ public class StreamPerformanceList  extends HttpServlet{
 				for(ExamResult streamscores : streamperformancelist){
 
 					subject = streamscores.getSubjectUuid();
-                    
-					if(StringUtils.equalsIgnoreCase(examType, "Opener")){
+
+					if(StringUtils.equalsIgnoreCase(examType, "OPENER")){
 						streamOS = streamscores.getOpenner();
 						streamOT += computationEngine.computeOpener(subject,streamOS);
 						streamScoremap.put(studentDis.getStudentUuid(), streamOT);
-						
+
 					}
-					
-					if(StringUtils.equalsIgnoreCase(examType, "MidTerm")){
+
+					if(StringUtils.equalsIgnoreCase(examType, "MIDTERM")){
 						streamMS = streamscores.getMidterm();
 						streamMT += computationEngine.computeMidterm(subject,streamMS); 
 						streamScoremap.put(studentDis.getStudentUuid(), streamMT);
-						
+
 					}
-					
-					if(StringUtils.equalsIgnoreCase(examType, "EndTerm")){
+
+					if(StringUtils.equalsIgnoreCase(examType, "ENDTERM")){
 						streamES = streamscores.getEndterm();
 						streamET += computationEngine.computeEndterm(subject,streamES); 
 						streamScoremap.put(studentDis.getStudentUuid(), streamET);
 					}
-					
+
 				}
-				
-				 streamOT=0;streamMT=0;streamET=0;//total
-				 streamOS=0;streamMS=0;streamES=0;//score
+
+				streamOT=0;streamMT=0;streamET=0;//total
+				streamOS=0;streamMS=0;streamES=0;//score
+				streamStudentcount++;
 			}
-			 
-			
+			streamStudentTotal = Integer.toString(streamStudentcount);
+
 
 			@SuppressWarnings("unchecked")
 			ArrayList<?> streamList = new ArrayList(streamScoremap.entrySet());
@@ -512,9 +541,24 @@ public class StreamPerformanceList  extends HttpServlet{
 				}
 			});
 
-			
+
+
+
+
+			//subject totals 
+			double engtotal = 0,engmean = 0;
+			double kistotal = 0,kismean = 0;
+			double mathtotal = 0,mathmean = 0;
+			double scitotal = 0,scimean = 0;
+			double sstotal = 0,ssmean = 0;
+			double cretotal = 0,cremean = 0;
+			double sscretotal = 0,sscremean = 0;
+			//subject totals 
+
+
 
 			int finalcount = 1;
+			int studentcount = 0;
 			String finalstudentuuid = "";
 			double finaltotalmark  = 0;
 			String thefinalposition = "";
@@ -522,8 +566,8 @@ public class StreamPerformanceList  extends HttpServlet{
 			double finalnumber = 0;
 			int finalposition = 1;
 			double streamTotal = 0;
-			int streamPosition =0;
-			int classPosition = 0;
+			//int streamPosition =0;
+			String classPosition = "";
 			for(Object o : streamList){
 				String items = String.valueOf(o);
 				String [] item = items.split("=");
@@ -531,26 +575,28 @@ public class StreamPerformanceList  extends HttpServlet{
 				finaltotalmark = Double.parseDouble(item[1]);
 				finalmean = finaltotalmark/5; 
 				streamTotal += finalmean;
-				
-				
+
+
 				if(finalmean==finalnumber){
 					thefinalposition = (" " +(finalcount-finalposition++)+ " " );//+ streamStudentTotal
-					streamPosition = (finalcount-finalposition++);
+					//streamPosition = (finalcount-finalposition++);
 				}else{
 					finalposition=1;
 					thefinalposition = (" " +finalcount+ "  " );//+ streamStudentTotal
-					streamPosition = finalcount;
+					//streamPosition = finalcount;
 				}
-				
+
 				//save mean and positions
 				double weight = 0;
 				weight = (finalmean/100)*12; 
-				if(classPositionmap2.get(finalstudentuuid) !=null){
-				 classPosition = classPositionmap2.get(finalstudentuuid); 
+				if(classPositionmap.get(finalstudentuuid) !=null){
+					classPosition = classPositionmap.get(finalstudentuuid); 
 				}
-				meanScoreDAO.putMeanScore(finalmean, streamPosition, classPosition, finalstudentuuid, systemConfig.getTerm(), systemConfig.getYear());
-				barWeightDAO.putWeight(weight, finalstudentuuid, systemConfig.getTerm(), systemConfig.getYear());
-				
+				if(StringUtils.equalsIgnoreCase(examType, "ENDTERM")){
+					meanScoreDAO.putMeanScore(finalmean, thefinalposition + "/ " + streamStudentTotal, classPosition+"/ " + classStudentTotal, finalstudentuuid, systemConfig.getTerm(), systemConfig.getYear());
+					barWeightDAO.putWeight(weight, finalstudentuuid, systemConfig.getTerm(), systemConfig.getYear());
+				}
+
 				//find deviation
 				int thisterm =0,lastterm =0;
 				int thisyear = 0,lastyear=0;
@@ -567,24 +613,24 @@ public class StreamPerformanceList  extends HttpServlet{
 					lastterm = 2;
 					lastyear = thisyear;
 				}
-				
+
 				//get last term mean
 				MeanScore lasttermscore = new MeanScore();
-				if(meanScoreDAO.getMeanScore(studentuuid,Integer.toString(lastterm),Integer.toString(lastyear)) !=null){
-					lasttermscore = meanScoreDAO.getMeanScore(studentuuid,Integer.toString(lastterm),Integer.toString(lastyear));
+				if(meanScoreDAO.getMeanScore(finalstudentuuid,Integer.toString(lastterm),Integer.toString(lastyear)) !=null){
+					lasttermscore = meanScoreDAO.getMeanScore(finalstudentuuid,Integer.toString(lastterm),Integer.toString(lastyear));
 				}
 				if(lasttermscore !=null){
 					lasttermmean = lasttermscore.getMeanScore();
 				}
 				//this term mean
 				MeanScore thistermscore = new MeanScore();
-				if(meanScoreDAO.getMeanScore(studentuuid,systemConfig.getTerm(),systemConfig.getYear()) !=null){
-					thistermscore = meanScoreDAO.getMeanScore(studentuuid,systemConfig.getTerm(),systemConfig.getYear());
+				if(meanScoreDAO.getMeanScore(finalstudentuuid,systemConfig.getTerm(),systemConfig.getYear()) !=null){
+					thistermscore = meanScoreDAO.getMeanScore(finalstudentuuid,systemConfig.getTerm(),systemConfig.getYear());
 				}
 				if(lasttermscore !=null){
 					thistermmean = thistermscore.getMeanScore();
 				}
-				
+
 				int engfinalscore = 0,kisfinalscore = 0,mathfinalscore = 0,scifinalscore = 0;
 				double sstfinalscore = 0,crefinalscore = 0;
 
@@ -594,105 +640,171 @@ public class StreamPerformanceList  extends HttpServlet{
 				for(ExamResult score : streamperformancelist){
 
 					if(StringUtils.equals(score.getSubjectUuid(), ExamConstants.SUB_ENG)) {
-						if(StringUtils.equalsIgnoreCase(examType, "Opener")){
+						if(StringUtils.equalsIgnoreCase(examType, "OPENER")){
 							engfinalscore  = (int)score.getOpenner();
-						}else if(StringUtils.equalsIgnoreCase(examType, "MidTerm")){
+						}else if(StringUtils.equalsIgnoreCase(examType, "MIDTERM")){
 							engfinalscore = (int)score.getMidterm();
-						}else if(StringUtils.equalsIgnoreCase(examType, "EndTerm")){
+						}else if(StringUtils.equalsIgnoreCase(examType, "ENDTERM")){
 							engfinalscore = (int)score.getEndterm();
 						}
-							
+
 					}if(StringUtils.equals(score.getSubjectUuid(), ExamConstants.SUB_KIS)) {
-						if(StringUtils.equalsIgnoreCase(examType, "Opener")){
+						if(StringUtils.equalsIgnoreCase(examType, "OPENER")){
 							kisfinalscore  = (int)score.getOpenner();
-						}else if(StringUtils.equalsIgnoreCase(examType, "MidTerm")){
+						}else if(StringUtils.equalsIgnoreCase(examType, "MIDTERM")){
 							kisfinalscore = (int)score.getMidterm();
-						}else if(StringUtils.equalsIgnoreCase(examType, "EndTerm")){
+						}else if(StringUtils.equalsIgnoreCase(examType, "ENDTERM")){
 							kisfinalscore = (int)score.getEndterm();
 						}
-						
+
 					}if(StringUtils.equals(score.getSubjectUuid(), ExamConstants.SUB_MATH)) {
-						if(StringUtils.equalsIgnoreCase(examType, "Opener")){
+						if(StringUtils.equalsIgnoreCase(examType, "OPENER")){
 							mathfinalscore  = (int)score.getOpenner();
-						}else if(StringUtils.equalsIgnoreCase(examType, "MidTerm")){
+						}else if(StringUtils.equalsIgnoreCase(examType, "MIDTERM")){
 							mathfinalscore = (int)score.getMidterm();
-						}else if(StringUtils.equalsIgnoreCase(examType, "EndTerm")){
+						}else if(StringUtils.equalsIgnoreCase(examType, "ENDTERM")){
 							mathfinalscore = (int)score.getEndterm();
 						}
-						
+
 					}if(StringUtils.equals(score.getSubjectUuid(), ExamConstants.SUB_SCI)) {
-						if(StringUtils.equalsIgnoreCase(examType, "Opener")){
+						if(StringUtils.equalsIgnoreCase(examType, "OPENER")){
 							scifinalscore  = (int)score.getOpenner();
-						}else if(StringUtils.equalsIgnoreCase(examType, "MidTerm")){
+						}else if(StringUtils.equalsIgnoreCase(examType, "MIDTERM")){
 							scifinalscore = (int)score.getMidterm();
-						}else if(StringUtils.equalsIgnoreCase(examType, "EndTerm")){
+						}else if(StringUtils.equalsIgnoreCase(examType, "ENDTERM")){
 							scifinalscore = (int)score.getEndterm();
 						}
-						
+
 					}if(StringUtils.equals(score.getSubjectUuid(), ExamConstants.SUB_CRE)) {
-						if(StringUtils.equalsIgnoreCase(examType, "Opener")){
+						if(StringUtils.equalsIgnoreCase(examType, "OPENER")){
 							crefinalscore  = (int)score.getOpenner();
-						}else if(StringUtils.equalsIgnoreCase(examType, "MidTerm")){
+						}else if(StringUtils.equalsIgnoreCase(examType, "MIDTERM")){
 							crefinalscore = (int)score.getMidterm();
-						}else if(StringUtils.equalsIgnoreCase(examType, "EndTerm")){
+						}else if(StringUtils.equalsIgnoreCase(examType, "ENDTERM")){
 							crefinalscore = (int)score.getEndterm();
 						}
-						
+
 					}if(StringUtils.equals(score.getSubjectUuid(), ExamConstants.SUB_SST)) {
-						if(StringUtils.equalsIgnoreCase(examType, "Opener")){
+						if(StringUtils.equalsIgnoreCase(examType, "OPENER")){
 							sstfinalscore  = (int)score.getOpenner();
-						}else if(StringUtils.equalsIgnoreCase(examType, "MidTerm")){
+						}else if(StringUtils.equalsIgnoreCase(examType, "MIDTERM")){
 							sstfinalscore = (int)score.getMidterm();
-						}else if(StringUtils.equalsIgnoreCase(examType, "EndTerm")){
+						}else if(StringUtils.equalsIgnoreCase(examType, "ENDTERM")){
 							sstfinalscore = (int)score.getEndterm();
 						}
-						
+
 					}
+
 				}
 
 				DecimalFormat rf = new DecimalFormat("0"); 
 				rf.setRoundingMode(RoundingMode.HALF_UP);
-				
+
 				double sscre = 0;String sscreStr = "";
 				sscre = ((sstfinalscore + crefinalscore)/90)*100;
 				sscreStr = rf.format(sscre);
-				
-				  subjectScoreTable.addCell(new Paragraph(" "+finalcount+" ",normalNewRoman7));
-				  subjectScoreTable.addCell(new Paragraph(studentAdmNoHash.get(finalstudentuuid),normalNewRoman7));
-				  subjectScoreTable.addCell(new Paragraph(studNameHash.get(finalstudentuuid),normalNewRoman7));				   
-				  subjectScoreTable.addCell(new Paragraph(" "+engfinalscore,normalNewRoman7));
-				  subjectScoreTable.addCell(new Paragraph(" "+kisfinalscore,normalNewRoman7));
-				  subjectScoreTable.addCell(new Paragraph(" "+mathfinalscore,normalNewRoman7));
-				  subjectScoreTable.addCell(new Paragraph(" "+scifinalscore,normalNewRoman7));
-				  subjectScoreTable.addCell(new Paragraph(" "+rf.format(sstfinalscore),normalNewRoman7));
-				  subjectScoreTable.addCell(new Paragraph(" "+rf.format(crefinalscore),normalNewRoman7));
-				  subjectScoreTable.addCell(new Paragraph(" "+sscreStr,normalNewRoman7));
-				  subjectScoreTable.addCell(new Paragraph(" "+df.format(finaltotalmark),normalNewRoman7));
-				  subjectScoreTable.addCell(new Paragraph(" "+df.format(finalmean),normalNewRoman7));
-				  subjectScoreTable.addCell(new Paragraph(" "+computeGrade(finalmean),normalNewRoman7));
-				  subjectScoreTable.addCell(new Paragraph(" "+deviationFinder(thistermmean,lasttermmean),normalNewRoman7)); 
-				  subjectScoreTable.addCell(new Paragraph(" "+thefinalposition,normalNewRoman7));
-				  subjectScoreTable.addCell(new Paragraph(" "+classPositionmap.get(finalstudentuuid),normalNewRoman7));				   
-				
-				  engfinalscore = 0;kisfinalscore= 0;mathfinalscore= 0;scifinalscore = 0;
-				  sstfinalscore = 0;crefinalscore = 0;
-				
-				
-                
+
+				subjectScoreTable.addCell(new Paragraph(" "+finalcount+" ",normalNewRoman7));
+				subjectScoreTable.addCell(new Paragraph(studentAdmNoHash.get(finalstudentuuid),normalNewRoman7));
+				subjectScoreTable.addCell(new Paragraph(studNameHash.get(finalstudentuuid),normalNewRoman7));				   
+				subjectScoreTable.addCell(new Paragraph(" "+engfinalscore,normalNewRoman7));
+				subjectScoreTable.addCell(new Paragraph(" "+kisfinalscore,normalNewRoman7));
+				subjectScoreTable.addCell(new Paragraph(" "+mathfinalscore,normalNewRoman7));
+				subjectScoreTable.addCell(new Paragraph(" "+scifinalscore,normalNewRoman7));
+				subjectScoreTable.addCell(new Paragraph(" "+rf.format(sstfinalscore),normalNewRoman7));
+				subjectScoreTable.addCell(new Paragraph(" "+rf.format(crefinalscore),normalNewRoman7));
+				subjectScoreTable.addCell(new Paragraph(" "+sscreStr,normalNewRoman7));
+				subjectScoreTable.addCell(new Paragraph(" "+df.format(finaltotalmark),normalNewRoman7));
+				subjectScoreTable.addCell(new Paragraph(" "+df.format(finalmean),normalNewRoman7));
+				subjectScoreTable.addCell(new Paragraph(" "+computeGrade(finalmean),normalNewRoman7));
+				subjectScoreTable.addCell(new Paragraph(" "+deviationFinder(thistermmean,lasttermmean),normalNewRoman7)); 
+				subjectScoreTable.addCell(new Paragraph(" "+thefinalposition,normalNewRoman7));
+				subjectScoreTable.addCell(new Paragraph(" "+classPositionmap.get(finalstudentuuid),normalNewRoman7));		
+
+				//subject totals
+				engtotal += engfinalscore; 
+				kistotal += kisfinalscore;
+				mathtotal += mathfinalscore;
+				scitotal += scifinalscore;
+				sstotal += (sstfinalscore/60)*100; 
+				cretotal += (crefinalscore/30)*100; 
+				sscretotal += sscre; 
+
+				engfinalscore = 0;kisfinalscore= 0;mathfinalscore= 0;scifinalscore = 0;
+				sstfinalscore = 0;crefinalscore = 0;
+
+
 				finalcount++;
+				studentcount++;
 				finalnumber=finalmean;
-				
+
 			}
+
 			
-            double thestreamMean= (streamTotal/finalcount); 
-			Paragraph classname = new Paragraph();
-			classname.add(new Paragraph(" (MEAN : " + df.format(thestreamMean) + " ,  GRADE : " + computeGrade(thestreamMean) +")\n",normalNewRoman7));
-	        
+			double thestreamMean= (streamTotal/studentcount); 
+			engmean = engtotal/performanceDAO.getSubjectCountPerStream(school.getUuid(),ExamConstants.SUB_ENG,streamuuid,systemConfig.getTerm(),systemConfig.getYear());
+			kismean =  kistotal/performanceDAO.getSubjectCountPerStream(school.getUuid(),ExamConstants.SUB_KIS,streamuuid,systemConfig.getTerm(),systemConfig.getYear());
+			mathmean  =  mathtotal/performanceDAO.getSubjectCountPerStream(school.getUuid(),ExamConstants.SUB_MATH,streamuuid,systemConfig.getTerm(),systemConfig.getYear());
+			scimean  =  scitotal/performanceDAO.getSubjectCountPerStream(school.getUuid(),ExamConstants.SUB_SCI,streamuuid,systemConfig.getTerm(),systemConfig.getYear());
+			ssmean  =  sstotal/performanceDAO.getSubjectCountPerStream(school.getUuid(),ExamConstants.SUB_SST,streamuuid,systemConfig.getTerm(),systemConfig.getYear());
+			cremean  =  cretotal/performanceDAO.getSubjectCountPerStream(school.getUuid(),ExamConstants.SUB_CRE,streamuuid,systemConfig.getTerm(),systemConfig.getYear());
+			sscremean  =  sscretotal/performanceDAO.getSubjectCountPerStream(school.getUuid(),ExamConstants.SUB_SST,streamuuid,systemConfig.getTerm(),systemConfig.getYear());
+			
+				for(int i = 0; i < 3;i++){
+
+						if(i == 0){
+							subAnalysisTable.addCell(new Paragraph(studentcount+" ",normalNewRoman7)); 
+							subAnalysisTable.addCell(new Paragraph("TOTAL ",normalNewRoman7));
+							subAnalysisTable.addCell(new Paragraph(df.format(engtotal)+" ",normalNewRoman7));
+							subAnalysisTable.addCell(new Paragraph(df.format(kistotal)+" ",normalNewRoman7));
+
+							subAnalysisTable.addCell(new Paragraph(df.format(mathtotal)+" ",normalNewRoman7));
+							subAnalysisTable.addCell(new Paragraph(df.format(scitotal)+" ",normalNewRoman7));
+							subAnalysisTable.addCell(new Paragraph(df.format(sstotal)+" ",normalNewRoman7));
+
+							subAnalysisTable.addCell(new Paragraph(df.format(cretotal)+" ",normalNewRoman7));
+							subAnalysisTable.addCell(new Paragraph(df.format(sscretotal)+" ",normalNewRoman7));
+							subAnalysisTable.addCell(new Paragraph(df.format(streamTotal)+" ",normalNewRoman7));
+
+						}if(i == 1){
+							subAnalysisTable.addCell(new Paragraph(studentcount+" ",normalNewRoman7)); 
+							subAnalysisTable.addCell(new Paragraph("MEAN ",normalNewRoman7));
+							subAnalysisTable.addCell(new Paragraph(df.format(engmean)+" ",normalNewRoman7));
+							subAnalysisTable.addCell(new Paragraph(df.format(kismean)+" ",normalNewRoman7));
+
+							subAnalysisTable.addCell(new Paragraph(df.format(mathmean)+" ",normalNewRoman7));
+							subAnalysisTable.addCell(new Paragraph(df.format(scimean)+" ",normalNewRoman7));
+							subAnalysisTable.addCell(new Paragraph(df.format(ssmean)+" ",normalNewRoman7));
+
+							subAnalysisTable.addCell(new Paragraph(df.format(cremean)+" ",normalNewRoman7));
+							subAnalysisTable.addCell(new Paragraph(df.format(sscremean)+" ",normalNewRoman7));
+							subAnalysisTable.addCell(new Paragraph(df.format(thestreamMean)+" ",normalNewRoman7));
+						}
+						if(i == 2){
+							subAnalysisTable.addCell(new Paragraph(" ",normalNewRoman7)); 
+							subAnalysisTable.addCell(new Paragraph("GRADE ",normalNewRoman7));
+							subAnalysisTable.addCell(new Paragraph(computeGrade(engmean)+" ",normalNewRoman7));
+							subAnalysisTable.addCell(new Paragraph(computeGrade(kismean)+" ",normalNewRoman7));
+
+							subAnalysisTable.addCell(new Paragraph(computeGrade(mathmean)+" ",normalNewRoman7));
+							subAnalysisTable.addCell(new Paragraph(computeGrade(scimean)+" ",normalNewRoman7));
+							subAnalysisTable.addCell(new Paragraph(computeGrade(ssmean)+" ",normalNewRoman7));
+
+							subAnalysisTable.addCell(new Paragraph(computeGrade(cremean)+" ",normalNewRoman7));
+							subAnalysisTable.addCell(new Paragraph(computeGrade(sscremean)+" ",normalNewRoman7));
+							subAnalysisTable.addCell(new Paragraph(computeGrade(thestreamMean)+" ",normalNewRoman7));
+						}
+
+
+					}
+			engtotal = 0;kistotal= 0;mathtotal= 0;scitotal= 0;sstotal= 0;cretotal= 0;sscretotal= 0;
+
 			Paragraph emptyline = new Paragraph(("                              "));
 			document.add(emptyline);
-			document.add(classname); 
 			document.add(emptyline);
 			document.add(subjectScoreTable);
+			document.add(emptyline);
+			document.add(subAnalysisTable);
 
 			document.close();
 		}
@@ -702,8 +814,8 @@ public class StreamPerformanceList  extends HttpServlet{
 		}
 
 	}
-	
-	
+
+
 	/** Find deviation from last term
 	 * pass thisTermMean following lastTermMean
 	 * @param lastTermMean
@@ -726,11 +838,11 @@ public class StreamPerformanceList  extends HttpServlet{
 		}else{
 			deviationStr = "";
 		}
-		
+
 		return deviationStr;
 	}
 
-	
+
 
 	/**
 	 * @param score

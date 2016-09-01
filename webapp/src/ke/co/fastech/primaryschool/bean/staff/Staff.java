@@ -10,8 +10,8 @@ import java.util.Date;
 
 import ke.co.fastech.primaryschool.bean.StorableBean;
 
-/**
- *  a staff in a school 
+/** 
+ *  A staff in a school 
  *  
  * @author <a href="mailto:mwendapeter72@gmail.com">Peter mwenda</a>
  *

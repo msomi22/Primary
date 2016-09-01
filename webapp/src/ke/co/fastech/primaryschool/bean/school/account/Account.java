@@ -16,6 +16,8 @@ import ke.co.fastech.primaryschool.bean.StorableBean;
  */
 public class Account extends StorableBean{
 	
+	private String accountUuid;
+	private String username;
 	private String schoolName;
 	private String schoolEmail;
 	private String schoolPhone;
@@ -30,6 +32,8 @@ public class Account extends StorableBean{
 	 */
 	public Account() {
 		super();
+		accountUuid = "";
+		username = "";
 		schoolName = "";
 		schoolEmail = "";
 		schoolPhone = "";
@@ -40,6 +44,34 @@ public class Account extends StorableBean{
 		dayBoarding = "";
 	}
 	
+	/**
+	 * @return the accountUuid
+	 */
+	public String getAccountUuid() {
+		return accountUuid;
+	}
+
+	/**
+	 * @param accountUuid the accountUuid to set
+	 */
+	public void setAccountUuid(String accountUuid) {
+		this.accountUuid = accountUuid;
+	}
+
+	/**
+	 * @return the username
+	 */
+	public String getUsername() {
+		return username;
+	}
+
+	/**
+	 * @param username the username to set
+	 */
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
 	/**
 	 * @return the schoolName
 	 */
@@ -163,6 +195,10 @@ public class Account extends StorableBean{
 		builder.append("SchoolAccount");
 		builder.append("[getUuid()=");
 		builder.append(getUuid()); 
+		builder.append(",accountUuid=");
+		builder.append(accountUuid);
+		builder.append(",username=");
+		builder.append(username);
 		builder.append(",schoolName=");
 		builder.append(schoolName);
 		builder.append(",schoolEmail=");

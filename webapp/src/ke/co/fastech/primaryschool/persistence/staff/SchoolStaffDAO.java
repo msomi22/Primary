@@ -28,7 +28,7 @@ public interface SchoolStaffDAO {
 	 * @return
 	 */
 	
-	public Staff getStaff(String uuid,String employeeNo);
+	public Staff getStaff(String accountUuid,String employeeNo);
 	/**
 	 * 
 	 * @param phone
@@ -46,6 +46,6 @@ public interface SchoolStaffDAO {
 	 * 
 	 * @return
 	 */
-	public List<Staff> getStaffList();
+	public List<Staff> getStaffList(String accountUuid);
 
 }

@@ -25,16 +25,19 @@ import org.apache.log4j.Logger;
 
 import ke.co.fastech.primaryschool.bean.school.account.Account;
 import ke.co.fastech.primaryschool.persistence.exam.ExamEngineDAO;
+import ke.co.fastech.primaryschool.persistence.school.ClassroomDAO;
 import ke.co.fastech.primaryschool.persistence.school.StreamDAO;
 import ke.co.fastech.primaryschool.persistence.school.SystemConfigDAO;
 import ke.co.fastech.primaryschool.persistence.staff.TeacherSubjectDAO;
 import ke.co.fastech.primaryschool.persistence.student.StudentDAO;
 import ke.co.fastech.primaryschool.persistence.student.subject.SubjectDAO;
+import ke.co.fastech.primaryschool.server.cache.CacheVariables;
 import ke.co.fastech.primaryschool.server.session.SessionConstants;
 import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
-/**
+/** 
  * @author peter
  *
  */
@@ -53,12 +56,8 @@ public class ScorePerClass extends HttpServlet{
 	private Cache schoolCache;
 
 	private Logger logger;
-	String staffUsername;
-	String schooluuid = "";
+	
 	private PerClassExcelUtil perClassExcelUtil;
-
-	String classuuid = "";
-	String room = "";
 	
 	private static TeacherSubjectDAO teacherSubjectDAO;
 	private static SystemConfigDAO systemConfigDAO;
@@ -66,8 +65,11 @@ public class ScorePerClass extends HttpServlet{
 	private static SubjectDAO subjectDAO;
 	private static StudentDAO studentDAO;
 	private static StreamDAO streamDAO;
+	private static ClassroomDAO classroomDAO;
 	
-
+	private String staffUsername;
+	private String schooluuid = "";
+	
 	/**
 	 *
 	 * @param config
@@ -83,6 +85,10 @@ public class ScorePerClass extends HttpServlet{
 		subjectDAO = SubjectDAO.getInstance();
 		studentDAO = StudentDAO.getInstance();
 		streamDAO = StreamDAO.getInstance();
+		classroomDAO = ClassroomDAO.getInstance();
+		
+		CacheManager mgr = CacheManager.getInstance();
+		schoolCache = mgr.getCache(CacheVariables.CACHE_SCHOOL_ACCOUNTS_BY_USERNAME);
 
 		// Create a factory for disk-based file items
 		DiskFileItemFactory factory = new DiskFileItemFactory();
@@ -107,17 +113,18 @@ public class ScorePerClass extends HttpServlet{
 		File uploadedFile = null;
 		HttpSession session = request.getSession(false);
 
-
 		String schoolusername = (String) session.getAttribute(SessionConstants.ACCOUNT_SIGN_IN_KEY);
 		staffUsername = (String) session.getAttribute(SessionConstants.STAFF_SIGN_IN_USERNAME);
 		
+		 //System.out.println("schoolusername " + schoolusername + " staffUsername " + staffUsername);
+		 
 		Account school = new Account();
 		Element element;
 		if ((element = schoolCache.get(schoolusername)) != null) {
 			school = (Account) element.getObjectValue();
 			schooluuid = school.getUuid();
 		}
-
+		
 		// Create a factory for disk-based file items
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 
@@ -143,7 +150,6 @@ public class ScorePerClass extends HttpServlet{
 					if(item!=null){
 						uploadedFile = processUploadedFile(item);
 						String feedback = "";
-
 						if(uploadedFile !=null){
 							feedback = perClassExcelUtil.inspectResultFile(uploadedFile,schooluuid,streamDAO,subjectDAO,teacherSubjectDAO,studentDAO);
 						}
@@ -152,7 +158,7 @@ public class ScorePerClass extends HttpServlet{
 						// Process the file into the database if it is ok
 						if(StringUtils.equals(feedback, UPLOAD_SUCCESS)) {
 							if(uploadedFile !=null){
-								perClassExcelUtil.saveResults(uploadedFile,school,examEngineDAO,studentDAO,streamDAO,subjectDAO,systemConfigDAO); 
+								perClassExcelUtil.saveResults(uploadedFile,school,examEngineDAO,studentDAO,streamDAO,classroomDAO,subjectDAO,systemConfigDAO); 
 							}
 						}
 
@@ -166,7 +172,7 @@ public class ScorePerClass extends HttpServlet{
 			logger.error(e);
 		} 
 		
-		 response.sendRedirect("perclassUpload.jsp");
+		 response.sendRedirect("examUpload.jsp");
 	     return;
 
 	}
@@ -179,7 +185,7 @@ public class ScorePerClass extends HttpServlet{
 	 */
 	private File processUploadedFile(FileItem item) {
 		// A specific folder in the system
-		String folder = UPLOAD_DIR + File.separator +staffUsername;
+		String folder = UPLOAD_DIR + File.separator + staffUsername;
 		File file = null;
 
 		try {
@@ -197,4 +203,6 @@ public class ScorePerClass extends HttpServlet{
 		} 
 		return file;
 	}
+	
+	
 }

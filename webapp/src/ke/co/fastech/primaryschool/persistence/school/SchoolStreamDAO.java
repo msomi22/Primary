@@ -28,7 +28,7 @@ public interface SchoolStreamDAO {
 	 * @param streamName
 	 * @return
 	 */
-	public Stream getStream(String streamName);
+	public Stream getStream(String streamName,String accountUuid);
 	/**
 	 * 
 	 * @param stream
@@ -45,6 +45,6 @@ public interface SchoolStreamDAO {
 	 * 
 	 * @return
 	 */
-	public List<Stream> getStreamList();
+	public List<Stream> getStreamList(String accountUuid);
 
 }

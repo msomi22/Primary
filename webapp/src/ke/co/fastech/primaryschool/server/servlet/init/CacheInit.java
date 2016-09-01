@@ -90,9 +90,9 @@ public class CacheInit extends HttpServlet {
         objList = accountDAO.getAllAccounts();
         initCacheByUuid(CacheVariables.CACHE_SCHOOL_ACCOUNTS_BY_UUID, objList);
        
-        initAccountsCache(CacheVariables.CACHE_SCHOOL_ACCOUNTS_BY_UUID);
+        initAccountsCache(CacheVariables.CACHE_SCHOOL_ACCOUNTS_BY_USERNAME);
            
-        initGenericCache(CacheVariables.CACHE_SCHOOL_ACCOUNTS_BY_UUID);
+        initGenericCache(CacheVariables.CACHE_STATISTICS_BY_SCHOOL_ACCOUNT); 
               
     }
     
@@ -149,9 +149,9 @@ public class CacheInit extends HttpServlet {
 
             List<Account> allAccounts = accountDAO.getAllAccounts();
 
-            if (StringUtils.equals(cacheName, CacheVariables.CACHE_SCHOOL_ACCOUNTS_BY_UUID)) {
+            if (StringUtils.equals(cacheName, CacheVariables.CACHE_SCHOOL_ACCOUNTS_BY_USERNAME)) {
                 for (Account a : allAccounts) {
-                    accountsCache.put(new Element(a.getUuid(), a));		// Uuid as the key
+                    accountsCache.put(new Element(a.getUsername(), a));		// username as the key
                 }
             }
         }

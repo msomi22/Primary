@@ -24,7 +24,7 @@ public interface SchoolOtherMoneyDAO {
 	 * @param year
 	 * @return
 	 */
-	public OtherMoney getOtherMoney(String description,String term,String year);
+	public OtherMoney getOtherMoney(String description,String term,String year,String accountUuid);
 	/**
 	 * 
 	 * @param otherMoney
@@ -49,11 +49,11 @@ public interface SchoolOtherMoneyDAO {
 	 * @param year
 	 * @return
 	 */
-	public List<OtherMoney> getOtherMoneyList(String term,String year);
+	public List<OtherMoney> getOtherMoneyList(String term,String year,String accountUuid);
 	/*
 	 * 
 	 */
-	public List<OtherMoney> getOtherMoneyList();
+	public List<OtherMoney> getOtherMoneyList(String accountUuid);
 	
 	
 

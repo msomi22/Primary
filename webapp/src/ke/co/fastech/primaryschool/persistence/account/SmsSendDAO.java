@@ -13,7 +13,6 @@ import org.apache.commons.dbutils.BeanProcessor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 
-import ke.co.fastech.primaryschool.bean.library.StudentBook;
 import ke.co.fastech.primaryschool.bean.school.account.SmsSend;
 import ke.co.fastech.primaryschool.persistence.GenericDAO;
 

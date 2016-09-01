@@ -34,6 +34,8 @@ public class TestTermFeeDAO {
 	
 	private TermFeeDAO store;
 	
+	private final String ACCOUNT_UUID = "9DEDDC49-444E-499B-BDB9-D6625D2F79F4";
+	
 	private String UUID = "3ED61507-2CBB-4414-83BD-3274D2FE3954";
 	private final String TERM = "1";
 	private final String YEAR = "2016";
@@ -79,7 +81,7 @@ public class TestTermFeeDAO {
 	@Test
 	public final void testGetTermFeeListStringString() {
 		store = new TermFeeDAO(databaseName, Host, databaseUsername, databasePassword, databasePort);
-		List<TermFee> feeList = store.getTermFeeList(TERM, YEAR);
+		List<TermFee> feeList = store.getTermFeeList(TERM, YEAR,ACCOUNT_UUID);
 		for(TermFee fee : feeList){
 			System.out.println(fee); 
 		}
@@ -92,7 +94,7 @@ public class TestTermFeeDAO {
 	@Test
 	public final void testGetTermFeeList() {
 		store = new TermFeeDAO(databaseName, Host, databaseUsername, databasePassword, databasePort);
-		List<TermFee> feeList = store.getTermFeeList();
+		List<TermFee> feeList = store.getTermFeeList(ACCOUNT_UUID);
 		for(TermFee fee : feeList){
 			System.out.println(fee); 
 		}

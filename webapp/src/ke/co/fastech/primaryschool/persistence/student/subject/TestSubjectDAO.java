@@ -69,7 +69,7 @@ public class TestSubjectDAO {
 	/**
 	 * Test method for {@link ke.co.fastech.primaryschool.persistence.student.subject.SubjectDAO#getSubjectList()}.
 	 */
-	@Ignore
+	//@Ignore
 	@Test
 	public final void testGetSubjectList() {
 		store = new SubjectDAO(databaseName, Host, databaseUsername, databasePassword, databasePort);

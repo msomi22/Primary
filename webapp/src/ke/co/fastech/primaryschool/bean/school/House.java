@@ -16,6 +16,7 @@ import ke.co.fastech.primaryschool.bean.StorableBean;
  */
 public class House extends StorableBean{
 	
+	private String accountUuid;
 	private String houseName;
 
 	/**
@@ -23,9 +24,24 @@ public class House extends StorableBean{
 	 */
 	public House() {
 		super();
+		accountUuid = "";
 		houseName = "";
 	}
 	
+	/**
+	 * @return the accountUuid
+	 */
+	public String getAccountUuid() {
+		return accountUuid;
+	}
+
+	/**
+	 * @param accountUuid the accountUuid to set
+	 */
+	public void setAccountUuid(String accountUuid) {
+		this.accountUuid = accountUuid;
+	}
+
 	/**
 	 * @return the houseName
 	 */
@@ -46,6 +62,8 @@ public class House extends StorableBean{
 		builder.append("House");
 		builder.append("[getUuid() = ");
 		builder.append(getUuid());
+		builder.append(", accountUuid = ");
+		builder.append(accountUuid);
 		builder.append(", houseName = ");
 		builder.append(houseName);
 		builder.append("]");

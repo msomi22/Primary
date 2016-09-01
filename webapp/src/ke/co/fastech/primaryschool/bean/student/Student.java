@@ -17,6 +17,7 @@ import ke.co.fastech.primaryschool.bean.StorableBean;
  */
 public class Student extends StorableBean implements Comparable<Student>{
 	
+	private String accountUuid;
 	private String statusUuid;
 	private String streamUuid;
 	private String admmissinNo;
@@ -42,6 +43,7 @@ public class Student extends StorableBean implements Comparable<Student>{
 	 */
 	public Student() {
 		super();
+		accountUuid = "";
 		statusUuid = "";
 		streamUuid = "";
 		admmissinNo = "";
@@ -63,6 +65,20 @@ public class Student extends StorableBean implements Comparable<Student>{
 		admissiondate = new Date();
 	}
 	
+	/**
+	 * @return the accountUuid
+	 */
+	public String getAccountUuid() {
+		return accountUuid;
+	}
+
+	/**
+	 * @param accountUuid the accountUuid to set
+	 */
+	public void setAccountUuid(String accountUuid) {
+		this.accountUuid = accountUuid;
+	}
+
 	/**
 	 * @return the statusUuid
 	 */
@@ -95,7 +111,7 @@ public class Student extends StorableBean implements Comparable<Student>{
 	 * @return the admmissinNo
 	 */
 	public String getAdmmissinNo() {
-		return admmissinNo;
+		return admmissinNo.substring(0, Math.min(admmissinNo.length(), 4));
 	}
 
 	/**
@@ -334,6 +350,8 @@ public class Student extends StorableBean implements Comparable<Student>{
 		StringBuilder builder = new StringBuilder();
 		builder.append("Student [getUuid() =");
 		builder.append(getUuid());
+		builder.append(", accountUuid = ");
+		builder.append(accountUuid);
 		builder.append(",statusUuid =");
 		builder.append(statusUuid);		
 		builder.append(",streamUuid =");

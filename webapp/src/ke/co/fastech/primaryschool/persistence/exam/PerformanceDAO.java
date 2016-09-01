@@ -124,17 +124,18 @@ public class PerformanceDAO extends GenericDAO implements SchoolPerformanceDAO {
 	 * @see ke.co.fastech.primaryschool.persistence.exam.SchoolPerformanceDAO#getStudentDistinctByStreamId(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	
-	public List<ExamResult> getStudentDistinctByStreamId(String streamUuid,String term, String year) {
+	public List<ExamResult> getStudentDistinctByStreamId(String accountUuid,String streamUuid,String term, String year) {
 		List<ExamResult> list = null;
 
         try (
         		 Connection conn = dbutils.getConnection();
      	         PreparedStatement pstmt = conn.prepareStatement("SELECT DISTINCT studentUuid FROM  Performance WHERE "
-     	         		+ " streamUuid = ? AND term = ? AND year = ?;");    		   
+     	         		+ " accountUuid = ? AND streamUuid = ? AND term = ? AND year = ?;");    		   
      	   ) {
-         	   pstmt.setString(1, streamUuid);  
-         	   pstmt.setString(2, term); 
-       	       pstmt.setString(3, year); 
+         	   pstmt.setString(1, accountUuid); 
+         	   pstmt.setString(2, streamUuid); 
+         	   pstmt.setString(3, term); 
+       	       pstmt.setString(4, year); 
          	   try( ResultSet rset = pstmt.executeQuery();){
      	       
      	       list = beanProcessor.toBeanList(rset, ExamResult.class);
@@ -152,17 +153,18 @@ public class PerformanceDAO extends GenericDAO implements SchoolPerformanceDAO {
 	 * @see ke.co.fastech.primaryschool.persistence.exam.SchoolPerformanceDAO#getStudentDistinctByClassId(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public List<ExamResult> getStudentDistinctByClassId(String classUuid,String term, String year) {
+	public List<ExamResult> getStudentDistinctByClassId(String accountUuid,String classUuid,String term, String year) {
 		List<ExamResult> list = null;
 
         try (
         		 Connection conn = dbutils.getConnection();
      	         PreparedStatement pstmt = conn.prepareStatement("SELECT DISTINCT studentUuid FROM  Performance WHERE "
-     	         		+ " classUuid = ? AND term = ? AND year = ?;");    		   
+     	         		+ "accountUuid = ? AND classUuid = ? AND term = ? AND year = ?;");    		   
      	   ) {
-         	   pstmt.setString(1, classUuid);  
-         	   pstmt.setString(2, term); 
-       	       pstmt.setString(3, year); 
+         	   pstmt.setString(1, accountUuid);  
+         	   pstmt.setString(2, classUuid);  
+         	   pstmt.setString(3, term); 
+       	       pstmt.setString(4, year); 
          	   try( ResultSet rset = pstmt.executeQuery();){
      	       
      	       list = beanProcessor.toBeanList(rset, ExamResult.class);
@@ -174,6 +176,71 @@ public class PerformanceDAO extends GenericDAO implements SchoolPerformanceDAO {
             System.out.println(ExceptionUtils.getStackTrace(e));
         }
         return list;
+	}
+
+	/**
+	 * @see ke.co.fastech.primaryschool.persistence.exam.SchoolPerformanceDAO#getSubjectCountPerStream(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public int getSubjectCountPerStream(String accountUuid,String subjectUuid, String streamUuid, String term, String year) {
+		int count = 0;
+		ResultSet rset = null;
+        try (
+        		 Connection conn = dbutils.getConnection();
+     	         PreparedStatement pstmt = conn.prepareStatement("SELECT COUNT(*) FROM performance WHERE accountUuid =? AND subjectuuid =? AND streamuuid =? AND term =? AND year =?;");    		   
+ 	    ) {
+        	   
+        	
+        	pstmt.setString(1, accountUuid);
+        	pstmt.setString(2, subjectUuid);
+        	pstmt.setString(3, streamUuid);
+        	pstmt.setString(4, term);
+        	pstmt.setString(5, year);
+        	rset = pstmt.executeQuery();
+        
+          	  while(rset.next()){
+   	       		count = rset.getInt("count");
+          	  }
+   	       	
+        } catch (SQLException e) {
+            logger.error("SQLException when getting count from performance:");
+            logger.error(ExceptionUtils.getStackTrace(e));
+        }
+		
+		return count;
+	}
+
+	/**
+	 * @see ke.co.fastech.primaryschool.persistence.exam.SchoolPerformanceDAO#getSubjectCountPerClass(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public int getSubjectCountPerClass(String accountUuid,String subjectUuid, String classUuid, String term, String year) {
+		int count = 0;
+		ResultSet rset = null;
+        try (
+        		 Connection conn = dbutils.getConnection();
+     	         PreparedStatement pstmt = conn.prepareStatement("SELECT COUNT(*) FROM performance WHERE accountUuid =? AND subjectuuid =? AND classUuid =? AND term =? AND year =?;");    		   
+ 	    ) {
+        	   
+        	
+        	pstmt.setString(1, accountUuid);
+        	pstmt.setString(2, subjectUuid);
+        	pstmt.setString(3, classUuid);
+        	pstmt.setString(4, term);
+        	pstmt.setString(5, year);
+        	rset = pstmt.executeQuery();
+        	
+        	while(rset.next()){
+   	       		count = rset.getInt("count");
+          	  }
+
+ 	       
+        } catch (SQLException e) {
+            logger.error("SQLException when getting count from performance:");
+            logger.error(ExceptionUtils.getStackTrace(e));
+        }
+		
+		return count;
 	}
 
 

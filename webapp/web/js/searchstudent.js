@@ -27,7 +27,7 @@
     
       var request=getRequestObject();
       request.onreadystatechange =function() { handleResponse(request); };
-       request.open("get", "../school/studentsearch.jsp?"+data, true);
+       request.open("get", "../primary/studentsearch.jsp?"+data, true);
        request.send(); 
   }
 //end of onKeyu/Up function
@@ -40,7 +40,7 @@ function handleResponse(request) {
              $('.tabledit').remove();
              $('#pagination').hide();   
                  response=request.responseText;
-                 //console.log(response);
+                // console.log(response);
               $('.tablebody').append(response);                               
         }
 }

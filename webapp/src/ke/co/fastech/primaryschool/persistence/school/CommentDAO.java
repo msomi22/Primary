@@ -95,7 +95,7 @@ public class CommentDAO extends GenericDAO implements SchoolCommentDAO {
 				PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Comment" 
 			        		+"(Uuid,accountUuid,headTeacherCom,gradeAplaincom,gradeAminuscom,gradeBpluscom,gradeBplaincom,"
 			        		+ "gradeBminuscom,gradeCpluscom,gradeCplaincom,gradeCminuscom,gradeDpluscom,"
-			        		+ "gradeDplaincom,gradeDminuscom,gradeEcom) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?);");
+			        		+ "gradeDplaincom,gradeDminuscom,gradeEcom) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);");
 		             ){
 			   
 	            pstmt.setString(1, comment.getUuid());
@@ -135,7 +135,7 @@ public class CommentDAO extends GenericDAO implements SchoolCommentDAO {
 		try (  Connection conn = dbutils.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement("UPDATE Comment SET HeadTeacherCom = ?,GradeAplaincom =?,GradeAminuscom =?,"
 						+ "GradeBpluscom =?,GradeBplaincom =?,GradeBminuscom=?, GradeCpluscom =?, GradeCplaincom =?,"
-						+ "GradeCminuscom =?,GradeDpluscom =?, GradeDplaincom =?, GradeDminuscom =?, GradeEcom =? WHERE Uuid = ?;");
+						+ "GradeCminuscom =?,GradeDpluscom =?, GradeDplaincom =?, GradeDminuscom =?, GradeEcom =? WHERE accountUuid = ?;");
 				) { 
 			
 	            pstmt.setString(1, comment.getHeadTeacherCom());
@@ -151,7 +151,7 @@ public class CommentDAO extends GenericDAO implements SchoolCommentDAO {
 	            pstmt.setString(11, comment.getGradeDplaincom());
 	            pstmt.setString(12, comment.getGradeDminuscom());
 	            pstmt.setString(13, comment.getGradeEcom()); 
-	            pstmt.setString(14, comment.getUuid());
+	            pstmt.setString(14, comment.getAccountUuid());
 			    pstmt.executeUpdate();
 
 		} catch (SQLException e) {

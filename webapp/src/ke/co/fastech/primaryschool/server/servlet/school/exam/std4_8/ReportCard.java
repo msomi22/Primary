@@ -171,11 +171,8 @@ public class ReportCard extends HttpServlet{
 
 		response.setContentType("application/pdf");
 
-		String accountuuid = "9DEDDC49-444E-499B-BDB9-D6625D2F79F4";
-		String streamuuid = "2B0F8F79-DEF2-419D-9A76-17450B5CF768";
-
-		/*accountuuid =request.getParameter("accountuuid");
-		 streamuuid = request.getParameter("streamuuid");*/
+		String accountuuid =request.getParameter("accountuuid");
+		String streamuuid = request.getParameter("streamuuid");
 
 		Account school = new Account();
 
@@ -183,6 +180,11 @@ public class ReportCard extends HttpServlet{
 		if ((element = accountCache.get(accountuuid)) != null) {
 			school = (Account) element.getObjectValue();
 		}
+		
+
+		SystemConfig systemConfig = systemConfigDAO.getSystemConfig(school.getUuid()); 
+		Stream stream = streamDAO.getStreamById(streamuuid); 
+
 
 		schoolname = school.getSchoolName().toUpperCase()+"\n";
 		PDF_SUBTITLE =  "P.O BOX "+school.getSchoolAddres()+"\n" 
@@ -192,10 +194,7 @@ public class ReportCard extends HttpServlet{
 				+ "" + school.getSchoolMotto()+"\n";
 
 		title = "_____________________________________ \n"
-				+ " End of Term Report Card "+"\n";
-
-		SystemConfig systemConfig = systemConfigDAO.getSystemConfig(school.getUuid()); 
-		Stream stream = streamDAO.getStreamById(streamuuid); 
+				+ " End of Term Report Card for : TERM " + systemConfig.getTerm() + " YEAR : " + systemConfig.getYear() + "   "+"\n";
 
 		systemConfig.getTerm();
 		systemConfig.getYear();
@@ -213,11 +212,18 @@ public class ReportCard extends HttpServlet{
 				classuuid = room.getUuid();
 			}
 		}
+		
+		String fileName = new StringBuffer(StringUtils.trimToEmpty("ReportCards")) 
+				.append("_")
+				.append(stream.getStreamName().replaceAll(" ", "_"))
+				.append(".pdf")
+				.toString();
+		response.setHeader("Content-Disposition", "inline; filename=\""+fileName);
 
 		List<Student> studentList  = new ArrayList<Student>(); 
-		studentList = studentDAO.getStudentsList();
+		studentList = studentDAO.getStudentsList(accountuuid);
 		for(Student stu : studentList){
-			studentAdmNoHash.put(stu.getUuid(),stu.getAdmmissinNo()); 
+			studentAdmNoHash.put(stu.getUuid(),stu.getAdmmissinNo().substring(0, Math.min(stu.getAdmmissinNo().length(), 4))); 
 
 			String formatedFirstname = StringUtils.capitalize(stu.getFirstname().toLowerCase());
 			String formatedmiddle = StringUtils.capitalize(stu.getMiddlename().toLowerCase());
@@ -232,8 +238,8 @@ public class ReportCard extends HttpServlet{
 		}
 
 
-		List<ExamResult> classdistinctlist = performanceDAO.getStudentDistinctByClassId(classuuid, systemConfig.getTerm(), systemConfig.getYear());
-		List<ExamResult> streamdistinctlist = performanceDAO.getStudentDistinctByStreamId(streamuuid, systemConfig.getTerm(), systemConfig.getYear());
+		List<ExamResult> classdistinctlist = performanceDAO.getStudentDistinctByClassId(school.getUuid(),classuuid, systemConfig.getTerm(), systemConfig.getYear());
+		List<ExamResult> streamdistinctlist = performanceDAO.getStudentDistinctByStreamId(school.getUuid(),streamuuid, systemConfig.getTerm(), systemConfig.getYear());
 
 		document = new Document(PageSize.A4, 46, 46, 64, 64);
 
@@ -272,15 +278,16 @@ public class ReportCard extends HttpServlet{
 		try {
 
 			document.open();
+			document.add(new Paragraph("."));
 
 			PdfPTable prefaceTable = new PdfPTable(2);  
 			prefaceTable.setWidthPercentage(100); 
 			prefaceTable.setWidths(new int[]{70,130}); 
 
 			Paragraph content = new Paragraph();
-			content.add(new Paragraph((schoolname +"") , boldCourierText14));
-			content.add(new Paragraph((PDF_SUBTITLE +"") , boldCourierText10));
-			content.add(new Paragraph((title) , boldNewRoman8));
+			content.add(new Paragraph((schoolname +"") , boldCourierText14));//
+			content.add(new Paragraph((PDF_SUBTITLE +"") , boldNewRoman8));
+			content.add(new Paragraph((title +" \n\n\n") , boldCourierText10));
 
 			PdfPCell contentcell = new PdfPCell(content);
 			contentcell.setBorder(Rectangle.NO_BORDER); 
@@ -308,15 +315,15 @@ public class ReportCard extends HttpServlet{
 			prefaceTable.addCell(logo); 
 			prefaceTable.addCell(contentcell);
 
-			double total = 0;
+			//double total = 0;
 			String subject = "";
-			double OMEtotal,openerScore,midtermScore,endtermScore = 0;
+			double openerScore,midtermScore,endtermScore = 0;
 
 			Map<String,Double> openermap = new LinkedHashMap<String,Double>();
 			Map<String,Double> midtermmap = new LinkedHashMap<String,Double>();
 			Map<String,Double> endtermmap = new LinkedHashMap<String,Double>();
 			Map<String,String> endTermclassPosmmap = new LinkedHashMap<String,String>();
-			Map<String,Integer> endTermclassPosmmap2 = new LinkedHashMap<String,Integer>();
+			//Map<String,Integer> endTermclassPosmmap2 = new LinkedHashMap<String,Integer>();
 			int classStudentCount = 0;
 			int classStudentTotal = 0; 
 
@@ -334,7 +341,7 @@ public class ReportCard extends HttpServlet{
 					midtermScore = classscores.getMidterm();
 					endtermScore = classscores.getEndterm();
 
-					OMEtotal = openerScore + midtermScore + endtermScore;
+					//OMEtotal = openerScore + midtermScore + endtermScore;
 					subject = classscores.getSubjectUuid();
 
 					openerTotal += computationEngine.computeOpener(subject,openerScore);
@@ -382,7 +389,7 @@ public class ReportCard extends HttpServlet{
 
 			int OCSCount = 1;// OPENER CLASS STUDENT COUNT MCSC
 			String Ostudentuuid = "";
-			String Ototalmarks  = "";
+			String Ototalmarks  = "0";
 			String Opos = "";
 			int Oposition = 1;
 			double Omean = 0;
@@ -428,7 +435,7 @@ public class ReportCard extends HttpServlet{
 
 			int MCSCount = 1;// MIDTERM CLASS STUDENT COUNT MCSC
 			String Mstudentuuid = "";
-			String Mtotalmarks  = "";
+			String Mtotalmarks  = "0";
 			String Mpos = "";
 			double Mmean = 0;
 			double Mnumber = 0;
@@ -472,12 +479,12 @@ public class ReportCard extends HttpServlet{
 
 			int ETCSCount = 1;//END TERM  CLASS STUDENT COUNT ETSC
 			String Estudentuuid = "";// E = END TERM
-			String Etotalmarks  = "";
+			String Etotalmarks  = "0";
 			String Epos = "";
 			double Emean = 0;
 			double Enumber = 0;
 			int Eposition = 1;
-			int classPosition1 =  0;
+			//int classPosition1 =  0;
 			for(Object o : endtermList){
 				String items = String.valueOf(o);
 				String [] item = items.split("=");
@@ -487,24 +494,27 @@ public class ReportCard extends HttpServlet{
 				Emean = Double.parseDouble(Etotalmarks)/5;
 				if(Emean==Enumber){
 					Epos = (" " +(ETCSCount-Eposition++)+ " / " + classStudentTotal);
-					classPosition1 = (ETCSCount-Eposition++);
+					//classPosition1 = Math.abs((ETCSCount-Eposition++));
 				}else{
 					Eposition=1;
 					Epos = (" " +ETCSCount+ " / " + classStudentTotal);
-					classPosition1 = ETCSCount;
+					//classPosition1 = Math.abs(ETCSCount); 
+
 					endTermclassPosmmap.put(Estudentuuid, Epos); 
-					endTermclassPosmmap2.put(Estudentuuid, classPosition1);
+					//endTermclassPosmmap2.put(Estudentuuid, classPosition1);
 				}
 
 				//save mean and positions
 				double weight = 0;
 				weight = (Emean/100)*12; 
-				meanScoreDAO.putMeanScore(Emean, 0, classPosition1, Estudentuuid, systemConfig.getTerm(), systemConfig.getYear());
+				meanScoreDAO.putMeanScore(Emean,"0", Epos, Estudentuuid, systemConfig.getTerm(), systemConfig.getYear());
 				barWeightDAO.putWeight(weight, Estudentuuid, systemConfig.getTerm(), systemConfig.getYear());
-
+				//System.out.println("student " + Estudentuuid + " mean " + Emean + " pos " + classPosition1);
 
 				ETCSCount++;
 				Enumber=Emean;
+
+
 
 			}
 
@@ -716,8 +726,8 @@ public class ReportCard extends HttpServlet{
 			double ESmean = 0;
 			double ESnumber = 0;
 			int ESposition = 1;
-			int streamPosition = 0;
-			int classPosition = 0;
+			//int streamPosition = 0;
+			String classPosition = "";
 			for(Object o : endtermStreamList){
 				String items = String.valueOf(o);
 				String [] item = items.split("=");
@@ -727,23 +737,29 @@ public class ReportCard extends HttpServlet{
 				ESmean = EStotalmarks/5; 
 				if(ESmean==ESnumber){
 					ESpos = (" " +(ETSSCount-ESposition++)+ " / " + streamStudentTotal);
-					streamPosition = (ETSSCount-ESposition++);
+					//streamPosition = Math.abs((ETSSCount-ESposition++));
 				}else{
 					ESposition=1;
 					ESpos = (" " +ETSSCount+ " / " + streamStudentTotal);
-					streamPosition = ETSSCount;
+					//streamPosition = Math.abs(ETSSCount);
 				}
 
 				//save mean and positions
 				double weight = 0;
 				weight = (ESmean/100)*12; 
-				if(endTermclassPosmmap2.get(ESstudentuuid)!=null){
-					classPosition = endTermclassPosmmap2.get(ESstudentuuid); 
+				if(endTermclassPosmmap.get(ESstudentuuid)!=null){
+					classPosition = endTermclassPosmmap.get(ESstudentuuid); 
 				}
-				meanScoreDAO.putMeanScore(ESmean, streamPosition, classPosition, ESstudentuuid, systemConfig.getTerm(), systemConfig.getYear());
+
+				//System.out.println("student " + ESstudentuuid + " mean " + ESmean + " stream pos " + streamPosition + " class pos " + classPosition);
+				meanScoreDAO.putMeanScore(ESmean, ESpos, classPosition, ESstudentuuid, systemConfig.getTerm(), systemConfig.getYear());
 				barWeightDAO.putWeight(weight, ESstudentuuid, systemConfig.getTerm(), systemConfig.getYear());
 
-				String classteachercomment = classteacherComment(ESstudentuuid,systemConfig,streamuuid); 
+				String classteachercomment = ""; 
+				if(classteacherComment(ESstudentuuid,systemConfig,streamuuid) !=null){
+					classteachercomment = classteacherComment(ESstudentuuid,systemConfig,streamuuid); 
+				}
+				//System.out.println("studentuuid " + ESstudentuuid + " streamuuid " + streamuuid + " term " + systemConfig.getTerm() + " year " + systemConfig.getYear());
 				//class teacher comment table start
 				PdfPTable classTeacherCommentTable = new PdfPTable(2);  
 				classTeacherCommentTable.setWidthPercentage(100); 
@@ -899,8 +915,13 @@ public class ReportCard extends HttpServlet{
 				midTermheader.setBackgroundColor(baseColor);
 				midTermheader.setHorizontalAlignment(Element.ALIGN_LEFT);
 
+				String etclasspos = "";
+				if(endTermclassPosmmap.get(ESstudentuuid) !=null){
+					etclasspos = endTermclassPosmmap.get(ESstudentuuid);
+				}
+
 				PdfPCell endTermheader = new PdfPCell(new Paragraph("END-TERM EXAM ANALYSIS \n\n"
-						+ "Stream Pos:  " + ESpos + " \t\t Class Pos:  " + endTermclassPosmmap.get(ESstudentuuid) + " \n" 
+						+ "Stream Pos:  " + ESpos + " \t\t Class Pos:  " + etclasspos + " \n" 
 						+ "Total Marks:  " + df.format(EStotalmarks) + " / 500    \n" , normalNewRoman7));
 				endTermheader.setBackgroundColor(baseColor);
 				endTermheader.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -1139,80 +1160,81 @@ public class ReportCard extends HttpServlet{
 				sstEndtermscore  = 0;creEndtermscore = 0;
 
 				//TODO year performance
-				
+
 				String t1streamposStr = "",t1classposStr = "";
 				String t1meanStr = "0";
-				
+
 				String t2streamposStr = "",t2classposStr = "";
 				String t2meanStr = "0";
-				
+
 				String t3streamposStr = "",t3classposStr = "";
 				String t3meanStr = "0";
-				
+
 				if(meanScoreDAO.getMeanScore(ESstudentuuid,"1",systemConfig.getYear()) !=null){
 					MeanScore termOnemeanscore = meanScoreDAO.getMeanScore(ESstudentuuid,"1",systemConfig.getYear()); 
-					if(termOnemeanscore.getStreamPosition() != 0){
-						t1streamposStr = Integer.toString(termOnemeanscore.getStreamPosition());
+					if(termOnemeanscore.getStreamPosition() !=null){
+						t1streamposStr = termOnemeanscore.getStreamPosition();
 					}else{
 						t1streamposStr = "";
 					}
-					
-					if(termOnemeanscore.getClassPosition() != 0){
-						t1classposStr = Integer.toString(termOnemeanscore.getClassPosition());
+					//System.out.println("student " + ESstudentuuid + " pos " + t1streamposStr);
+
+					if(termOnemeanscore.getClassPosition() !=null){
+						t1classposStr = termOnemeanscore.getClassPosition();
 					}else{
 						t1classposStr = "";
 					}
-					
+
 					if(termOnemeanscore.getMeanScore() != 0){
 						t1meanStr = df.format(termOnemeanscore.getMeanScore());
 					}else{
-						t1meanStr = "";
+						t1meanStr = "0";
 					}
-					
+
 				}
 
 				if(meanScoreDAO.getMeanScore(ESstudentuuid,"2",systemConfig.getYear()) !=null){
 					MeanScore termTwomeanscore = meanScoreDAO.getMeanScore(ESstudentuuid,"2",systemConfig.getYear()); 
-					if(termTwomeanscore.getStreamPosition() != 0){
-						t2streamposStr = Integer.toString(termTwomeanscore.getStreamPosition());
+					if(termTwomeanscore.getStreamPosition() !=null){
+						t2streamposStr = termTwomeanscore.getStreamPosition();
 					}else{
 						t2streamposStr = "";
 					}
-					
-					if(termTwomeanscore.getClassPosition() != 0){
-						t2classposStr = Integer.toString(termTwomeanscore.getClassPosition());
+
+					if(termTwomeanscore.getClassPosition() !=null){
+						t2classposStr = termTwomeanscore.getClassPosition();
 					}else{
 						t2classposStr = "";
 					}
-					
+
 					if(termTwomeanscore.getMeanScore() != 0){
 						t2meanStr = df.format(termTwomeanscore.getMeanScore());
 					}else{
-						t2meanStr = "";
+						t2meanStr = "0";
 					}
 				}
 
 				if(meanScoreDAO.getMeanScore(ESstudentuuid,"3",systemConfig.getYear()) !=null){
 					MeanScore termThreemeanscore = meanScoreDAO.getMeanScore(ESstudentuuid,"3",systemConfig.getYear()); 
-					if(termThreemeanscore.getStreamPosition() != 0){
-						t3streamposStr = Integer.toString(termThreemeanscore.getStreamPosition());
+					if(termThreemeanscore.getStreamPosition() !=null){
+						t3streamposStr = termThreemeanscore.getStreamPosition();
 					}else{
 						t3streamposStr = "";
 					}
-					
-					if(termThreemeanscore.getClassPosition() != 0){
-						t3classposStr = Integer.toString(termThreemeanscore.getClassPosition());
+
+					if(termThreemeanscore.getClassPosition() !=null){
+						t3classposStr = termThreemeanscore.getClassPosition();
 					}else{
 						t3classposStr = "";
 					}
-					
+
 					if(termThreemeanscore.getMeanScore() != 0){
 						t3meanStr = df.format(termThreemeanscore.getMeanScore());
 					}else{
-						t3meanStr = "";
+						t3meanStr = "0";
 					}
 				}
-				
+
 				PdfPCell termOneheader = new PdfPCell(new Paragraph("TERM 1 ANALYSIS \n\n"
 						+ "Stream Pos:  " + t1streamposStr + " \t\t\t\t\t Class Pos:  " + t1classposStr + " \n" 
 						+ "Mean:  " + t1meanStr + " Grade \t\t\t\t\t " + computeGrade(Double.parseDouble(t1meanStr))+" \n" , normalNewRoman7));
@@ -1230,7 +1252,8 @@ public class ReportCard extends HttpServlet{
 						+ "Mean:  " + t3meanStr + " Grade \t\t\t\t\t " + computeGrade(Double.parseDouble(t3meanStr))+" \n" , normalNewRoman7));
 				termThreeheader.setBackgroundColor(baseColor);
 				termThreeheader.setHorizontalAlignment(Element.ALIGN_LEFT);
-				
+
+				//System.out.println("student " + Estudentuuid + " mean " + Emean + " pos " + classPosition1);
 
 				PdfPTable yearPerformanceTable = new PdfPTable(3);   
 				yearPerformanceTable.setWidthPercentage(100); 
@@ -1240,8 +1263,8 @@ public class ReportCard extends HttpServlet{
 				yearPerformanceTable.addCell(termOneheader);
 				yearPerformanceTable.addCell(termTwoheader); 
 				yearPerformanceTable.addCell(termThreeheader); 
-				
-				
+
+
 				//end year performance
 
 
@@ -1358,7 +1381,7 @@ public class ReportCard extends HttpServlet{
 
 				ETSSCount++;
 				ESnumber=ESmean;
-               
+
 				document.add(emptyline); 
 				document.add(resultTable); 
 				document.add(emptyline); 
@@ -1441,20 +1464,24 @@ public class ReportCard extends HttpServlet{
 		if(lasttermscore !=null){
 			thistermmean = thistermscore.getMeanScore();
 		}
+		//System.out.println("last term " + lastterm + " this term " + lastyear);
+		
 
 		if(lasttermmean < thistermmean && lasttermmean != 0){//improved,ameliorated
-			coment = "You have improved with " + deviationFinder(thistermmean,lasttermmean)+". This term comment : " + thisTermComment(thistermmean); 
+			coment = "You have improved with " + deviationFinder(thistermmean,lasttermmean)+" points. Elsewise, your work for this term is : " + thisTermComment(thistermmean); 
 
 		}else if(lasttermmean < thistermmean && lasttermmean == 0){//no last term exam
-			coment = "Your last term exam was not recorded " +". This term comment : " + thisTermComment(thistermmean);
+			coment = "Your last term exam was not recorded " +". Otherwise, your work for this term is : " + thisTermComment(thistermmean);
 
 		}else if(lasttermmean == thistermmean){//equals
-			coment = "Wake up! No improvement " + ". This term comment " + thisTermComment(thistermmean);
+			coment = "Wake up! No improvement " + ". Otherwise, your work for this term is " + thisTermComment(thistermmean);
 
-		}else if(lasttermmean < thistermmean){//deteriorated,nosedive 
-			coment = "You are nosediving, you have deteriorated with " + deviationFinder(thistermmean,lasttermmean)+". This term comment " + thisTermComment(thistermmean);
+		}else if(lasttermmean > thistermmean){//deteriorated,nosedive 
+			coment = "You are nosediving, you have deteriorated with " + deviationFinder(thistermmean,lasttermmean)+" points. Otherwise, your work for this term is " + thisTermComment(thistermmean);
 
 		}
+		
+		//System.out.println(">> last term " + lastterm + " this term " + systemConfig.getTerm() + " last term mean " + lasttermmean + " this term mean " + thistermmean +" >>"+ deviationFinder(thistermmean,lasttermmean));
 		//find class teacher  
 		String teacherID = "";
 		String teachername = "";
@@ -1468,10 +1495,40 @@ public class ReportCard extends HttpServlet{
 			teachername = staff.getName(); 
 			teachername.substring(0, Math.min(teachername.length(), 10)).toLowerCase();
 		}
-
-		return coment + " ( Teacher : " + teachername + " ) "; 
+		
+		return coment + " .................. Teacher : " + teachername + "  "; 
 	}
 
+	/** Find deviation from last term
+	 * pass thisTermMean following lastTermMean
+	 * @param lastTermMean
+	 * @param thisTermMean
+	 * @return the deviation 
+	 */
+
+	private String deviationFinder(double thisTermMean, double lastTermMean){
+		DecimalFormat df = new DecimalFormat("0.00"); 
+		df.setRoundingMode(RoundingMode.DOWN);	
+		String deviationStr = "";
+		double deviation = 0;
+		if(lastTermMean == 0){
+			deviation = 0;
+		}else{
+			deviation = thisTermMean - lastTermMean;
+		}
+		if(deviation != 0){
+			deviationStr = df.format(deviation);
+		}else{
+			deviationStr = "";
+		}
+
+		return deviationStr;
+	}
+
+	/**
+	 * @param thistermmean
+	 * @return
+	 */
 	private String thisTermComment(double thistermmean) {
 		String thistermComment = "";
 
@@ -1481,29 +1538,29 @@ public class ReportCard extends HttpServlet{
 		double mean = Double.parseDouble(rf.format(thistermmean));
 
 		if(mean >= gradingSystem.getGradeAplain()){
-			thistermComment = "Execellent";
+			thistermComment = " execellent";
 		}else if(mean >= gradingSystem.getGradeAminus()){
-			thistermComment = "Execellent";
+			thistermComment = " execellent";
 		}else if(mean >= gradingSystem.getGradeBplus()){
-			thistermComment = "Good work";
+			thistermComment = " quite good";
 		}else if(mean >= gradingSystem.getGradeBplain()){
-			thistermComment = "Good work";
+			thistermComment = " fairly good";
 		}else if(mean >= gradingSystem.getGradeBminus()){
-			thistermComment = "Good work";
+			thistermComment = " good";
 		}else if(mean >= gradingSystem.getGradeCplus()){
-			thistermComment = "Average";
+			thistermComment = " average";
 		}else if(mean >= gradingSystem.getGradeCplain()){
-			thistermComment = "Average";
+			thistermComment = " slightly below average";
 		}else if(mean >= gradingSystem.getGradeCminus()){
-			thistermComment = "Average";
+			thistermComment = " below average";
 		}else if(mean >= gradingSystem.getGradeDplus()){
-			thistermComment = "Below average";
+			thistermComment = " far below average";
 		}else if(mean >= gradingSystem.getGradeDplain()){
-			thistermComment = "Below average";
+			thistermComment = " quite worrying";
 		}else if(mean >= gradingSystem.getGradeDminus()){
-			thistermComment = "Below average";
+			thistermComment = " horribly poor";
 		}else{
-			thistermComment = "Below average";
+			thistermComment = " horribly poor";
 		}
 
 		if(mean ==0){
@@ -1621,22 +1678,7 @@ public class ReportCard extends HttpServlet{
 		return grade;
 	}
 
-	/** Find deviation from last term
-	 * pass thisTermMean following lastTermMean
-	 * @param lastTermMean
-	 * @param thisTermMean
-	 * @return the deviation 
-	 */
 
-	private double deviationFinder(double thisTermMean, double lastTermMean){
-		double deviation = 0;
-		if(lastTermMean == 0){
-			deviation = 0;
-		}else{
-			deviation = thisTermMean - lastTermMean;
-		}
-		return deviation;
-	}
 
 	/**
 	 * @param score

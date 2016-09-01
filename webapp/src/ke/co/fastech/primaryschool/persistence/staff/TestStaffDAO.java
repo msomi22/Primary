@@ -142,11 +142,11 @@ public class TestStaffDAO {
 	/**
 	 * Test method for {@link ke.co.fastech.primaryschool.persistence.staff.StaffDAO#getStaffList()}.
 	 */
-	@Ignore
+	//@Ignore
 	@Test
 	public final void testGetStaffList() {
 		store = new StaffDAO(databaseName, Host, databaseUsername, databasePassword, databasePort);
-		 List<Staff> list = store.getStaffList();
+		 List<Staff> list = store.getStaffList(ACCOUNT_UUID);
 		 for(Staff sff : list){
 			 System.out.println(sff);
 		 } 

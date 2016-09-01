@@ -8,7 +8,7 @@ package ke.co.fastech.primaryschool.bean.staff;
 
 import ke.co.fastech.primaryschool.bean.StorableBean;
 
-/**
+/** 
  * a class teacher in the school
  * 
  * @author <a href="mailto:mwendapeter72@gmail.com">Peter mwenda</a>
@@ -16,6 +16,7 @@ import ke.co.fastech.primaryschool.bean.StorableBean;
  */
 public class ClassTeacher extends StorableBean{
 	
+	 private String accountUuid;
 	 private String teacherUuid;
 	 private String streamUuid;
 
@@ -24,10 +25,25 @@ public class ClassTeacher extends StorableBean{
 	 */
 	public ClassTeacher() {
 		super();
+		accountUuid = "";
 		teacherUuid = "";
 		streamUuid = "";
 	}
 	
+	/**
+	 * @return the accountUuid
+	 */
+	public String getAccountUuid() {
+		return accountUuid;
+	}
+
+	/**
+	 * @param accountUuid the accountUuid to set
+	 */
+	public void setAccountUuid(String accountUuid) {
+		this.accountUuid = accountUuid;
+	}
+
 	/**
 	 * @return the teacherUuid
 	 */
@@ -62,6 +78,8 @@ public class ClassTeacher extends StorableBean{
 		builder.append("ClassTeacher");
 		builder.append("[getUuid() = ");
 		builder.append(getUuid());
+		builder.append(", accountUuid = ");
+		builder.append(accountUuid);
 		builder.append(", teacherUuid = ");
 		builder.append(teacherUuid);
 		builder.append(", streamUuid = ");

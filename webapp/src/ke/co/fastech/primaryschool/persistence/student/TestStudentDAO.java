@@ -36,6 +36,8 @@ public class TestStudentDAO {
 	
 	private StudentDAO store;
 	
+	private final String ACCOUNT_UUID = "9DEDDC49-444E-499B-BDB9-D6625D2F79F4";
+	
 	private final String STUDENT_UUID = "CA69EB58-7DCA-4E9E-80B1-AC47B63A8C21",
 			             STUDENT_UUID_NEW ="D1A13DE9-36CA-4AF2-9912-02CFEB25D7B7";
 	
@@ -102,7 +104,7 @@ public class TestStudentDAO {
 	public final void testGetStudentByADMNO() {
 		store = new StudentDAO(databaseName, Host, databaseUsername, databasePassword, databasePort);
 		Student s = new Student();
-		s = store.getStudentByADMNO(ADMISSION_NUMBER); 
+		s = store.getStudentByADMNO(ADMISSION_NUMBER,ACCOUNT_UUID); 
 		assertEquals(s.getUuid(),STUDENT_UUID); 
 		assertEquals(s.getStatusUuid(),STATUS_UUID);
 		assertEquals(s.getStreamUuid(),STREAM_UUID);
@@ -134,6 +136,7 @@ public class TestStudentDAO {
 		store = new StudentDAO(databaseName, Host, databaseUsername, databasePassword, databasePort);
 		Student s = new Student();
 		s.setUuid(STUDENT_UUID_NEW);
+		s.setAccountUuid(ACCOUNT_UUID); 
 		s.setStatusUuid(STATUS_UUID);
 		s.setStreamUuid(STREAM_UUID);
 		s.setAdmmissinNo(ADMISSION_NUMBER_NEW);
@@ -194,7 +197,7 @@ public class TestStudentDAO {
 	@Test
 	public final void testGetStudentListByAdmNo() {
 		store = new StudentDAO(databaseName, Host, databaseUsername, databasePassword, databasePort);
-		List<Student> list = store.getStudentListByAdmNo("10");
+		List<Student> list = store.getStudentListByAdmNo("10",ACCOUNT_UUID);
 		for (Student l : list) {
 			System.out.println(l);	
 		}
@@ -207,7 +210,7 @@ public class TestStudentDAO {
 	@Test
 	public final void testGetStudentListByStreamUuid() {
 		store = new StudentDAO(databaseName, Host, databaseUsername, databasePassword, databasePort);
-		List<Student> list = store.getStudentListByStreamUuid("2B0F8F79-DEF2-419D-9A76-17450B5CF768");
+		List<Student> list = store.getStudentListByStreamUuid("2B0F8F79-DEF2-419D-9A76-17450B5CF768",ACCOUNT_UUID);
 		for (Student l : list) {
 			System.out.println(l);	
 		}
@@ -220,7 +223,7 @@ public class TestStudentDAO {
 	@Test
 	public final void testGetStudentsListByLimit() {
 		store = new StudentDAO(databaseName, Host, databaseUsername, databasePassword, databasePort);
-		List<Student> list = store.getStudentsListByLimit(0, 15);
+		List<Student> list = store.getStudentsListByLimit(0, 15,ACCOUNT_UUID);
 		for (Student l : list) {
 			System.out.println(l);	
 		}
@@ -233,7 +236,7 @@ public class TestStudentDAO {
 	@Test
 	public final void testGetStudentsList() {
 		store = new StudentDAO(databaseName, Host, databaseUsername, databasePassword, databasePort);
-		List<Student> list = store.getStudentsList();
+		List<Student> list = store.getStudentsList(ACCOUNT_UUID);
 		for (Student l : list) {
 			System.out.println(l);	
 		}

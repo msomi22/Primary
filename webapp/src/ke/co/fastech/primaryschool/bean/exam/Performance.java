@@ -16,6 +16,7 @@ import ke.co.fastech.primaryschool.bean.StorableBean;
  */
 public class Performance extends StorableBean{
 	
+	private String accountUuid;
 	private String studentUuid;
 	private String subjectUuid;
 	private String streamUuid;
@@ -38,6 +39,20 @@ public class Performance extends StorableBean{
 		  score = 0;
 	}
 	
+	/**
+	 * @return the accountUuid
+	 */
+	public String getAccountUuid() {
+		return accountUuid;
+	}
+
+	/**
+	 * @param accountUuid the accountUuid to set
+	 */
+	public void setAccountUuid(String accountUuid) {
+		this.accountUuid = accountUuid;
+	}
+
 	/**
 	 * @return the studentUuid
 	 */
@@ -143,6 +158,8 @@ public class Performance extends StorableBean{
 	public String toString(){
 		StringBuilder builder = new StringBuilder();
 		builder.append("Performance [");
+		builder.append("accountUuid =");
+		builder.append(accountUuid); 
 		builder.append("studentUuid =");
 		builder.append(studentUuid); 
 		builder.append(", subjectUuid =");

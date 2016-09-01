@@ -16,6 +16,7 @@ import ke.co.fastech.primaryschool.bean.StorableBean;
  */
 public class OtherMoney extends StorableBean{
 	
+	private String accountUuid;
 	private String description;
 	private String term;
 	private String year;
@@ -26,12 +27,27 @@ public class OtherMoney extends StorableBean{
 	 */
 	public OtherMoney() {
 		super();
+		accountUuid = "";
 		description = "";
 		term = "";
 		year = "";
 		amount = 0;
 	}
 	
+	/**
+	 * @return the accountUuid
+	 */
+	public String getAccountUuid() {
+		return accountUuid;
+	}
+
+	/**
+	 * @param accountUuid the accountUuid to set
+	 */
+	public void setAccountUuid(String accountUuid) {
+		this.accountUuid = accountUuid;
+	}
+
 	/**
 	 * @return the description
 	 */
@@ -94,6 +110,8 @@ public class OtherMoney extends StorableBean{
 		builder.append("OtherMoney");
 		builder.append("[getUuid() = ");
 		builder.append(getUuid());
+		builder.append(", accountUuid = ");
+		builder.append(accountUuid);
 		builder.append(", description = ");
 		builder.append(description);
 		builder.append(", term = ");

@@ -86,6 +86,34 @@
       <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.exam.std4_8.StreamPerformanceList</servlet-class>
     </servlet>
 
+    <servlet>
+      <servlet-name>MostImproved</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.exam.std4_8.MostImproved</servlet-class>
+    </servlet>
+
+
+     <servlet>
+      <servlet-name>NewStream</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.account.NewStream</servlet-class>
+    </servlet>
+
+    <servlet>
+      <servlet-name>UpdateStream</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.account.UpdateStream</servlet-class>
+    </servlet>
+
+
+     <servlet>
+      <servlet-name>UpdateSystemConfig</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.account.UpdateSystemConfig</servlet-class>
+    </servlet>
+
+
+     <servlet>
+      <servlet-name>UpdateGradingScale</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.account.UpdateGradingScale</servlet-class>
+    </servlet>
+
 
 
     <!-- Start - money servlets -->
@@ -233,6 +261,46 @@
       <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.student.UpdateStudent</servlet-class>
     </servlet>
 
+    <servlet>
+      <servlet-name>PromotePerStudent</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.student.manage.PromotePerStudent</servlet-class>
+    </servlet>
+
+     <servlet>
+      <servlet-name>PromotePerStream</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.student.manage.PromotePerStream</servlet-class>
+    </servlet>
+
+     <servlet>
+      <servlet-name>DeactivatePerStudent</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.student.manage.DeactivatePerStudent</servlet-class>
+    </servlet>
+
+    <servlet>
+      <servlet-name>DeactivatePerStream</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.student.manage.DeactivatePerStream</servlet-class>
+    </servlet>
+
+     <servlet>
+      <servlet-name>ActivatePerStudent</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.student.manage.ActivatePerStudent</servlet-class>
+    </servlet>
+
+     <servlet>
+      <servlet-name>ActivatePerStream</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.student.manage.ActivatePerStream</servlet-class>
+    </servlet>
+
+
+
+
+
+
+
+
+
+
+
 
 
     <!-- end -student servlets -->
@@ -240,7 +308,7 @@
     <!-- start -student parent servlets -->
 
      <servlet>
-      <servlet-name>UpdateStudent</servlet-name>
+      <servlet-name>FindStudentParent</servlet-name>
       <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.student.parent.FindStudentParent</servlet-class>
     </servlet>
 
@@ -262,6 +330,11 @@
      <servlet>
       <servlet-name>FeeListPerClass</servlet-name>
       <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.export.excel.FeeListPerClass</servlet-class>
+    </servlet>
+
+    <servlet>
+      <servlet-name>ExamList</servlet-name>
+      <servlet-class>ke.co.fastech.primaryschool.server.servlet.school.export.excel.ExamList</servlet-class>
     </servlet>
 
     <servlet>
@@ -367,6 +440,31 @@
         <url-pattern>/primary/streamPerformanceList</url-pattern>
     </servlet-mapping>
 
+     <servlet-mapping>
+        <servlet-name>MostImproved</servlet-name>
+        <url-pattern>/primary/mostImproved</url-pattern>
+    </servlet-mapping>
+
+     <servlet-mapping>
+        <servlet-name>NewStream</servlet-name>
+        <url-pattern>/primary/newStream</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>UpdateStream</servlet-name>
+        <url-pattern>/primary/updateStream</url-pattern>
+    </servlet-mapping>
+
+     <servlet-mapping>
+        <servlet-name>UpdateSystemConfig</servlet-name>
+        <url-pattern>/primary/updateSystemConfig</url-pattern>
+    </servlet-mapping>
+
+     <servlet-mapping>
+        <servlet-name>UpdateGradingScale</servlet-name>
+        <url-pattern>/primary/updateGradingScale</url-pattern>
+    </servlet-mapping>
+
 
     <!-- money mapping -->
 
@@ -456,7 +554,7 @@
 
      <servlet-mapping>
         <servlet-name>NewTeacherSubject</servlet-name>
-        <url-pattern>/primary/newTeacherSubject</url-pattern>
+        <url-pattern>/primary/newTeacherSubject</url-pattern> 
     </servlet-mapping>
 
      <servlet-mapping>
@@ -508,6 +606,36 @@
         <url-pattern>/primary/updateStudent</url-pattern>
     </servlet-mapping>
 
+     <servlet-mapping>
+        <servlet-name>PromotePerStudent</servlet-name>
+        <url-pattern>/primary/promotePerStudent</url-pattern>
+    </servlet-mapping>
+
+     <servlet-mapping>
+        <servlet-name>PromotePerStream</servlet-name>
+        <url-pattern>/primary/promotePerStream</url-pattern>
+    </servlet-mapping>
+
+     <servlet-mapping>
+        <servlet-name>DeactivatePerStudent</servlet-name>
+        <url-pattern>/primary/deactivatePerStudent</url-pattern>
+    </servlet-mapping>
+
+     <servlet-mapping>
+        <servlet-name>DeactivatePerStream</servlet-name>
+        <url-pattern>/primary/deactivatePerStream</url-pattern>
+    </servlet-mapping>
+
+     <servlet-mapping>
+        <servlet-name>ActivatePerStudent</servlet-name>
+        <url-pattern>/primary/activatePerStudent</url-pattern>
+    </servlet-mapping>
+
+     <servlet-mapping>
+        <servlet-name>ActivatePerStream</servlet-name>
+        <url-pattern>/primary/activatePerStream</url-pattern>
+    </servlet-mapping>
+
 
     <!--student mapping  end-->
 
@@ -538,6 +666,11 @@
      <servlet-mapping>
         <servlet-name>FeeListPerClass</servlet-name>
         <url-pattern>/primary/feeListPerClass</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ExamList</servlet-name>
+        <url-pattern>/primary/examList</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

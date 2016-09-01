@@ -28,7 +28,7 @@ public interface SchoolHouseDAO {
 	 * @param houseName
 	 * @return
 	 */
-	public House getHouseByName(String houseName);
+	public House getHouseByName(String houseName,String accountUuid);
 	/**
 	 * 
 	 * @param house
@@ -45,6 +45,6 @@ public interface SchoolHouseDAO {
 	 * 
 	 * @return
 	 */
-	public List<House> getHouseList();
+	public List<House> getHouseList(String accountUuid);
 
 }

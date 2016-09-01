@@ -55,6 +55,6 @@ public interface SchoolTeacherClassDAO {
 	 * 
 	 * @return
 	 */
-	public List<ClassTeacher> getClassTeacherList();
+	public List<ClassTeacher> getClassTeacherList(String accountUuid); 
 
 }

@@ -84,21 +84,81 @@ public class StudentDAO extends GenericDAO implements SchoolStudentDAO {
      }
 		return student; 
 	}
+	
+
+	/**
+	 * @see ke.co.fastech.primaryschool.persistence.student.SchoolStudentDAO#getStudentBystatus(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public Student getStudentBystatus(String admmissinNo, String statusUuid,String accountUuid) {
+		Student student = null;
+        ResultSet rset = null;
+     try(
+     		 Connection conn = dbutils.getConnection();
+        	      PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM Student WHERE admmissinNo = ? AND statusUuid = ? AND accountUuid =?;");       
+     		
+     		){
+     	
+     	 pstmt.setString(1, admmissinNo);
+     	 pstmt.setString(2, statusUuid);
+     	 pstmt.setString(3, accountUuid);
+	     rset = pstmt.executeQuery();
+	     while(rset.next()){
+	    	 student  = beanProcessor.toBean(rset,Student.class);
+	   }
+     	
+     }catch(SQLException e){
+     	  logger.error("SQL Exception when getting Student with admmissinNo " + admmissinNo);
+          logger.error(ExceptionUtils.getStackTrace(e));
+          System.out.println(ExceptionUtils.getStackTrace(e));
+     }
+		return student; 
+	}
+
+	/**
+	 * @see ke.co.fastech.primaryschool.persistence.student.SchoolStudentDAO#getStudentBystream(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public Student getStudentBystream(String admmissinNo, String streamUuid,String accountUuid) {
+		Student student = null;
+        ResultSet rset = null;
+     try(
+     		 Connection conn = dbutils.getConnection();
+        	      PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM Student WHERE admmissinNo = ? AND streamUuid = ? AND accountUuid = ?;");       
+     		
+     		){
+     	
+     	 pstmt.setString(1, admmissinNo);
+     	 pstmt.setString(2, streamUuid);
+     	 pstmt.setString(3, accountUuid);
+	     rset = pstmt.executeQuery();
+	     while(rset.next()){
+	    	 student  = beanProcessor.toBean(rset,Student.class);
+	   }
+     	
+     }catch(SQLException e){
+     	  logger.error("SQL Exception when getting Student with admmissinNo " + admmissinNo);
+          logger.error(ExceptionUtils.getStackTrace(e));
+          System.out.println(ExceptionUtils.getStackTrace(e));
+     }
+		return student; 
+	}
 
 	/**
 	 * @see ke.co.fastech.primaryschool.persistence.student.SchoolStudentDAO#getStudentByADMNO(java.lang.String)
 	 */
 	@Override
-	public Student getStudentByADMNO(String admmissinNo) {
+	public Student getStudentByADMNO(String admmissinNo,String accountUuid) {
 		Student student = null;
         ResultSet rset = null;
      try(
      		 Connection conn = dbutils.getConnection();
-        	      PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM Student WHERE admmissinNo = ?;");       
+        	      PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM Student WHERE admmissinNo = ? AND accountUuid = ?;");       
      		
      		){
      	
      	 pstmt.setString(1, admmissinNo);
+     	 pstmt.setString(2, accountUuid);
 	         rset = pstmt.executeQuery();
 	     while(rset.next()){
 	    	 student  = beanProcessor.toBean(rset,Student.class);
@@ -121,30 +181,31 @@ public class StudentDAO extends GenericDAO implements SchoolStudentDAO {
 		  
 		 try(   Connection conn = dbutils.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Student" 
-			        		+"(uuid,statusUuid,streamUuid,admmissinNo,firstname,middlename,lastname,gender,"
+			        		+"(uuid,accountUuid,statusUuid,streamUuid,admmissinNo,firstname,middlename,lastname,gender,"
 			        		+ "dateofbirth,birthcertificateNo,country,county,ward,regTerm,"
-			        		+ "regYear,finalTerm,finalYear,studentType,studentLevel,admissiondate) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);");
+			        		+ "regYear,finalTerm,finalYear,studentType,studentLevel,admissiondate) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);");
    		){
 	            pstmt.setString(1, student.getUuid());
-	            pstmt.setString(2, student.getStatusUuid());
-	            pstmt.setString(3, student.getStreamUuid());
-	            pstmt.setString(4, student.getAdmmissinNo());  
-	            pstmt.setString(5, student.getFirstname());
-	            pstmt.setString(6, student.getMiddlename());
-	            pstmt.setString(7, student.getLastname());
-	            pstmt.setString(8, student.getGender());
-	            pstmt.setString(9, student.getDateofbirth());
-	            pstmt.setString(10, student.getBirthcertificateNo());
-	            pstmt.setString(11, student.getCountry());
-	            pstmt.setString(12, student.getCounty());
-	            pstmt.setString(13, student.getWard());
-	            pstmt.setInt(14, student.getRegTerm());
-	            pstmt.setInt(15, student.getRegYear());
-	            pstmt.setInt(16, student.getFinalTerm());
-	            pstmt.setInt(17, student.getFinalYear());
-	            pstmt.setString(18, student.getStudentType()); 
-	            pstmt.setString(19, student.getStudentLevel()); 
-	            pstmt.setTimestamp(20, new Timestamp(student.getAdmissiondate().getTime()));
+	            pstmt.setString(2, student.getAccountUuid());
+	            pstmt.setString(3, student.getStatusUuid());
+	            pstmt.setString(4, student.getStreamUuid());
+	            pstmt.setString(5, student.getAdmmissinNo());  
+	            pstmt.setString(6, student.getFirstname());
+	            pstmt.setString(7, student.getMiddlename());
+	            pstmt.setString(8, student.getLastname());
+	            pstmt.setString(9, student.getGender());
+	            pstmt.setString(10, student.getDateofbirth());
+	            pstmt.setString(11, student.getBirthcertificateNo());
+	            pstmt.setString(12, student.getCountry());
+	            pstmt.setString(13, student.getCounty());
+	            pstmt.setString(14, student.getWard());
+	            pstmt.setInt(15, student.getRegTerm());
+	            pstmt.setInt(16, student.getRegYear());
+	            pstmt.setInt(17, student.getFinalTerm());
+	            pstmt.setInt(18, student.getFinalYear());
+	            pstmt.setString(19, student.getStudentType()); 
+	            pstmt.setString(20, student.getStudentLevel()); 
+	            pstmt.setTimestamp(21, new Timestamp(student.getAdmissiondate().getTime()));
 	            pstmt.executeUpdate();
 			 
 		 }catch(SQLException e){
@@ -210,16 +271,17 @@ public class StudentDAO extends GenericDAO implements SchoolStudentDAO {
 	 * @see ke.co.fastech.primaryschool.persistence.student.SchoolStudentDAO#getStudentListByAdmNo(java.lang.String)
 	 */
 	@Override
-	public List<Student> getStudentListByAdmNo(String admmissinNo) {
+	public List<Student> getStudentListByAdmNo(String admmissinNo,String accountUuid) {
 		List<Student> list = null;
 
         try (
         		 Connection conn = dbutils.getConnection();
-     	       PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM Student WHERE admmissinNo ILIKE ? LIMIT ? OFFSET ?;");    		   
+     	       PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM Student WHERE admmissinNo ILIKE ? AND accountUuid = ?  LIMIT ? OFFSET ?;");    		   
      	   ) {        
          	   pstmt.setString(1, "%"+admmissinNo+"%"); 
-         	   pstmt.setInt(2, 15);
-         	   pstmt.setInt(3, 0);
+         	   pstmt.setString(2,accountUuid);
+         	   pstmt.setInt(3, 15);
+         	   pstmt.setInt(4, 0);
          	   try( ResultSet rset = pstmt.executeQuery();){
      	       
      	       list = beanProcessor.toBeanList(rset, Student.class);
@@ -236,14 +298,15 @@ public class StudentDAO extends GenericDAO implements SchoolStudentDAO {
 	 * @see ke.co.fastech.primaryschool.persistence.student.SchoolStudentDAO#getStudentListByStreamUuid(java.lang.String)
 	 */
 	@Override
-	public List<Student> getStudentListByStreamUuid(String streamUuid) {
+	public List<Student> getStudentListByStreamUuid(String streamUuid,String accountUuid) {
 		List<Student> list = null;
 
 		 try(   
 	  		Connection conn = dbutils.getConnection();
-	  		PreparedStatement  pstmt = conn.prepareStatement("SELECT * FROM Student WHERE streamUuid =? ORDER BY admmissinNo ASC;");   
+	  		PreparedStatement  pstmt = conn.prepareStatement("SELECT * FROM Student WHERE streamUuid =? AND accountUuid =? ORDER BY admmissinNo ASC;");   
 			) {
 			 pstmt.setString(1,streamUuid);
+			 pstmt.setString(2,accountUuid);
 			 try(ResultSet rset = pstmt.executeQuery();){
 					
 				 list = beanProcessor.toBeanList(rset, Student.class);
@@ -267,15 +330,16 @@ public class StudentDAO extends GenericDAO implements SchoolStudentDAO {
 	 * @return
 	 */
 	@Override
-	public List<Student> getStudentsListByLimit(int startIndex, int endIndex) {
+	public List<Student> getStudentsListByLimit(int startIndex, int endIndex,String accountUuid) {
 		List<Student> studentList =null;
 		
 		try(
 				Connection conn = dbutils.getConnection();
-				PreparedStatement psmt= conn.prepareStatement("SELECT * FROM Student ORDER BY admmissinNo DESC LIMIT ? OFFSET ?;");
+				PreparedStatement psmt= conn.prepareStatement("SELECT * FROM Student  WHERE accountUuid =? ORDER BY admmissinNo DESC LIMIT ? OFFSET ?;");
 				) {
-			psmt.setInt(1, endIndex - startIndex);
-			psmt.setInt(2, startIndex);
+			psmt.setString(1, accountUuid); 
+			psmt.setInt(2, endIndex - startIndex);
+			psmt.setInt(3, startIndex);
 			
 			try(ResultSet rset = psmt.executeQuery();){
 				studentList = beanProcessor.toBeanList(rset, Student.class);
@@ -294,17 +358,17 @@ public class StudentDAO extends GenericDAO implements SchoolStudentDAO {
 	 * @see ke.co.fastech.primaryschool.persistence.student.SchoolStudentDAO#getStudentsList()
 	 */
 	@Override
-	public List<Student> getStudentsList() {
+	public List<Student> getStudentsList(String accountUuid) {
 	     List<Student> studentList = new ArrayList<>();
 			try(
 					Connection conn = dbutils.getConnection();
-					PreparedStatement psmt= conn.prepareStatement("SELECT * FROM Student ORDER BY admmissinNo ASC;");
+					PreparedStatement psmt= conn.prepareStatement("SELECT * FROM Student WHERE accountUuid =? ORDER BY admmissinNo ASC;");
 					) {
-				
-				try(ResultSet rset = psmt.executeQuery();){
-				
-					studentList = beanProcessor.toBeanList(rset, Student.class);
-				}
+				   psmt.setString(1,accountUuid);
+				  try(ResultSet rset = psmt.executeQuery();){
+						
+					 studentList = beanProcessor.toBeanList(rset, Student.class);
+					}
 			} catch (SQLException e) {
 				logger.error("SQLException when trying to get Student List");
 	            logger.error(ExceptionUtils.getStackTrace(e));
@@ -312,5 +376,114 @@ public class StudentDAO extends GenericDAO implements SchoolStudentDAO {
 		    }
 			return studentList;
 		}
+
+	/**
+	 * @see ke.co.fastech.primaryschool.persistence.student.SchoolStudentDAO#getStudentCountPerClass(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public int getStudentCountPerClass(String statusUuid, String streamUuid,String accountUuid) {
+		int count = 0;
+		ResultSet rset = null;
+        try (
+        		 Connection conn = dbutils.getConnection();
+     	         PreparedStatement pstmt = conn.prepareStatement("SELECT COUNT(*) FROM Student WHERE statusUuid =? AND streamUuid =? AND accountUuid =?;");    		   
+ 	    ) {
+        	pstmt.setString(1, statusUuid);
+        	pstmt.setString(2, streamUuid);
+        	pstmt.setString(3, accountUuid);
+        	rset = pstmt.executeQuery();
+        	
+        	while(rset.next()){
+   	       		count = rset.getInt("count");
+          	  }
+        } catch (SQLException e) {
+            logger.error("SQLException Student count for stream" + streamUuid);
+            logger.error(ExceptionUtils.getStackTrace(e));
+        }
+		
+		return count;
+	}
+
+	/**
+	 * @see ke.co.fastech.primaryschool.persistence.student.SchoolStudentDAO#getStudentCount(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public int getStudentCount(String statusUuid, String accountUuid) {
+		int count = 0;
+		ResultSet rset = null;
+        try (
+        		 Connection conn = dbutils.getConnection();
+     	         PreparedStatement pstmt = conn.prepareStatement("SELECT COUNT(*) FROM Student WHERE statusUuid =? AND accountUuid =?;");    		   
+ 	    ) {
+        	pstmt.setString(1, statusUuid);
+        	pstmt.setString(2, accountUuid);
+        	rset = pstmt.executeQuery();
+        	
+        	while(rset.next()){
+   	       		count = rset.getInt("count");
+          	  }
+        } catch (SQLException e) {
+            logger.error("SQLException Student count for accountUuid" + accountUuid);
+            logger.error(ExceptionUtils.getStackTrace(e));
+        }
+		
+		return count;
+	}
+
+	/**
+	 * @see ke.co.fastech.primaryschool.persistence.student.SchoolStudentDAO#getStudentCountByCategory(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public int getStudentCountByCategory(String studentType, String statusUuid, String accountUuid) {
+		int count = 0;
+		ResultSet rset = null;
+        try (
+        		 Connection conn = dbutils.getConnection();
+     	         PreparedStatement pstmt = conn.prepareStatement("SELECT COUNT(*) FROM Student WHERE studentType =? AND statusUuid =? AND accountUuid =?;");    		   
+ 	    ) {
+        	pstmt.setString(1, studentType);
+        	pstmt.setString(2, statusUuid);
+        	pstmt.setString(3, accountUuid);
+        	rset = pstmt.executeQuery();
+        	
+        	while(rset.next()){
+   	       		count = rset.getInt("count");
+          	  }
+        } catch (SQLException e) {
+            logger.error("SQLException Student count for category" + studentType);
+            logger.error(ExceptionUtils.getStackTrace(e));
+        }
+		
+		return count;
+	}
+
+	/**
+	 * @see ke.co.fastech.primaryschool.persistence.student.SchoolStudentDAO#getStudentCountByLevel(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public int getStudentCountByLevel(String studentLevel, String statusUuid, String accountUuid) {
+		int count = 0;
+		ResultSet rset = null;
+        try (
+        		 Connection conn = dbutils.getConnection();
+     	         PreparedStatement pstmt = conn.prepareStatement("SELECT COUNT(*) FROM Student WHERE studentLevel =? AND statusUuid =? AND accountUuid =?;");    		   
+ 	    ) {
+        	pstmt.setString(1, studentLevel);
+        	pstmt.setString(2, statusUuid);
+        	pstmt.setString(3, accountUuid);
+        	rset = pstmt.executeQuery();
+        	
+        	while(rset.next()){
+   	       		count = rset.getInt("count");
+          	  }
+        } catch (SQLException e) {
+            logger.error("SQLException Student count for Level" + studentLevel);
+            logger.error(ExceptionUtils.getStackTrace(e));
+        }
+		
+		return count;
+	}
+
+	
 
 }

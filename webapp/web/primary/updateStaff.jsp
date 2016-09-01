@@ -1,8 +1,17 @@
 <%@page import="ke.co.fastech.primaryschool.bean.school.account.Account"%>
 
+
+<%@page import="ke.co.fastech.primaryschool.persistence.school.SystemConfigDAO"%>
+<%@page import="ke.co.fastech.primaryschool.bean.school.SystemConfig"%>
+
 <%@page import="ke.co.fastech.primaryschool.server.cache.CacheVariables"%>
 <%@page import="ke.co.fastech.primaryschool.server.session.SessionConstants"%>
 
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.List"%>
+<%@page import="java.util.Arrays"%>
+<%@page import="java.util.Date"%>
+<%@page import="java.util.Iterator"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.text.SimpleDateFormat"%>
@@ -18,19 +27,34 @@
 
 <%
 
-        String schoolId = (String) session.getAttribute(SessionConstants.ACCOUNT_SIGN_IN_ACCOUNTUUID); 
+        String schoolUsername = (String) session.getAttribute(SessionConstants.ACCOUNT_SIGN_IN_KEY);
+        String schoolId = "";
+
 
         CacheManager mgr = CacheManager.getInstance();
-        Cache accountsCache = mgr.getCache(CacheVariables.CACHE_SCHOOL_ACCOUNTS_BY_UUID);
+        Cache accountsCache = mgr.getCache(CacheVariables.CACHE_SCHOOL_ACCOUNTS_BY_USERNAME);
 
         Account school = new Account();
         Element element;
-         if ((element = accountsCache.get(schoolId)) != null) {
+         if ((element = accountsCache.get(schoolUsername)) != null) {
             school = (Account) element.getObjectValue();
          }
+         
+         schoolId = school.getUuid();
 
+         SystemConfigDAO systemConfigDAO = SystemConfigDAO.getInstance();
+         SystemConfig systemConfig = systemConfigDAO.getSystemConfig(schoolId);
 
-        String accountuuid = school.getUuid();
+         if (session == null) {
+            response.sendRedirect("../index.jsp");
+           }
+
+       if (StringUtils.isEmpty(schoolUsername)) {
+          response.sendRedirect("../index.jsp");
+        }
+
+      session.setMaxInactiveInterval(SessionConstants.SESSION_TIMEOUT);
+      response.setHeader("Refresh", SessionConstants.SESSION_TIMEOUT + "; url=../logout");
 
        
 
@@ -42,7 +66,8 @@
 <div>
     <ul class="breadcrumb">
 
-    <li> <b> WELCOME TO   <b> <%=school.getSchoolName()%> </li> 
+   <li> <b> WELCOME TO   <b> <%=school.getSchoolName()%>  : TERM  : <%=systemConfig.getTerm()%>  YEAR :  <%=systemConfig.getYear()%> </li> <br>
+   <li> <a href="staff.jsp">Back</a>  <span class="divider">/</span> </li> 
     </ul>
 </div>
 
@@ -50,65 +75,24 @@
 
     <div class="box span12">
         <div class="box-content">
-        <form class="form-horizontal" action="" method="POST"  >
+        <form class="form-horizontal" action="updateStaff" method="POST"  >
                 <fieldset>
 
-                        
-                    <div class="control-group" id="divid">
-                        <label class="control-label" for="name">Position</label>
-                        <div class="controls">
-                            <select name="position" >
-                                <option value="">Please select one</option> 
-                                 <%
-                                    int count = 1;
-                                    if (positionList != null) {
-                                        for (Position p : positionList) {
-                                %>
-                               <option value="<%= p.getUuid()%>"><%=p.getPosition()%></option>
-                                <%
-                                            count++;
-                                        }
-                                    }
-                                %>
-                            </select>                           
-                          
-                        </div>
-                    </div> 
 
                     <div class="control-group">
-                        <label class="control-label" for="employeeNo">Employee Number</label>
+                        <label class="control-label" for="employeeNo">Employee Number*</label>
                         <div class="controls">
                             <input class="input-xlarge focused"  name="employeeNo" type="text" value="<%=request.getParameter("employeeNo")%>" >
                         </div>
                     </div>
 
-                     <div class="control-group">
-                        <label class="control-label" for="username">Username</label>
-                        <div class="controls">
-                            <input class="input-xlarge focused"  name="username" type="text" value="<%=request.getParameter("username")%>" >
-                        </div>
-                    </div>
-                    
                     <div class="control-group">
-                        <label class="control-label" for="staffname">Staff name</label>
+                        <label class="control-label" for="staffname">Staff name*</label>
                         <div class="controls">
-                            <input class="input-xlarge focused"   name="staffname" type="text" value="<%=request.getParameter("staffname")%>" style="text-transform: capitalize;">
+                            <input class="input-xlarge focused"   name="staffname" type="text" value="<%=request.getParameter("staffname")%>" >
                         </div>
                     </div>
 
-            
-                     <div class="control-group">
-                        <label class="control-label" for="gender">Gender:</label>
-                         <div class="controls">
-                            <select name="gender" >
-                                <option value="">Please select one</option> 
-                                <option value="MALE">Male</option>
-                                <option value="FEMALE">Female</option>
-                                
-                            </select>                           
-                          
-                        </div>
-                    </div> 
 
 
                      <div class="control-group">
@@ -119,51 +103,26 @@
                     </div>
 
                     <div class="control-group">
-                        <label class="control-label" for="email">Email *:</label>
+                        <label class="control-label" for="email">Email :</label>
                         <div class="controls">
                             <input class="input-xlarge focused" id="receiver" type="text" name="email"
                               value="<%=request.getParameter("email")%>"  >
                         </div>
                     </div> 
 
-
-                     <div class="control-group">
-                        <label class="control-label" for="dob">DOB</label>
+                    <div class="control-group">
+                        <label class="control-label" for="gender">Gender*:</label>
                         <div class="controls">
-                            <input class="input-xlarge focused"   name="dob" type="text" value="<%=request.getParameter("dob")%>">
+                            <input class="input-xlarge focused" id="receiver" type="text" name="gender"
+                              value="<%=request.getParameter("gender")%>"  >
                         </div>
-                    </div>
+                    </div> 
+
 
                      
-
-                    <div class="control-group">
-                        <label class="control-label" for="country">Country:</label>
-                        <div class="controls">
-                            <input class="input-xlarge focused" id="receiver" type="text" name="country"
-                              value="<%=request.getParameter("country")%>" >
-                        </div>
-                    </div>  
-
-                    <div class="control-group">
-                        <label class="control-label" for="county">County:</label>
-                        <div class="controls">
-                            <input class="input-xlarge focused" id="receiver" type="text" name="county"
-                              value="<%=request.getParameter("county")%>"  >
-                        </div>
-                    </div>  
-
-                    <div class="control-group">
-                        <label class="control-label" for="ward">Ward:</label>
-                        <div class="controls">
-                            <input class="input-xlarge focused" id="receiver" type="text" name="ward"
-                              value="<%=request.getParameter("ward")%>" >
-                        </div>
-                    </div>  
-
-
-                  
                     <div class="form-actions">
-                        <input type="hidden" name="schooluuid" value="<%=accountuuid%>">
+                        <input type="hidden" name="staffuuid" value="<%=request.getParameter("staffuuid")%>">
+                         <input type="hidden" name="schooluuid" value="<%=schoolId%>">
                         <button type="submit" class="btn btn-primary">Update</button>
                     </div>
                    

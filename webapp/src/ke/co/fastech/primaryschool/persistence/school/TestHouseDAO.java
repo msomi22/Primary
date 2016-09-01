@@ -12,6 +12,8 @@ import org.junit.Test;
  *
  */
 public class TestHouseDAO {
+	
+	private final String ACCOUNT_UUID = "9DEDDC49-444E-499B-BDB9-D6625D2F79F4";
 
 	/**
 	 * Test method for {@link ke.co.fastech.primaryschool.persistence.school.HouseDAO#getHouse(java.lang.String)}.

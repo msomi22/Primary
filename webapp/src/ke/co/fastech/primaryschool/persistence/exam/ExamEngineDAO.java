@@ -137,44 +137,48 @@ public class ExamEngineDAO extends GenericDAO implements SchoolExamEngineDAO {
 		 try( Connection conn = dbutils.getConnection();
 				
 				PreparedStatement pstmtopener = conn.prepareStatement("INSERT INTO Performance"
-						+"(studentUuid,subjectUuid,streamUuid,classUuid,term,year,openner) VALUES (?,?,?,?,?,?,?);");
+						+"(AccountUuid,studentUuid,subjectUuid,streamUuid,classUuid,term,year,openner) VALUES (?,?,?,?,?,?,?,?);");
 				
 				PreparedStatement pstmtmidterm = conn.prepareStatement("INSERT INTO Performance"
-						+"(studentUuid,subjectUuid,streamUuid,classUuid,term,year,midterm) VALUES (?,?,?,?,?,?,?);");
+						+"(AccountUuid,studentUuid,subjectUuid,streamUuid,classUuid,term,year,midterm) VALUES (?,?,?,?,?,?,?,?);");
 				
 				PreparedStatement pstmtendterm = conn.prepareStatement("INSERT INTO Performance"
-						+"(studentUuid,subjectUuid,streamUuid,classUuid,term,year,endterm) VALUES (?,?,?,?,?,?,?);");
+						+"(AccountUuid,studentUuid,subjectUuid,streamUuid,classUuid,term,year,endterm) VALUES (?,?,?,?,?,?,?,?);");
 				
 				){
 
 			if(performance instanceof OpenerExam) {
-				pstmtopener.setString(1, studentUuid);
-				pstmtopener.setString(2, subjectUuid);
-				pstmtopener.setString(3, streamUuid);
-				pstmtopener.setString(4, classUuid);
-				pstmtopener.setString(5, term);
-				pstmtopener.setString(6, year);
-				pstmtopener.setDouble(7, performance.getScore());
+				pstmtopener.setString(1, performance.getAccountUuid());
+				pstmtopener.setString(2, studentUuid);
+				pstmtopener.setString(3, subjectUuid);
+				pstmtopener.setString(4, streamUuid);
+				pstmtopener.setString(5, classUuid);
+				pstmtopener.setString(6, term);
+				pstmtopener.setString(7, year);
+				pstmtopener.setDouble(8, performance.getScore());
 				pstmtopener.executeUpdate();
 			}
 			else if(performance instanceof MidTermExam) {
-				pstmtmidterm.setString(1, studentUuid);
-				pstmtmidterm.setString(2, subjectUuid);
-				pstmtmidterm.setString(3, streamUuid);
-				pstmtmidterm.setString(4, classUuid);
-				pstmtmidterm.setString(5, term);
-				pstmtmidterm.setString(6, year);
-				pstmtmidterm.setDouble(7, performance.getScore());
+				pstmtmidterm.setString(1, performance.getAccountUuid());
+				pstmtmidterm.setString(2, studentUuid);
+				pstmtmidterm.setString(3, subjectUuid);
+				pstmtmidterm.setString(4, streamUuid);
+				pstmtmidterm.setString(5, classUuid);
+				pstmtmidterm.setString(6, term);
+				pstmtmidterm.setString(7, year);
+				pstmtmidterm.setDouble(8, performance.getScore());
 				pstmtmidterm.executeUpdate();
 			}
 			else if(performance instanceof EndTermExam) {
 				pstmtendterm.setString(1, studentUuid);
-				pstmtendterm.setString(2, subjectUuid);
-				pstmtendterm.setString(3, streamUuid);
-				pstmtendterm.setString(4, classUuid);
-				pstmtendterm.setString(5, term);
-				pstmtendterm.setString(6, year);
-				pstmtendterm.setDouble(7, performance.getScore()); 
+				pstmtendterm.setString(1, performance.getAccountUuid());
+				pstmtendterm.setString(2, studentUuid);
+				pstmtendterm.setString(3, subjectUuid);
+				pstmtendterm.setString(4, streamUuid);
+				pstmtendterm.setString(5, classUuid);
+				pstmtendterm.setString(6, term);
+				pstmtendterm.setString(7, year);
+				pstmtendterm.setDouble(8, performance.getScore());
 				pstmtendterm.executeUpdate();
 			}
 			

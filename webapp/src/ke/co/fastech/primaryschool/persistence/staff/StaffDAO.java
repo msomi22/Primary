@@ -14,14 +14,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.commons.dbutils.BeanProcessor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
+
 import ke.co.fastech.primaryschool.bean.staff.Staff;
 import ke.co.fastech.primaryschool.persistence.GenericDAO;
 
-/**
+/** 
+ *  
  * Persistence abstraction for {@link Staff}
  * 
  * @author <a href="mailto:mwendapeter72@gmail.com">Peter mwenda</a>
@@ -97,16 +101,16 @@ public class StaffDAO extends GenericDAO  implements SchoolStaffDAO {
 	 * @see ke.co.fastech.primaryschool.persistence.staff.SchoolStaffDAO#getStaff(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public Staff getStaff(String uuid, String employeeNo) {
+	public Staff getStaff(String accountUuid, String employeeNo) {
 		Staff staff = null;
         ResultSet rset = null;
      try(
      		      Connection conn = dbutils.getConnection();
-        	      PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM Staff WHERE uuid = ? AND employeeNo = ?;");       
+        	      PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM Staff WHERE accountUuid = ? AND employeeNo = ?;");       
      		
      		){
      	
-     	     pstmt.setString(1, uuid);
+     	     pstmt.setString(1, accountUuid);
      	     pstmt.setString(2, employeeNo);
 	         rset = pstmt.executeQuery();
 	        while(rset.next()){
@@ -115,7 +119,7 @@ public class StaffDAO extends GenericDAO  implements SchoolStaffDAO {
 	   }
      	
      }catch(SQLException e){
-     	  logger.error("SQL Exception when getting Staff with Uuid " + uuid + " and employeeNo " + employeeNo);
+     	  logger.error("SQL Exception when getting Staff with accountUuid " + accountUuid + " and employeeNo " + employeeNo);
           logger.error(ExceptionUtils.getStackTrace(e));
           System.out.println(ExceptionUtils.getStackTrace(e));
      }
@@ -198,23 +202,23 @@ public class StaffDAO extends GenericDAO  implements SchoolStaffDAO {
 	 * @see ke.co.fastech.primaryschool.persistence.staff.SchoolStaffDAO#getStaffList()
 	 */
 	@Override
-	public List<Staff> getStaffList() {
-		 List<Staff> list = null;
-		 try(   
-	  		Connection conn = dbutils.getConnection();
-	  		PreparedStatement  pstmt = conn.prepareStatement("SELECT * FROM Staff;");   
-			) {
-			 try(ResultSet rset = pstmt.executeQuery();){
-					
-				 list = beanProcessor.toBeanList(rset, Staff.class);
-				}
-	        
-	  } catch(SQLException e){
-	  	 logger.error("SQL Exception when getting Staff List");
-	     logger.error(ExceptionUtils.getStackTrace(e));
-	     System.out.println(ExceptionUtils.getStackTrace(e)); 
-	  }
-		return list;
-	}
+	public List<Staff> getStaffList(String accountUuid) {
+	     List<Staff> list = new ArrayList<>();
+			try(
+					Connection conn = dbutils.getConnection();
+					PreparedStatement psmt= conn.prepareStatement("SELECT * FROM Staff WHERE accountUuid =?;");
+					) {
+				   psmt.setString(1,accountUuid);
+				  try(ResultSet rset = psmt.executeQuery();){
+						
+					  list = beanProcessor.toBeanList(rset, Staff.class);
+					}
+			} catch (SQLException e) {
+				logger.error("SQLException when trying to get Staff List");
+	            logger.error(ExceptionUtils.getStackTrace(e));
+	            System.out.println(ExceptionUtils.getStackTrace(e)); 
+		    }
+			return list;
+		}
 
 }

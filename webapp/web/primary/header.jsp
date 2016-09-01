@@ -102,7 +102,7 @@
           <!--<li><a href="#">Profile</a></li>-->
           <li class="divider"></li>
           <li><a href="../logout">Logout</a></li>
-          <li ><a href="" target="_blank">Help</a></li>
+          
           </ul>
           </div>
 
@@ -115,11 +115,11 @@
       <div class="topmenu">
 
 
-          <a href="">REGISTRATION</a>
-          <a href="">ACADEMIC</a>
+          <a href="registration.jsp">REGISTRATION</a>
+          <a href="academic.jsp">ACADEMIC</a>
           <a href="">FINANCE</a>
-          <a href="">STAFF</a>
-          <a href="">CONTROL PANEL</a>
+          <a href="staff.jsp">STAFF</a> 
+          <a href="controlPanel.jsp">CONTROL PANEL</a>
           
   
           
@@ -147,8 +147,6 @@
 <!--menu to change depending on page requested-->
 <li class="nav-header hidden-tablet">MORE</li>
 <li><a href="schoolIndex.jsp" class="ajax-link" id ="btn-dangers1"href=""><i class="icon-envelope"></i><span class="hidden-tablet">HOME</span></a></li>
-<li><a href="" class="ajax-link" id ="btn-dangers1"href=""><i class="icon-envelope"></i><span class="hidden-tablet">LIBRARY</span></a></li>
-
 
 </ul>
 </div><!--/.well -->

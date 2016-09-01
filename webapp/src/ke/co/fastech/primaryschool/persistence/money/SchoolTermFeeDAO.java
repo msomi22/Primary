@@ -38,11 +38,11 @@ public interface SchoolTermFeeDAO {
 	 * @param year
 	 * @return
 	 */
-	public List<TermFee> getTermFeeList(String term,String year);
+	public List<TermFee> getTermFeeList(String term,String year,String accountUuid);
 	/**
 	 * 
 	 * @return
 	 */
-	public List<TermFee> getTermFeeList();
+	public List<TermFee> getTermFeeList(String accountUuid);
 
 }

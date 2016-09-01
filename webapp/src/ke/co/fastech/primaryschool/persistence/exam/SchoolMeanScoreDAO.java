@@ -50,6 +50,6 @@ public interface SchoolMeanScoreDAO {
 	 * @return Whether {@link MeanScore} was inserted successfully 
 	 */
 	 
-	public boolean putMeanScore(double mean,int streamPosition,int classPosition,String studentUuid,String term,String year);
+	public boolean putMeanScore(double mean,String streamPosition,String classPosition,String studentUuid,String term,String year);
 
 }

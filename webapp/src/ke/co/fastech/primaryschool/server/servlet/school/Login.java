@@ -25,9 +25,8 @@ import org.apache.log4j.Logger;
 import org.jasypt.util.text.BasicTextEncryptor;
 
 import ke.co.fastech.primaryschool.bean.school.account.Account;
-import ke.co.fastech.primaryschool.bean.staff.Staff;
 import ke.co.fastech.primaryschool.bean.staff.user.Users;
-import ke.co.fastech.primaryschool.persistence.staff.StaffDAO;
+import ke.co.fastech.primaryschool.persistence.account.AcountDAO;
 import ke.co.fastech.primaryschool.persistence.staff.category.StaffCategoryDAO;
 import ke.co.fastech.primaryschool.persistence.user.UserDAO;
 import ke.co.fastech.primaryschool.server.cache.CacheVariables;
@@ -57,7 +56,7 @@ public class Login extends HttpServlet{
 	ServletContext context;
 
 	private static UserDAO userDAO;
-	private static StaffDAO staffDAO;
+	private static AcountDAO acountDAO;
 	private static StaffCategoryDAO staffCategoryDAO;
 
 	/**
@@ -68,15 +67,15 @@ public class Login extends HttpServlet{
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		CacheManager mgr = CacheManager.getInstance();
+		schoolCache = mgr.getCache(CacheVariables.CACHE_SCHOOL_ACCOUNTS_BY_USERNAME);
+
 		textEncryptor = new BasicTextEncryptor();
 		textEncryptor.setPassword(FontImageGenerator.SECRET_KEY);
-		schoolCache = mgr.getCache(CacheVariables.CACHE_SCHOOL_ACCOUNTS_BY_UUID);
-		//statisticsCache = mgr.getCache(CacheVariables.CACHE_SCHOOL_ACCOUNTS_BY_UUID);
 		logger = Logger.getLogger(this.getClass());
 		onlineUsersMap = new HashMap<String,String>();
 		context = getServletContext();
 		userDAO = UserDAO.getInstance();
-		staffDAO = StaffDAO.getInstance();
+		acountDAO = AcountDAO.getInstance();
 		staffCategoryDAO = StaffCategoryDAO.getInstance();
 
 	}
@@ -98,6 +97,7 @@ public class Login extends HttpServlet{
 		}
 		session = request.getSession(true);
 
+		String schoolusername = StringUtils.trimToEmpty(request.getParameter("schoolusername"));
 		String staffposition = StringUtils.trimToEmpty(request.getParameter("staffposition"));
 		String staffusername = StringUtils.trimToEmpty(request.getParameter("staffusername"));
 		String staffpassword = StringUtils.trimToEmpty(request.getParameter("staffpassword"));
@@ -108,13 +108,17 @@ public class Login extends HttpServlet{
 		Users user = new Users();
 		if(userDAO.getUserByUsername(staffusername) !=null){
 			user = userDAO.getUserByUsername(staffusername); 
-		}
+		}//acountDAO
 
 		if(userDAO.getUserByUsername(staffusername) == null){
 			session.setAttribute(SessionConstants.ACCOUNT_LOGIN_ERROR, ERROR_WRONG_USER_DETAIL); 
 			response.sendRedirect("index.jsp");
 
 		}else  if (userDAO.getUserPassword(staffusername, staffpassword) == null) { 
+			session.setAttribute(SessionConstants.ACCOUNT_LOGIN_ERROR, ERROR_WRONG_USER_DETAIL);
+			response.sendRedirect("index.jsp");
+
+		}else  if (acountDAO.getAccountByusername(schoolusername) == null) {  
 			session.setAttribute(SessionConstants.ACCOUNT_LOGIN_ERROR, ERROR_WRONG_USER_DETAIL);
 			response.sendRedirect("index.jsp");
 
@@ -128,17 +132,13 @@ public class Login extends HttpServlet{
 
 		} else{
 			
-			Staff staff = new Staff();
-			if(staffDAO.getStaff(user.getStaffUuid()) != null){ 
-				staff = staffDAO.getStaff(user.getStaffUuid());
-			}
-
+			    
 				Account school = new Account(); 
 				Element element;
-				if ((element = schoolCache.get(staff.getAccountUuid())) != null) { 
+				if ((element = schoolCache.get(schoolusername)) != null) {  
 					school = (Account) element.getObjectValue(); 
 				}
-
+				
 				onlineUsersMap.put(user.getStaffUuid(),session.getId());
 				context.setAttribute("onlineUsersMap", onlineUsersMap);
 
@@ -148,7 +148,7 @@ public class Login extends HttpServlet{
 		          
 
 				session.setAttribute(SessionConstants.ACCOUNT_SIGN_IN_ACCOUNTUUID, school.getUuid());
-				session.setAttribute(SessionConstants.ACCOUNT_SIGN_IN_KEY, school.getUuid()); 
+				session.setAttribute(SessionConstants.ACCOUNT_SIGN_IN_KEY, school.getUsername());  
 				session.setAttribute(SessionConstants.ACCOUNT_LOGIN_SUCCESS, SessionConstants.ACCOUNT_LOGIN_SUCCESS); 
 				session.setAttribute(SessionConstants.ACCOUNT_SIGN_IN_TIME, String.valueOf(new Date().getTime()));
 				request.getSession().setAttribute(SessionConstants.STAFF_SIGN_IN_USERNAME, user.getUsername());    

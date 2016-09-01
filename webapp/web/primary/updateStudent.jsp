@@ -1,6 +1,9 @@
 
 <%@page import="ke.co.fastech.primaryschool.bean.school.account.Account"%>
 
+<%@page import="ke.co.fastech.primaryschool.persistence.school.SystemConfigDAO"%>
+<%@page import="ke.co.fastech.primaryschool.bean.school.SystemConfig"%>
+
 <%@page import="ke.co.fastech.primaryschool.server.cache.CacheVariables"%>
 <%@page import="ke.co.fastech.primaryschool.server.session.SessionConstants"%>
 
@@ -19,19 +22,36 @@
 
 <%
 
-        String schoolId = (String) session.getAttribute(SessionConstants.ACCOUNT_SIGN_IN_ACCOUNTUUID); 
+       
+        String schoolUsername = (String) session.getAttribute(SessionConstants.ACCOUNT_SIGN_IN_KEY);
+        String schoolId = "";
+
 
         CacheManager mgr = CacheManager.getInstance();
-        Cache accountsCache = mgr.getCache(CacheVariables.CACHE_SCHOOL_ACCOUNTS_BY_UUID);
+        Cache accountsCache = mgr.getCache(CacheVariables.CACHE_SCHOOL_ACCOUNTS_BY_USERNAME);
 
         Account school = new Account();
         Element element;
-         if ((element = accountsCache.get(schoolId)) != null) {
+         if ((element = accountsCache.get(schoolUsername)) != null) {
             school = (Account) element.getObjectValue();
          }
+         
+         schoolId = school.getUuid();
 
 
-        String accountuuid = school.getUuid();
+         SystemConfigDAO systemConfigDAO = SystemConfigDAO.getInstance();
+         SystemConfig systemConfig = systemConfigDAO.getSystemConfig(schoolId);
+
+         if (session == null) {
+            response.sendRedirect("../index.jsp");
+           }
+
+       if (StringUtils.isEmpty(schoolUsername)) {
+          response.sendRedirect("../index.jsp");
+        }
+
+      session.setMaxInactiveInterval(SessionConstants.SESSION_TIMEOUT);
+      response.setHeader("Refresh", SessionConstants.SESSION_TIMEOUT + "; url=../logout");
 
        
 
@@ -45,7 +65,8 @@
 <div>
     <ul class="breadcrumb">
 
-    <li> <b> WELCOME TO   <b> <%=school.getSchoolName()%> </li> 
+   <li> <b> WELCOME TO   <b> <%=school.getSchoolName()%>  : TERM  : <%=systemConfig.getTerm()%>  YEAR :  <%=systemConfig.getYear()%> </li> <br>
+   <li> <a href="schoolIndex.jsp">Back</a>  <span class="divider">/</span> </li>
     </ul>
 </div>
 
@@ -53,7 +74,7 @@
 <div class="row-fluid sortable">
     <div class="box span12">
         <div class="box-content">
-        <form  class="form-horizontal"   action="" method="POST" >
+        <form  class="form-horizontal" action="updateStudent" method="POST" >
                  <fieldset>
                     
                                      
@@ -64,51 +85,6 @@
                                       value="<%=request.getParameter("admissionNumber")%>" >  
                                 </div>
                              </div> 
-
-                              <div class="control-group">
-                                <label class="control-label" for="finalYear">Final Year:</label>
-                                <div class="controls">
-                                <input class="input-xlarge focused" id="receiver" type="text" name="finalYear"
-                                      value="<%=request.getParameter("finalYear")%>"  >
-                                </div>
-                             </div> 
-
-                              <div class="control-group">
-                                <label class="control-label" for="finalTerm">Final Term:</label>
-                                <div class="controls">
-                                <input class="input-xlarge focused" id="receiver" type="text" name="finalTerm"
-                                      value="<%=request.getParameter("finalTerm")%>"  >
-                                </div>
-                             </div> 
-
-                            
-                            <div class="control-group">
-                                        <label class="control-label" for="Category">Category*:</label>
-                                         <div class="controls">
-                                            <select name="category" >
-                                              <option value="">Please select one</option> 
-                                              <option value="Boarding">Boarding</option> 
-                                              <option value="Day">Day</option> 
-                                                
-                                            </select>                           
-                                          
-                                        </div>
-                                    </div> 
-
-
-                                    <div class="control-group">
-                                        <label class="control-label" for="Level">Level*:</label>
-                                         <div class="controls">
-                                            <select name="level" >
-                                              <option value="">Please select one</option> 
-                                              <option value="UPPER">Upper</option> 
-                                              <option value="LOWER">Lower</option> 
-                                                
-                                            </select>                           
-                                          
-                                        </div>
-                                    </div> 
-
 
                               
                              <div class="control-group">
@@ -135,73 +111,15 @@
                                 </div>
                              </div> 
 
-                             <div class="control-group">
-                                        <label class="control-label" for="gender">Gender*:</label>
-                                         <div class="controls">
-                                            <select name="gender" >
-                                               <option value="">Please select one</option> 
-                                                <option value="M">Male</option>
-                                              <option value="F">Female</option> 
-                                                
-                                            </select>                           
-                                          
-                                        </div>
-                             </div> 
-
-                             <div class="control-group">
-                                <label class="control-label" for="dob">Date of Birth:</label>
-                                <div class="controls">
-                                <input class="input-xlarge focused" id="receiver" type="text" name="dob"
-                                      value="<%=request.getParameter("dob")%>"  >
-                                </div>
-                             </div> 
-
-                             <div class="control-group">
-                                <label class="control-label" for="bcertNo">Birth Cert No:</label>
-                                <div class="controls">
-                                <input class="input-xlarge focused" id="receiver" type="text" name="bcertNo"
-                                      value="<%=request.getParameter("bcertNo")%>"  >
-                                </div>
-                             </div> 
-                            
-                             <div class="control-group">
-                                <label class="control-label" for="County">County:</label>
-                                <div class="controls">
-                                <input class="input-xlarge focused" id="receiver" type="text" name="county"
-                                      value="<%=request.getParameter("county")%>" style="text-transform: capitalize;" >
-                                </div>
-                             </div> 
-
-
-                             <div class="control-group">
-                                <label class="control-label" for="ward">Ward:</label>
-                                <div class="controls">
-                                <input class="input-xlarge focused" id="receiver" type="text" name="ward"
-                                      value="<%=request.getParameter("ward")%>" style="text-transform: capitalize;" >
-                                </div>
-                             </div> 
-
-
-
-                                    
-                                    
+                             
                             <div class="form-actions">
                                 <input type="hidden" name="studentUuid" value="<%=request.getParameter("studentUuid")%>">
-                                <input type="hidden" name="accountuuid" value="<%=accountuuid%>">
+                                <input type="hidden" name="schoolUuid" value="<%=schoolId%>">
                                 <button type="submit" class="btn btn-primary">Update</button>
                             </div> 
 
               </fieldset>
               </form>
-       
-
-
-
-
-
-
-
-
 
 
 

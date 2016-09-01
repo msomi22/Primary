@@ -22,7 +22,7 @@ import org.apache.log4j.Logger;
 import ke.co.fastech.primaryschool.bean.school.account.Account;
 import ke.co.fastech.primaryschool.persistence.GenericDAO;
 
-/**
+/**  
  * Persistence abstraction for {@link Account}
  * 
  * @author <a href="mailto:mwendapeter72@gmail.com">Peter mwenda</a>
@@ -67,7 +67,7 @@ public class AcountDAO extends GenericDAO implements SchoolAcountDAO {
 	 */
 	@Override
 	public Account getAccount(String accountUuid) {
-		Account account = new Account();
+		Account account = null;
         ResultSet rset = null;
      try(
      		 Connection conn = dbutils.getConnection();
@@ -89,6 +89,36 @@ public class AcountDAO extends GenericDAO implements SchoolAcountDAO {
      }
 		return account; 
 	}
+	
+
+	/**
+	 * @see ke.co.fastech.primaryschool.persistence.account.SchoolAcountDAO#getAccountByusername(java.lang.String)
+	 */
+	@Override
+	public Account getAccountByusername(String username) {
+		Account account = null;
+        ResultSet rset = null;
+     try(
+     		 Connection conn = dbutils.getConnection();
+        	      PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM Account WHERE username = ?;");       
+     		
+     		){
+     	
+     	 pstmt.setString(1, username);
+	         rset = pstmt.executeQuery();
+	     while(rset.next()){
+	
+	    	 account  = beanProcessor.toBean(rset,Account.class);
+	   }
+     	
+     }catch(SQLException e){
+     	  logger.error("SQL Exception when getting Account with username " + username);
+          logger.error(ExceptionUtils.getStackTrace(e));
+          System.out.println(ExceptionUtils.getStackTrace(e));
+     }
+		return account; 
+	}
+
 
 	/**
 	 * @see ke.co.fastech.primaryschool.persistence.account.SchoolAcountDAO#put(ke.co.fastech.primaryschool.bean.school.account.Account)
@@ -99,17 +129,18 @@ public class AcountDAO extends GenericDAO implements SchoolAcountDAO {
 		  
 		 try(   Connection conn = dbutils.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Account" 
-			        		+"(uuid,schoolName,schoolEmail,schoolPhone,schoolAddres,schoolHomeTown,schoolCounty,schoolMotto,DayBoarding) VALUES (?,?,?,?,?,?,?,?,?);");
+			        		+"(uuid,username,schoolName,schoolEmail,schoolPhone,schoolAddres,schoolHomeTown,schoolCounty,schoolMotto,DayBoarding) VALUES (?,?,?,?,?,?,?,?,?,?);");
     		){
 	            pstmt.setString(1, account.getUuid());
-	            pstmt.setString(2, account.getSchoolName());
-	            pstmt.setString(3, account.getSchoolEmail());
-	            pstmt.setString(4, account.getSchoolPhone());
-	            pstmt.setString(5, account.getSchoolAddres());
-	            pstmt.setString(6, account.getSchoolHomeTown());
-	            pstmt.setString(7, account.getSchoolCounty());
-	            pstmt.setString(8, account.getSchoolMotto());
-	            pstmt.setString(9, account.getDayBoarding());
+	            pstmt.setString(2, account.getUsername());
+	            pstmt.setString(3, account.getSchoolName());
+	            pstmt.setString(4, account.getSchoolEmail());
+	            pstmt.setString(5, account.getSchoolPhone());
+	            pstmt.setString(6, account.getSchoolAddres());
+	            pstmt.setString(7, account.getSchoolHomeTown());
+	            pstmt.setString(8, account.getSchoolCounty());
+	            pstmt.setString(9, account.getSchoolMotto());
+	            pstmt.setString(10, account.getDayBoarding());
 	            pstmt.executeUpdate();
 			 
 		 }catch(SQLException e){
@@ -130,19 +161,20 @@ public class AcountDAO extends GenericDAO implements SchoolAcountDAO {
 	public boolean update(Account account) {
 		boolean success = true; 
 		 try(   Connection conn = dbutils.getConnection();
-	      PreparedStatement pstmt = conn.prepareStatement("UPDATE Account SET SchoolName =?,SchoolEmail =?,SchoolPhone =?,"
-			+ "SchoolAddres =?,SchoolHomeTown =?,SchoolCounty =?,SchoolMotto =?,Boarding =? WHERE Uuid = ? ;");
+	      PreparedStatement pstmt = conn.prepareStatement("UPDATE Account SET username =?,SchoolName =?,SchoolEmail =?,SchoolPhone =?,"
+			+ "SchoolAddres =?,SchoolHomeTown =?,SchoolCounty =?,SchoolMotto =?,DayBoarding =? WHERE Uuid = ? ;");
       		){
 			 
-	            pstmt.setString(1, account.getSchoolName());
-	            pstmt.setString(2, account.getSchoolEmail());
-	            pstmt.setString(3, account.getSchoolPhone());
-	            pstmt.setString(4, account.getSchoolAddres());
-	            pstmt.setString(5, account.getSchoolHomeTown());
-	            pstmt.setString(6, account.getSchoolCounty());
-	            pstmt.setString(7, account.getSchoolMotto());
-	            pstmt.setString(8, account.getDayBoarding());
-	            pstmt.setString(9, account.getUuid());
+	            pstmt.setString(1, account.getUsername());
+	            pstmt.setString(2, account.getSchoolName());
+	            pstmt.setString(3, account.getSchoolEmail());
+	            pstmt.setString(4, account.getSchoolPhone());
+	            pstmt.setString(5, account.getSchoolAddres());
+	            pstmt.setString(6, account.getSchoolHomeTown());
+	            pstmt.setString(7, account.getSchoolCounty());
+	            pstmt.setString(8, account.getSchoolMotto());
+	            pstmt.setString(9, account.getDayBoarding());
+	            pstmt.setString(10, account.getUuid());
 	            pstmt.executeUpdate();
 			 
 		 }catch(SQLException e){

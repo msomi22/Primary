@@ -39,6 +39,6 @@ public interface SchoolSystemConfigDAO {
 	 * 
 	 * @return
 	 */
-	public List<SystemConfig> getSystemConfig();
+	public List<SystemConfig> getSystemConfigList(String accountUuid);
 
 }

@@ -13,6 +13,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.dbutils.BeanProcessor;
@@ -22,7 +23,8 @@ import org.apache.log4j.Logger;
 import ke.co.fastech.primaryschool.bean.school.Stream;
 import ke.co.fastech.primaryschool.persistence.GenericDAO;
 
-/**
+/**  
+ * 
  * Persistence abstraction for {@link Stream}
  * 
  * @author <a href="mailto:mwendapeter72@gmail.com">Peter mwenda</a>
@@ -87,16 +89,17 @@ public class StreamDAO extends GenericDAO implements SchoolStreamDAO {
 	 * @see ke.co.fastech.primaryschool.persistence.school.SchoolStreamDAO#getStream(java.lang.String)
 	 */
 	@Override
-	public Stream getStream(String streamName) {
+	public Stream getStream(String streamName,String accountUuid) {
 		Stream stream = null;
 		ResultSet rset = null;
 		try(
 				Connection conn = dbutils.getConnection();
-				PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM Stream WHERE streamName = ?;");       
+				PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM Stream WHERE streamName = ? AND accountUuid =?;");       
 
 				){
 
 			pstmt.setString(1, streamName);
+			pstmt.setString(2, accountUuid);
 			rset = pstmt.executeQuery();
 			while(rset.next()){
 				stream  = beanProcessor.toBean(rset,Stream.class);
@@ -119,11 +122,12 @@ public class StreamDAO extends GenericDAO implements SchoolStreamDAO {
 
 		try(   Connection conn = dbutils.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Stream" 
-						+"(Uuid, StreamName) VALUES (?,?);");
+						+"(Uuid,AccountUuid,StreamName) VALUES (?,?,?);");
 				){
 
 			pstmt.setString(1, stream.getUuid());
-			pstmt.setString(2, stream.getStreamName());
+			pstmt.setString(2, stream.getAccountUuid()); 
+			pstmt.setString(3, stream.getStreamName());
 			pstmt.executeUpdate();
 
 		}catch(SQLException e){
@@ -145,10 +149,11 @@ public class StreamDAO extends GenericDAO implements SchoolStreamDAO {
 
 		try (  Connection conn = dbutils.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement("UPDATE Stream SET StreamName = ?"
-						+ "WHERE Uuid = ?;");
+						+ "WHERE Uuid = ? AND AccountUuid =?;");
 				) {           			 	            
 			pstmt.setString(1, stream.getStreamName());
 			pstmt.setString(2, stream.getUuid());
+			pstmt.setString(3, stream.getAccountUuid()); 
 			pstmt.executeUpdate();
 
 		} catch (SQLException e) {
@@ -165,22 +170,23 @@ public class StreamDAO extends GenericDAO implements SchoolStreamDAO {
 	 * @see ke.co.fastech.primaryschool.persistence.school.SchoolStreamDAO#getStreamList()
 	 */
 	@Override
-	public List<Stream> getStreamList() {
-		List<Stream>  list = null;
-		try(   
-				Connection conn = dbutils.getConnection();
-				PreparedStatement  pstmt = conn.prepareStatement("SELECT * FROM Stream ;");   
-				ResultSet rset = pstmt.executeQuery();
-				) {
-
-			list = beanProcessor.toBeanList(rset, Stream.class);
-
-		} catch(SQLException e){
-			logger.error("SQL Exception when getting all Stream");
-			logger.error(ExceptionUtils.getStackTrace(e));
-			System.out.println(ExceptionUtils.getStackTrace(e));
+	public List<Stream> getStreamList(String accountUuid) {
+	     List<Stream> list = new ArrayList<>();
+			try(
+					Connection conn = dbutils.getConnection();
+					PreparedStatement psmt= conn.prepareStatement("SELECT * FROM Stream WHERE accountUuid =?;");
+					) {
+				   psmt.setString(1,accountUuid);
+				  try(ResultSet rset = psmt.executeQuery();){
+						
+					  list = beanProcessor.toBeanList(rset, Stream.class);
+					}
+			} catch (SQLException e) {
+				logger.error("SQLException when trying to get Stream List");
+	            logger.error(ExceptionUtils.getStackTrace(e));
+	            System.out.println(ExceptionUtils.getStackTrace(e)); 
+		    }
+			return list;
 		}
-		return list;
-	}
 
 }

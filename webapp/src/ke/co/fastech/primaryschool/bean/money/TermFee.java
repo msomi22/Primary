@@ -16,6 +16,7 @@ import ke.co.fastech.primaryschool.bean.StorableBean;
  */
 public class TermFee extends StorableBean{
 	
+	private String accountUuid;
 	private String term;
 	private String year;
 	private String studentLevel;
@@ -27,12 +28,29 @@ public class TermFee extends StorableBean{
 	 */
 	public TermFee() {
 		super();
+		accountUuid = "";
 		term = "";
 		year = "";
 		studentLevel ="";
 		amount = 0;
 	}
 	
+
+	/**
+	 * @return the accountUuid
+	 */
+	public String getAccountUuid() {
+		return accountUuid;
+	}
+
+
+	/**
+	 * @param accountUuid the accountUuid to set
+	 */
+	public void setAccountUuid(String accountUuid) {
+		this.accountUuid = accountUuid;
+	}
+
 
 	/**
 	 * @return the term
@@ -104,6 +122,8 @@ public class TermFee extends StorableBean{
 		builder.append("TermFee");
 		builder.append("[getUuid() = ");
 		builder.append(getUuid());
+		builder.append(", accountUuid = ");
+		builder.append(accountUuid);
 		builder.append(", term = ");
 		builder.append(term);
 		builder.append(", year = ");

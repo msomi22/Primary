@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <%@page import="org.apache.commons.lang3.StringUtils"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="ke.co.fastech.primaryschool.server.session.AdminSessionConstants"%>
+
 
 <html lang="en">
     <head>
@@ -74,6 +76,27 @@
     </head>
 
     <body>
+
+    <%
+
+
+
+    if (session == null) {
+        response.sendRedirect("index.jsp");
+    }
+
+    String username = (String) session.getAttribute(AdminSessionConstants.ADMIN_SESSION_KEY);
+    if (StringUtils.isEmpty(username)) {
+        response.sendRedirect("index.jsp");
+    }
+
+     session.setMaxInactiveInterval(AdminSessionConstants.SESSION_TIMEOUT);
+     response.setHeader("Refresh", AdminSessionConstants.SESSION_TIMEOUT + "; url=logout");
+
+
+
+
+    %>
  
   
 
@@ -88,7 +111,7 @@
             <!--user dropdown starts -->
                       <div class="btn-group pull-right" >
                          <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="icon-user"></i><span class="hidden-phone"> username  </span>
+                            <i class="icon-user"></i><span class="hidden-phone"> <%=username%>  </span>
                             <span class="caret"></span>
                         </a>
 
@@ -116,8 +139,8 @@
                             <li class="nav-header hidden-tablet">Main</li>                                                     
 
 
-                            <li><a class="ajax-link" href=""><i class="icon-home"></i><span class="hidden-tablet">Home</span></a></li>
-                            <li><a class="ajax-link" href=""><i class="icon-home"></i><span class="hidden-tablet">New Principal</span></a></li>
+                            <li><a class="ajax-link" href="adminIndex.jsp"><i class="icon-home"></i><span class="hidden-tablet">Home</span></a></li>
+                            <li><a class="ajax-link" href="newHeadteacher.jsp"><i class="icon-home"></i><span class="hidden-tablet">New Headteacher</span></a></li>
                             
                         </ul>
                         <!--<label id="for-is-ajax" class="hidden-tablet" for="is-ajax"><input id="is-ajax" type="checkbox"> Ajax on menu</label>-->

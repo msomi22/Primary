@@ -16,6 +16,7 @@ import ke.co.fastech.primaryschool.bean.StorableBean;
  */
 public class Book extends StorableBean{
 	
+	private String accountUuid;
 	private String ISBN;
 	private String author;
 	private String publisher;
@@ -28,6 +29,7 @@ public class Book extends StorableBean{
 	 * 
 	 */
 	public Book() {
+		accountUuid = "";
 		ISBN = "";
 		author = "";
 		publisher = "";
@@ -37,6 +39,20 @@ public class Book extends StorableBean{
 		bookcost = 0;
 	}
 	
+	/**
+	 * @return the accountUuid
+	 */
+	public String getAccountUuid() {
+		return accountUuid;
+	}
+
+	/**
+	 * @param accountUuid the accountUuid to set
+	 */
+	public void setAccountUuid(String accountUuid) {
+		this.accountUuid = accountUuid;
+	}
+
 	/**
 	 * @return the iSBN
 	 */
@@ -141,6 +157,8 @@ public class Book extends StorableBean{
 		builder.append("Book");
 		builder.append("[getUuid() = ");
 		builder.append(getUuid());
+		builder.append(", accountUuid = ");
+		builder.append(accountUuid);
 		builder.append(", ISBN = ");
 		builder.append(ISBN);
 		builder.append(", author = ");

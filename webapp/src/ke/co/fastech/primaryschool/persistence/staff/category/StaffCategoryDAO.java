@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 import ke.co.fastech.primaryschool.bean.staff.StaffCategory;
 import ke.co.fastech.primaryschool.persistence.GenericDAO;
 
-/**
+/** 
  * Persistence abstraction for {@link StaffCategory}
  * 
  * @author <a href="mailto:mwendapeter72@gmail.com">Peter mwenda</a>

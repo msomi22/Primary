@@ -8,8 +8,8 @@ package ke.co.fastech.primaryschool.bean.staff;
 
 import ke.co.fastech.primaryschool.bean.StorableBean;
 
-/**
- * teacher subject assignment logic 
+/** 
+ * Teacher subject assignment logic 
  * 
  * @author <a href="mailto:mwendapeter72@gmail.com">Peter mwenda</a>
  *

@@ -19,19 +19,21 @@
 
 <%
 
-        String schoolId = (String) session.getAttribute(SessionConstants.ACCOUNT_SIGN_IN_ACCOUNTUUID); 
+       
+        String schoolUsername = (String) session.getAttribute(SessionConstants.ACCOUNT_SIGN_IN_KEY);
+        String schoolId = "";
+
 
         CacheManager mgr = CacheManager.getInstance();
-        Cache accountsCache = mgr.getCache(CacheVariables.CACHE_SCHOOL_ACCOUNTS_BY_UUID);
+        Cache accountsCache = mgr.getCache(CacheVariables.CACHE_SCHOOL_ACCOUNTS_BY_USERNAME);
 
         Account school = new Account();
         Element element;
-         if ((element = accountsCache.get(schoolId)) != null) {
+         if ((element = accountsCache.get(schoolUsername)) != null) {
             school = (Account) element.getObjectValue();
          }
-
-
-        String accountuuid = school.getUuid();
+         
+         schoolId = school.getUuid();
 
        
 
@@ -43,6 +45,7 @@
     <ul class="breadcrumb">
 
     <li> <b> WELCOME TO   <b> <%=school.getSchoolName()%> </li> 
+     <li> <a href="schoolIndex.jsp">Back</a>  <span class="divider">/</span> </li>
     </ul>
 </div>
 

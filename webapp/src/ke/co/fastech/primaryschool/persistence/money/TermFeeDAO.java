@@ -71,14 +71,15 @@ public class TermFeeDAO extends GenericDAO implements SchoolTermFeeDAO {
 		boolean success = true;
 		try( Connection conn = dbutils.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement("INSERT INTO TermFee" 
-						+"(Uuid,term,year,studentLevel,amount) VALUES (?,?,?,?,?);");
+						+"(Uuid,accountUuid,term,year,studentLevel,amount) VALUES (?,?,?,?,?,?);");
 				){
 
 			pstmt.setString(1, termFee.getUuid());
-			pstmt.setString(2, termFee.getTerm());
-			pstmt.setString(3, termFee.getYear());
-			pstmt.setString(4, termFee.getStudentLevel());
-			pstmt.setDouble(5, termFee.getAmount());
+			pstmt.setString(2, termFee.getAccountUuid());
+			pstmt.setString(3, termFee.getTerm());
+			pstmt.setString(4, termFee.getYear());
+			pstmt.setString(5, termFee.getStudentLevel());
+			pstmt.setDouble(6, termFee.getAmount());
 			pstmt.executeUpdate();
 
 		}catch(SQLException e){
@@ -102,7 +103,7 @@ public class TermFeeDAO extends GenericDAO implements SchoolTermFeeDAO {
 
 		try (  Connection conn = dbutils.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement("UPDATE termFee SET Term =?,Year =?,StudentLevel =?, Amount =?"
-						+ " WHERE Uuid = ?;");
+						+ " WHERE Uuid = ? AND accountUuid =?;");
 				) {           			 	            
 
 			pstmt.setString(1, termFee.getTerm());
@@ -110,6 +111,7 @@ public class TermFeeDAO extends GenericDAO implements SchoolTermFeeDAO {
 			pstmt.setString(3, termFee.getStudentLevel());
 			pstmt.setDouble(4, termFee.getAmount());
 			pstmt.setString(5, termFee.getUuid());
+			pstmt.setString(6, termFee.getAccountUuid());
 			pstmt.executeUpdate();
 
 		} catch (SQLException e) {
@@ -126,15 +128,16 @@ public class TermFeeDAO extends GenericDAO implements SchoolTermFeeDAO {
 	 * @see ke.co.fastech.primaryschool.persistence.money.SchoolTermFeeDAO#getTermFeeList(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public List<TermFee> getTermFeeList(String term, String year) {
+	public List<TermFee> getTermFeeList(String term, String year,String accountUuid) {
 		List<TermFee> List = null;
 		try(
 				Connection conn = dbutils.getConnection();
 				PreparedStatement psmt= conn.prepareStatement("SELECT * FROM TermFee WHERE "
-						+ "term = ? AND year = ?;");
+						+ "term = ? AND year = ? AND accountUuid =? ;");
 				) {
 			psmt.setString(1, term);
 			psmt.setString(2, year);
+			psmt.setString(3, accountUuid);
 			try(ResultSet rset = psmt.executeQuery();){
 
 				List = beanProcessor.toBeanList(rset, TermFee.class);
@@ -152,12 +155,13 @@ public class TermFeeDAO extends GenericDAO implements SchoolTermFeeDAO {
 	 * @see ke.co.fastech.primaryschool.persistence.money.SchoolTermFeeDAO#getTermFeeList()
 	 */
 	@Override
-	public List<TermFee> getTermFeeList() {
+	public List<TermFee> getTermFeeList(String accountUuid) {
 		List<TermFee> List = null;
 		try(
 				Connection conn = dbutils.getConnection();
-				PreparedStatement psmt= conn.prepareStatement("SELECT * FROM TermFee ORDER BY YEAR DESC;");
+				PreparedStatement psmt= conn.prepareStatement("SELECT * FROM TermFee WHERE accountUuid =?  ORDER BY YEAR DESC;");
 				) {
+			psmt.setString(1, accountUuid);
 			try(ResultSet rset = psmt.executeQuery();){
 				List = beanProcessor.toBeanList(rset, TermFee.class);
 			}

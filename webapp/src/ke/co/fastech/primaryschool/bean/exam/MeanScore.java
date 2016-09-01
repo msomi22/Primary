@@ -18,8 +18,8 @@ public class MeanScore{
 	private String term;
 	private String year;
 	private double meanScore;
-	private int streamPosition;
-	private int classPosition;
+	private String streamPosition;
+	private String classPosition;
 	
 	/**
 	 * 
@@ -29,8 +29,8 @@ public class MeanScore{
 		term = "";
 		year = "";
 		meanScore = 0;
-		streamPosition = 0;
-		classPosition = 0;
+		streamPosition = "";
+		classPosition = "";
 	} 
 	
 
@@ -101,7 +101,7 @@ public class MeanScore{
 	/**
 	 * @return the streamPosition
 	 */
-	public int getStreamPosition() {
+	public String getStreamPosition() {
 		return streamPosition;
 	}
 
@@ -109,7 +109,7 @@ public class MeanScore{
 	/**
 	 * @param streamPosition the streamPosition to set
 	 */
-	public void setStreamPosition(int streamPosition) {
+	public void setStreamPosition(String streamPosition) {
 		this.streamPosition = streamPosition;
 	}
 
@@ -117,7 +117,7 @@ public class MeanScore{
 	/**
 	 * @return the classPosition
 	 */
-	public int getClassPosition() {
+	public String getClassPosition() {
 		return classPosition;
 	}
 
@@ -125,7 +125,7 @@ public class MeanScore{
 	/**
 	 * @param classPosition the classPosition to set
 	 */
-	public void setClassPosition(int classPosition) {
+	public void setClassPosition(String classPosition) {
 		this.classPosition = classPosition;
 	}
 

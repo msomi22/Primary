@@ -8,7 +8,7 @@ package ke.co.fastech.primaryschool.bean.school;
 
 import ke.co.fastech.primaryschool.bean.StorableBean;
 
-/**
+/** 
  * a stream in a school
  * 
  *@author <a href="mailto:mwendapeter72@gmail.com">Peter mwenda</a>
@@ -16,6 +16,7 @@ import ke.co.fastech.primaryschool.bean.StorableBean;
  */
 public class Stream extends StorableBean{
 	
+	private String accountUuid;
 	private String streamName;
 
 	/**
@@ -23,9 +24,24 @@ public class Stream extends StorableBean{
 	 */
 	public Stream() {
 		super();
+		accountUuid = "";
 		streamName = "";
 	}
 	
+	/**
+	 * @return the accountUuid
+	 */
+	public String getAccountUuid() {
+		return accountUuid;
+	}
+
+	/**
+	 * @param accountUuid the accountUuid to set
+	 */
+	public void setAccountUuid(String accountUuid) {
+		this.accountUuid = accountUuid;
+	}
+
 	/**
 	 * @return the streamName
 	 */
@@ -46,6 +62,8 @@ public class Stream extends StorableBean{
 		builder.append("Stream");
 		builder.append("[getUuid() = ");
 		builder.append(getUuid());
+		builder.append(", accountUuid = ");
+		builder.append(accountUuid);
 		builder.append(", streamName = ");
 		builder.append(streamName);
 		builder.append("]");

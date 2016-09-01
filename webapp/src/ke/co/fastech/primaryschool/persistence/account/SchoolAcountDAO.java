@@ -25,6 +25,12 @@ public interface SchoolAcountDAO {
 	public Account getAccount(String accountUuid);
 	/**
 	 * 
+	 * @param username
+	 * @return
+	 */
+	public Account getAccountByusername(String username);
+	/**
+	 * 
 	 * @param account
 	 * @return whether account was inserted into database successfully
 	 */

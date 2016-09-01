@@ -29,9 +29,27 @@ public interface SchoolStudentDAO {
 	/**
 	 * 
 	 * @param admmissinNo
+	 * @param statusUuid
+	 * @param accountUuid
+	 * @return
+	 */
+	 
+	public Student getStudentBystatus(String admmissinNo,String statusUuid,String accountUuid);
+	/**
+	 * 
+	 * @param admmissinNo
+	 * @param streamUuid
+	 * @param accountUuid
+	 * @return
+	 */
+	 
+	public Student getStudentBystream(String admmissinNo,String streamUuid,String accountUuid);
+	/**
+	 * 
+	 * @param admmissinNo
 	 * @return a {@link Student} object with admmissinNo
 	 */
-	public Student getStudentByADMNO(String admmissinNo);
+	public Student getStudentByADMNO(String admmissinNo,String accountUuid);
 	/**
 	 * 
 	 * @param student
@@ -49,24 +67,55 @@ public interface SchoolStudentDAO {
 	 * @param admmissinNo
 	 * @return {@link List} of all {@link Student}(s) in the school with admission number like admmissinNo
 	 */
-	public List<Student> getStudentListByAdmNo(String admmissinNo);
+	public List<Student> getStudentListByAdmNo(String admmissinNo,String accountUuid);
 	/**
 	 * 
 	 * @param streamUuid
 	 * @return {@link List} of all {@link Student}(s) in the school for a given streamUuid
 	 */
-	public List<Student> getStudentListByStreamUuid(String streamUuid);
+	public List<Student> getStudentListByStreamUuid(String streamUuid,String accountUuid);
 	/**
 	 * 
 	 * @param start
 	 * @param end
 	 * @return
 	 */
-	public List<Student> getStudentsListByLimit(int startIndex,int endIndex);
+	public List<Student> getStudentsListByLimit(int startIndex,int endIndex,String accountUuid);
 	/**
 	 * 
 	 * @return {@link List} of all {@link Student}(s) in the school
 	 */
-	public List<Student> getStudentsList();
+	public List<Student> getStudentsList(String accountUuid);
+	/**
+	 * 
+	 * @param statusUuid
+	 * @param streamUuid
+	 * @return
+	 */
+	public int getStudentCountPerClass(String statusUuid,String streamUuid,String accountUuid);
+	/**
+	 * 
+	 * @param statusUuid
+	 * @param accountUuid
+	 * @return
+	 */
+	public int getStudentCount(String statusUuid,String accountUuid);
+	/**
+	 * 
+	 * @param studentType
+	 * @param statusUuid
+	 * @param accountUuid
+	 * @return
+	 */
+	public int getStudentCountByCategory(String studentType,String statusUuid,String accountUuid);
+	/**
+	 * 
+	 * @param studentLevel
+	 * @param statusUuid
+	 * @param accountUuid
+	 * @return
+	 */
+	public int getStudentCountByLevel(String studentLevel,String statusUuid,String accountUuid);
+	
 	
 }

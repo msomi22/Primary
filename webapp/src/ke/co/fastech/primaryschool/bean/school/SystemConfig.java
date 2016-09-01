@@ -8,7 +8,7 @@ package ke.co.fastech.primaryschool.bean.school;
 
 import ke.co.fastech.primaryschool.bean.StorableBean;
 
-/**
+/** 
  * school configuration properties 
  * 
  * @author <a href="mailto:mwendapeter72@gmail.com">Peter mwenda</a>
@@ -20,9 +20,7 @@ public class SystemConfig extends StorableBean{
 	private String term;
 	private String year;
 	private String smsSend;
-	private String endTerm;
-	private String eTMidTerm;
-	private String examAll;
+	private String examcode;
 	private String openningDate;
 	private String closingDate;
 
@@ -35,9 +33,7 @@ public class SystemConfig extends StorableBean{
 		term = "";
 		year = "";
 		smsSend = "";
-		endTerm = "";
-		eTMidTerm = "";
-		examAll = "";
+		examcode = "";
 		openningDate = "";
 		closingDate = "";
 	}
@@ -114,58 +110,20 @@ public class SystemConfig extends StorableBean{
 		this.smsSend = smsSend;
 	}
 
-
-
 	/**
-	 * @return the endTerm
+	 * @return the examcode
 	 */
-	public String getEndTerm() {
-		return endTerm;
+	public String getExamcode() {
+		return examcode;
 	}
 
 
 
 	/**
-	 * @param endTerm the endTerm to set
+	 * @param examcode the examcode to set
 	 */
-	public void setEndTerm(String endTerm) {
-		this.endTerm = endTerm;
-	}
-
-
-
-	/**
-	 * @return the eTMidTerm
-	 */
-	public String geteTMidTerm() {
-		return eTMidTerm;
-	}
-
-
-
-	/**
-	 * @param eTMidTerm the eTMidTerm to set
-	 */
-	public void seteTMidTerm(String eTMidTerm) {
-		this.eTMidTerm = eTMidTerm;
-	}
-
-
-
-	/**
-	 * @return the examAll
-	 */
-	public String getExamAll() {
-		return examAll;
-	}
-
-
-
-	/**
-	 * @param examAll the examAll to set
-	 */
-	public void setExamAll(String examAll) {
-		this.examAll = examAll;
+	public void setExamcode(String examcode) {
+		this.examcode = examcode;
 	}
 
 
@@ -220,12 +178,8 @@ public class SystemConfig extends StorableBean{
 		builder.append(year);
 		builder.append(", smsSend = ");
 		builder.append(smsSend);
-		builder.append(", endTerm = ");
-		builder.append(endTerm);
-		builder.append(", eTMidTerm = ");
-		builder.append(eTMidTerm);
-		builder.append(", examAll = ");
-		builder.append(examAll);
+		builder.append(", examcode = ");
+		builder.append(examcode);
 		builder.append(", openningDate = ");
 		builder.append(openningDate);
 		builder.append(", closingDate = ");

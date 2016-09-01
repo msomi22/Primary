@@ -13,6 +13,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.dbutils.BeanProcessor;
@@ -22,7 +23,8 @@ import org.apache.log4j.Logger;
 import ke.co.fastech.primaryschool.bean.school.SystemConfig;
 import ke.co.fastech.primaryschool.persistence.GenericDAO;
 
-/**
+/** 
+ *  
  * Persistence abstraction for {@link SystemConfig}
  * 
  * @author <a href="mailto:mwendapeter72@gmail.com">Peter mwenda</a>
@@ -91,8 +93,8 @@ public class SystemConfigDAO extends GenericDAO implements SchoolSystemConfigDAO
 	public boolean putSystemConfig(SystemConfig systemConfig) {
 		boolean success = true;
 		try(   Connection conn = dbutils.getConnection();
-				PreparedStatement pstmt = conn.prepareStatement("INSERT INTO ExamConfig" 
-						+"(Uuid,accountUuid,term,year,smsSend,endTerm,eTMidTerm,examAll,openningDate,closingDate) VALUES (?,?,?,?,?,?,?,?,?);");
+				PreparedStatement pstmt = conn.prepareStatement("INSERT INTO SystemConfig" 
+						+"(Uuid,accountUuid,term,year,smsSend,examcode,openningDate,closingDate) VALUES (?,?,?,?,?,?,?,?);");
 				){
 
 			pstmt.setString(1, systemConfig.getUuid());
@@ -100,11 +102,9 @@ public class SystemConfigDAO extends GenericDAO implements SchoolSystemConfigDAO
 			pstmt.setString(3, systemConfig.getTerm());
 			pstmt.setString(4, systemConfig.getYear());
 			pstmt.setString(5, systemConfig.getSmsSend());
-			pstmt.setString(6, systemConfig.getEndTerm());
-			pstmt.setString(7, systemConfig.geteTMidTerm());
-			pstmt.setString(8, systemConfig.getExamAll());
-			pstmt.setString(9, systemConfig.getOpenningDate());
-			pstmt.setString(10, systemConfig.getClosingDate());
+			pstmt.setString(6, systemConfig.getExamcode());
+			pstmt.setString(7, systemConfig.getOpenningDate());
+			pstmt.setString(8, systemConfig.getClosingDate());
 			pstmt.executeUpdate();
 
 		}catch(SQLException e){
@@ -126,18 +126,16 @@ public class SystemConfigDAO extends GenericDAO implements SchoolSystemConfigDAO
 
 		try (  Connection conn = dbutils.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement("UPDATE SystemConfig SET Term =?,Year =?,SmsSend =?,"
-						+ "EndTerm =?,eTMidTerm =?,ExamAll =?,OpenningDate =?,ClosingDate =? WHERE Uuid = ?;");
+						+ "examcode =?,OpenningDate =?,ClosingDate =? WHERE accountUuid = ?;");
 				) {           			 	            
 
 			pstmt.setString(1, systemConfig.getTerm());
 			pstmt.setString(2, systemConfig.getYear());
 			pstmt.setString(3, systemConfig.getSmsSend());
-			pstmt.setString(4, systemConfig.getEndTerm());
-			pstmt.setString(5, systemConfig.geteTMidTerm());
-			pstmt.setString(6, systemConfig.getExamAll());
-			pstmt.setString(7, systemConfig.getOpenningDate());
-			pstmt.setString(8, systemConfig.getClosingDate());
-			pstmt.setString(9, systemConfig.getUuid());
+			pstmt.setString(4, systemConfig.getExamcode());
+			pstmt.setString(5, systemConfig.getOpenningDate());
+			pstmt.setString(6, systemConfig.getClosingDate());
+			pstmt.setString(7, systemConfig.getAccountUuid());
 			pstmt.executeUpdate();
 
 		} catch (SQLException e) {
@@ -154,22 +152,23 @@ public class SystemConfigDAO extends GenericDAO implements SchoolSystemConfigDAO
 	 * @see ke.co.fastech.primaryschool.persistence.school.SchoolSystemConfigDAO#getSystemConfig()
 	 */
 	@Override
-	public List<SystemConfig> getSystemConfig() {
-		List<SystemConfig>  list = null;
-		try(   
-				Connection conn = dbutils.getConnection();
-				PreparedStatement  pstmt = conn.prepareStatement("SELECT * FROM SystemConfig ;");   
-				ResultSet rset = pstmt.executeQuery();
-				) {
-
-			list = beanProcessor.toBeanList(rset, SystemConfig.class);
-
-		} catch(SQLException e){
-			logger.error("SQL Exception when getting SystemConfig List");
-			logger.error(ExceptionUtils.getStackTrace(e));
-			System.out.println(ExceptionUtils.getStackTrace(e));
+	public List<SystemConfig> getSystemConfigList(String accountUuid) {
+	     List<SystemConfig> list = new ArrayList<>();
+			try(
+					Connection conn = dbutils.getConnection();
+					PreparedStatement psmt= conn.prepareStatement("SELECT * FROM SystemConfig WHERE accountUuid =?;");
+					) {
+				   psmt.setString(1,accountUuid);
+				  try(ResultSet rset = psmt.executeQuery();){
+						
+					  list = beanProcessor.toBeanList(rset, SystemConfig.class);
+					}
+			} catch (SQLException e) {
+				logger.error("SQLException when trying to get SystemConfig List");
+	            logger.error(ExceptionUtils.getStackTrace(e));
+	            System.out.println(ExceptionUtils.getStackTrace(e)); 
+		    }
+			return list;
 		}
-		return list;
-	}
 
 }

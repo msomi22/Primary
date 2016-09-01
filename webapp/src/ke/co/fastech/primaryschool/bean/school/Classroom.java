@@ -8,7 +8,7 @@ package ke.co.fastech.primaryschool.bean.school;
 
 import ke.co.fastech.primaryschool.bean.StorableBean;
 
-/**
+/** 
  * a class in a school
  * 
  * @author <a href="mailto:mwendapeter72@gmail.com">Peter mwenda</a>

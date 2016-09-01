@@ -171,7 +171,7 @@ public class MeanScoreDAO extends GenericDAO implements SchoolMeanScoreDAO {
 	 * @see ke.co.fastech.primaryschool.persistence.exam.SchoolMeanScoreDAO#putMeanScore(ke.co.fastech.primaryschool.bean.exam.MeanScore, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public boolean putMeanScore(double mean,int streamPosition,int classPosition,String studentuuid, String term, String year) {
+	public boolean putMeanScore(double mean,String streamPosition,String classPosition,String studentuuid, String term, String year) {
 		boolean success = true;
 		if(!meanExist(studentuuid,term,year)){
 		 try(   Connection conn = dbutils.getConnection();
@@ -182,8 +182,8 @@ public class MeanScoreDAO extends GenericDAO implements SchoolMeanScoreDAO {
 	            pstmt.setString(2, term);
 	            pstmt.setString(3, year);
 	            pstmt.setDouble(4, mean);
-	            pstmt.setInt(5, streamPosition);
-	            pstmt.setInt(6, classPosition);
+	            pstmt.setString(5, streamPosition);
+	            pstmt.setString(6, classPosition);
 	            pstmt.executeUpdate();
 			 
 		 }catch(SQLException e){
@@ -202,8 +202,8 @@ public class MeanScoreDAO extends GenericDAO implements SchoolMeanScoreDAO {
 	        			+ " WHERE studentuuid =? AND term = ? AND year = ?;");
 	        	) { 
 				    pstmt.setDouble(1, mean);
-				    pstmt.setInt(2, streamPosition);
-				    pstmt.setInt(3, classPosition);
+				    pstmt.setString(2, streamPosition);
+				    pstmt.setString(3, classPosition);
 		            pstmt.setString(4, studentuuid);
 		            pstmt.setString(5, term);
 				    pstmt.setString(6, year);

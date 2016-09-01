@@ -32,6 +32,8 @@ public class TestOtherMoneyDAO {
 	final String databasePassword = "priM123PriM";
 	final int databasePort = 5432;
 	
+	private final String ACCOUNT_UUID = "9DEDDC49-444E-499B-BDB9-D6625D2F79F4";
+	
 	private final String UUID = "CAA3E91A-E324-4A18-AEE1-88BF14DDB606", UUID_NEW ="HKJ3E96O-E324-4A18-ADD1-66BF14DDB404";
 	private final String DESCRIPTION = "Kneck Exam",DESCRIPTION_NEW ="New Money";
 	private final String TERM = "1";
@@ -49,7 +51,7 @@ public class TestOtherMoneyDAO {
 	public final void testGetOtherMoney() {
 		store = new OtherMoneyDAO(databaseName, Host, databaseUsername, databasePassword, databasePort);
 		OtherMoney otherMoney = new OtherMoney();
-		otherMoney = store.getOtherMoney(DESCRIPTION, TERM, YEAR);
+		otherMoney = store.getOtherMoney(DESCRIPTION, TERM, YEAR,ACCOUNT_UUID);
 		assertEquals(otherMoney.getUuid(),UUID);
 		assertEquals(otherMoney.getDescription(),DESCRIPTION); 
 		assertEquals(otherMoney.getTerm(),TERM);
@@ -106,7 +108,7 @@ public class TestOtherMoneyDAO {
 	@Test
 	public final void testGetOtherMoneyList() {
 		store = new OtherMoneyDAO(databaseName, Host, databaseUsername, databasePassword, databasePort);
-		List<OtherMoney> omoneyList = store.getOtherMoneyList(TERM, YEAR);
+		List<OtherMoney> omoneyList = store.getOtherMoneyList(TERM, YEAR,ACCOUNT_UUID);
 		for(OtherMoney om : omoneyList){
 			System.out.println(om); 
 		}
@@ -118,7 +120,7 @@ public class TestOtherMoneyDAO {
 	@Test
 	public final void testGetOtherMone() {
 		store = new OtherMoneyDAO(databaseName, Host, databaseUsername, databasePassword, databasePort);
-		List<OtherMoney> omoneyList = store.getOtherMoneyList();
+		List<OtherMoney> omoneyList = store.getOtherMoneyList(ACCOUNT_UUID);
 		for(OtherMoney om : omoneyList){
 			System.out.println(om); 
 		}

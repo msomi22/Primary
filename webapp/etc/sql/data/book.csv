@@ -1,2 +1,2 @@
-uuid|ISBN|author|publisher|title|bookStatus|borrowStatus|bookcost
-C17DD410-386D-4C60-8AE3-C80E64D98597|15526278810298900|Kithaka Wa Nberia|abc pub|Kifo Kisimani|Reference|Available|1700
+uuid|accountUuid|ISBN|author|publisher|title|bookStatus|borrowStatus|bookcost
+C17DD410-386D-4C60-8AE3-C80E64D98597|9DEDDC49-444E-499B-BDB9-D6625D2F79F4|15526278810298900|Kithaka Wa Nberia|abc pub|Kifo Kisimani|Reference|Available|1700

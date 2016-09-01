@@ -6,6 +6,12 @@
 <%@page import="ke.co.fastech.primaryschool.persistence.student.StudentDAO"%>
 <%@page import="ke.co.fastech.primaryschool.bean.student.Student"%>
 
+<%@page import="ke.co.fastech.primaryschool.persistence.school.StreamDAO"%>
+<%@page import="ke.co.fastech.primaryschool.bean.school.Stream"%>
+
+<%@page import="ke.co.fastech.primaryschool.persistence.school.SystemConfigDAO"%>
+<%@page import="ke.co.fastech.primaryschool.bean.school.SystemConfig"%>
+
 <%@page import="ke.co.fastech.primaryschool.server.servlet.util.PropertiesConfig"%>
 
 <%@page import="ke.co.fastech.primaryschool.bean.school.account.Account"%>
@@ -13,6 +19,7 @@
 <%@page import="ke.co.fastech.primaryschool.server.cache.CacheVariables"%>
 <%@page import="ke.co.fastech.primaryschool.server.session.SessionConstants"%>
 
+<%@page import="ke.co.fastech.primaryschool.server.servlet.school.exam.ExamConstants"%>
 
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
@@ -33,14 +40,36 @@
 <%@page import="org.joda.time.MutableDateTime"%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
+ 
 <%
 
 
+
+
+        String schoolUsername = (String) session.getAttribute(SessionConstants.ACCOUNT_SIGN_IN_KEY);
+        String schoolId = "";
+
+
+        CacheManager mgr = CacheManager.getInstance();
+        Cache accountsCache = mgr.getCache(CacheVariables.CACHE_SCHOOL_ACCOUNTS_BY_USERNAME);
+
+        Account school = new Account();
+        Element element;
+         if ((element = accountsCache.get(schoolUsername)) != null) {
+            school = (Account) element.getObjectValue();
+         }
+         schoolId = school.getUuid();
+
+
+
    
-     StudentDAO studentDAO = StudentDAO.getInstance();
+     StudentDAO studentDAO = StudentDAO.getInstance(); 
+     StreamDAO streamDAO = StreamDAO.getInstance();
+     SystemConfigDAO systemConfigDAO = SystemConfigDAO.getInstance();
+
+
      List<Student> studentList = new ArrayList<Student>();  
-     studentList = studentDAO.getStudentsListByLimit(0 , 15);  
+     studentList = studentDAO.getStudentsListByLimit(0 , 15,schoolId);  
 
     
     SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-dd-MM");
@@ -48,7 +77,7 @@
 
 
      int ussdCount = 0;
-     StudentPaginator paginator = new StudentPaginator();
+     StudentPaginator paginator = new StudentPaginator(schoolId);
      StudentPage studentpage;
 
      studentpage = (StudentPage) session.getAttribute("currentPage");
@@ -79,29 +108,30 @@
         ussdCount = (studentpage.getPageNum() - 1) * studentpage.getPagesize() + 1;
 
 
-
-        String schoolId = (String) session.getAttribute(SessionConstants.ACCOUNT_SIGN_IN_ACCOUNTUUID); 
-
-        CacheManager mgr = CacheManager.getInstance();
-        Cache accountsCache = mgr.getCache(CacheVariables.CACHE_SCHOOL_ACCOUNTS_BY_UUID);
-
-        Account school = new Account();
-        Element element;
-         if ((element = accountsCache.get(schoolId)) != null) {
-            school = (Account) element.getObjectValue();
-         }
+        //get student stream
+        Map<String,String> streamMap = new HashMap<String,String>(); 
+        List<Stream> streamList = new ArrayList<Stream>();  
+        streamList = streamDAO.getStreamList(schoolId); 
+        for(Stream strm : streamList){
+            streamMap.put(strm.getUuid(),strm.getStreamName()); 
+             }
 
 
-        final String ACTIVE_STATUS = "85C6F08E-902C-46C2-8746-8C50E7D11E2E";
-        final String DAY_STATE = "Day";
-        final String BOARDER_STATE = "Boarder";
+        SystemConfig systemConfig = systemConfigDAO.getSystemConfig(schoolId);
 
-       /* int dayStudentCount = 0;
-        int boardingStudentCount = 0;
 
-        dayStudentCount = studentDAO.getStudentCount(ACTIVE_STATUS,DAY_STATE);
-        boardingStudentCount = studentDAO.getStudentCount(ACTIVE_STATUS,BOARDER_STATE); */
+       if (session == null) {
+            response.sendRedirect("../index.jsp");
+           }
 
+       if (StringUtils.isEmpty(schoolUsername)) {
+          response.sendRedirect("../index.jsp");
+        }
+
+      session.setMaxInactiveInterval(SessionConstants.SESSION_TIMEOUT);
+      response.setHeader("Refresh", SessionConstants.SESSION_TIMEOUT + "; url=../logout");
+
+       
        
 
 %> 
@@ -111,7 +141,7 @@
 <div>
     <ul class="breadcrumb">
 
-    <li> <b> WELCOME TO   <b> <%=school.getSchoolName()%> </li> 
+    <li> <b> WELCOME TO   <b> <%=school.getSchoolName()%>  : TERM  : <%=systemConfig.getTerm()%>  YEAR :  <%=systemConfig.getYear()%> </li> <br>
     </ul>
 </div>
 
@@ -120,7 +150,57 @@
     <div class="box span12">
         <div class="box-content">
 
-        <p> Day student count: **   |  Boarding student count: **  |  Lower student count: **  | Upper student count:  ** </p> 
+                             <%             
+
+                                String updateErr = "";
+                                String updateSuccess = "";
+                                session = request.getSession(false);
+
+                                     updateErr = (String) session.getAttribute(SessionConstants.STUDENT_UPDATE_ERROR);
+                                     updateSuccess = (String) session.getAttribute(SessionConstants.STUDENT_UPDATE_SUCCESS);                     
+
+                                if (StringUtils.isNotEmpty(updateErr)) {
+                                    out.println("<p style='color:red;'>");                 
+                                    out.println("error: " + updateErr);
+                                    out.println("</p>");                                 
+                                    session.setAttribute(SessionConstants.STUDENT_UPDATE_ERROR, null);
+                                  } 
+                                   else if (StringUtils.isNotEmpty(updateSuccess)) {
+                                    out.println("<p style='color:green;'>");                                 
+                                    out.println("success: " + updateSuccess);
+                                    out.println("</p>");                                   
+                                    session.setAttribute(SessionConstants.STUDENT_UPDATE_SUCCESS,null);
+                                  } 
+
+
+                                 %>
+
+
+                <div id="search_box">
+                <form action="#" method="get">
+                 <input type="text" placeholder="Search By AdmNo" name="q" size="10" id="searchfield" title="searchfield" onkeyup="searchstudents(this.value)" />
+                </form>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <p> Day student count: <%=studentDAO.getStudentCountByCategory(ExamConstants.STUDENT_CAT_DAY, ExamConstants.STATUS_ACTIVE, schoolId)%>   |
+            Boarding student count: <%=studentDAO.getStudentCountByCategory(ExamConstants.STUDENT_CAT_BOARDER, ExamConstants.STATUS_ACTIVE, schoolId)%>  |
+            Lower student count: <%=studentDAO.getStudentCountByLevel(ExamConstants.STUDENT_LEVEL_LOWWR, ExamConstants.STATUS_ACTIVE, schoolId)%>   |
+            Upper student count: <%=studentDAO.getStudentCountByLevel(ExamConstants.STUDENT_LEVEL_UPPER, ExamConstants.STATUS_ACTIVE, schoolId)%> |
+            TOTAL students: <%=studentDAO.getStudentCount(ExamConstants.STATUS_ACTIVE,schoolId)%> </p> 
 
             <table class="table table-striped table-bordered bootstrap-datatable ">
                 <thead>
@@ -135,9 +215,11 @@
                         <th>Bcert</th>
                         <th>Category</th> 
                         <th>Level</th> 
+                        <th>Class</th> 
+                        <th>Action</th> 
                     </tr>
                 </thead>   
-                <tbody >
+                <tbody class='tablebody'>
                     <%
 
                     String firstnameLowecase = "";
@@ -150,7 +232,7 @@
                         firstnameLowecase = StringUtils.capitalize(student.getFirstname().toLowerCase());
                         middlenameLowecase = StringUtils.capitalize(student.getMiddlename().toLowerCase());
                         lastnameLowecase = StringUtils.capitalize(student.getLastname().toLowerCase());
-                          
+                         
                         %>
 
                          <tr class="tabledit">
@@ -164,6 +246,17 @@
                          <td class="center"><%=student.getBirthcertificateNo()%></td>
                          <td class="center"><%=student.getStudentType()%></td>
                          <td class="center"><%=student.getStudentLevel()%></td> 
+                         <td class="center"><%=streamMap.get(student.getStreamUuid())%></td> 
+                         <td class="center">
+                                <form name="Update" method="POST" action="updateStudent.jsp"> 
+                                <input type="hidden" name="admissionNumber" value="<%=student.getAdmmissinNo()%>">
+                                <input type="hidden" name="firstname" value="<%=firstnameLowecase%>">
+                                <input type="hidden" name="middlename" value="<%=middlenameLowecase%>">
+                                <input type="hidden" name="lastname" value="<%=lastnameLowecase%>">
+                                <input type="hidden" name="studentUuid" value="<%=student.getUuid()%>">
+                                <input class="btn btn-success" type="submit" name="Update" id="Update" value="Update"/> 
+                                </form>                          
+                          </td>      
                          </tr>
 
                         <%

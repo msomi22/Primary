@@ -31,7 +31,7 @@ import net.sf.ehcache.Element;
 public class Logout extends HttpServlet{
 
 
-	private Cache accountsCache,statisticsCache;
+	private Cache accountsCache;
 	Map<String,String> onlineUsersMap;
 	ServletContext context;
 
@@ -43,7 +43,7 @@ public class Logout extends HttpServlet{
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		CacheManager mgr = CacheManager.getInstance();
-		accountsCache = mgr.getCache(CacheVariables.CACHE_SCHOOL_ACCOUNTS_BY_UUID);
+		accountsCache = mgr.getCache(CacheVariables.CACHE_SCHOOL_ACCOUNTS_BY_USERNAME);
 		onlineUsersMap = new HashMap<String,String>();
 		context = getServletContext();
 
@@ -56,6 +56,7 @@ public class Logout extends HttpServlet{
 	 * @throws ServletException, IOException
 	 */
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -66,13 +67,13 @@ public class Logout extends HttpServlet{
 
 		if (session != null) {
 			// Remove the statistics of this user from cache
-			String schoolId = (String) session.getAttribute(SessionConstants.ACCOUNT_SIGN_IN_ACCOUNTUUID); 
+			String schoolusername = (String) session.getAttribute(SessionConstants.ACCOUNT_SIGN_IN_KEY); 
 			String userId = (String) session.getAttribute(SessionConstants.STAFF_SIGN_IN_ID);
 			String username = (String) session.getAttribute(SessionConstants.STAFF_SIGN_IN_USERNAME);
 			Account school = new Account();
 
 			Element element;
-			if ((element = accountsCache.get(schoolId)) != null) {
+			if ((element = accountsCache.get(schoolusername)) != null) {
 				school = (Account) element.getObjectValue();
 			}
 			
@@ -80,11 +81,11 @@ public class Logout extends HttpServlet{
 
 			System.out.println("\""+username + "\" form  \"" + school.getSchoolName() + "\" has logged out on \"" + dateFormatter.format(new Date()) +"\""); 
           
-			
-			//statisticsCache.remove(school.getUuid());
-
 			onlineUsersMap =  (HashMap<String,String>)context.getAttribute("onlineUsersMap");
-			onlineUsersMap.remove(userId);
+			if(!onlineUsersMap.isEmpty()){  
+				onlineUsersMap.remove(userId);
+			}
+			
 
 			//destroy the session
 			session.invalidate();

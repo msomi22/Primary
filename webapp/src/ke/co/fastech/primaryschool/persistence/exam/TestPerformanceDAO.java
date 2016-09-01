@@ -30,6 +30,8 @@ public class TestPerformanceDAO {
 	final String databasePassword = "priM123PriM";
 	final int databasePort = 5432;
 	
+	private String ACCOUNT_UUID = "9DEDDC49-444E-499B-BDB9-D6625D2F79F4";
+	
 	final String STUDENT_UUID = "82B17C63-6BBA-4B5C-B387-43DD1E74B2B1";
 	final String SUBJECT_UUID = "F294FD7C-6321-417C-A56F-CFE8AC8D7950";
 	final String STREAM_UUID = "2B0F8F79-DEF2-419D-9A76-17450B5CF768";
@@ -72,7 +74,7 @@ public class TestPerformanceDAO {
 	@Test
 	public final void testGetStudentDistinctByStreamId() {
 		store = new PerformanceDAO(databaseName, Host, databaseUsername, databasePassword, databasePort);
-		List<ExamResult> resultList = store.getStudentDistinctByStreamId(STREAM_UUID, TERM, YEAR);
+		List<ExamResult> resultList = store.getStudentDistinctByStreamId(ACCOUNT_UUID,STREAM_UUID, TERM, YEAR);
 		for(ExamResult result : resultList){
 			System.out.println(result);
 		}
@@ -85,10 +87,29 @@ public class TestPerformanceDAO {
 	@Test
 	public final void testGetStudentDistinctByClassId() {
 		store = new PerformanceDAO(databaseName, Host, databaseUsername, databasePassword, databasePort);
-		List<ExamResult> resultList = store.getStudentDistinctByClassId(CLASS_UUID, TERM, YEAR);
+		List<ExamResult> resultList = store.getStudentDistinctByClassId(ACCOUNT_UUID,CLASS_UUID, TERM, YEAR);
 		for(ExamResult result : resultList){
 			System.out.println(result);
 		}
+	}
+	
+	@Ignore
+	@Test
+	public final void testGetSubjectCountPerStream() {
+		store = new PerformanceDAO(databaseName, Host, databaseUsername, databasePassword, databasePort);
+		String sub = "A194FD7C-6321-417C-A56F-CFE8AC8D7950";
+		String stream = "2B0F8F79-DEF2-419D-9A76-17450B5CF768";
+		System.out.println(store.getSubjectCountPerStream(ACCOUNT_UUID,sub,stream,"1","2016"));
+		
+	}
+	@Ignore
+	@Test
+   public final void testGetSubjectCountPerClass() {
+		store = new PerformanceDAO(databaseName, Host, databaseUsername, databasePassword, databasePort);
+		String sub = "A194FD7C-6321-417C-A56F-CFE8AC8D7950";
+		String clss = "6537D3DF-313D-4F8D-AB7D-D2216B6407D0";
+		System.out.println(store.getSubjectCountPerClass(ACCOUNT_UUID,sub,clss,"1","2016"));
+		
 	}
 
 

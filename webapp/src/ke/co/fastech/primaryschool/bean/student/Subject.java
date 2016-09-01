@@ -8,7 +8,7 @@ package ke.co.fastech.primaryschool.bean.student;
 
 import ke.co.fastech.primaryschool.bean.StorableBean;
 
-/**
+/** 
  * a subject that a student can take
  * 
  * @author <a href="mailto:mwendapeter72@gmail.com">Peter mwenda</a>
@@ -59,8 +59,8 @@ public class Subject extends StorableBean{
 	@Override
 	public String toString(){
 		StringBuilder builder = new StringBuilder();
-		builder.append("subject");
-		builder.append("[getUuid() = ");
+		builder.append("[subject ");
+		builder.append(", getUuid() = ");
 		builder.append(getUuid());
 		builder.append(", subjectCode = ");
 		builder.append(subjectCode);
