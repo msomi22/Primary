@@ -46,7 +46,6 @@ public class StudentExcelUtil {
 	private String[] levelArray;
 	private List<String> levelList;
 	
-	private String STATUS_ACTIVE = ExamConstants.STATUS_ACTIVE;
 	
 	/**
 	 * 
@@ -283,7 +282,7 @@ public class StudentExcelUtil {
 	    				
 						Student student = new Student();
 	    				student.setAccountUuid(school.getUuid());  
-	    				student.setStatusUuid(STATUS_ACTIVE); 
+	    				student.setStatusUuid(ExamConstants.STATUS_ACTIVE); 
 	    				student.setStreamUuid(streamuuid); 
 	    				student.setAdmmissinNo(admno); 
 	    				student.setFirstname(StringUtils.capitalize(firstname.toLowerCase()));

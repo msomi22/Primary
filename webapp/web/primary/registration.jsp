@@ -63,6 +63,7 @@
     <li> <b> WELCOME TO   <b> <%=school.getSchoolName()%>  : TERM  : <%=systemConfig.getTerm()%>  YEAR :  <%=systemConfig.getYear()%> </li> <br>
     <li> <a href="schoolIndex.jsp">Back</a>  <span class="divider">/</span> </li>
     <li> <a href="importexcel.jsp">Import Student</a> <span class="divider">/</span> </li>
+    <li> <a href="newStudent.jsp">New Student</a> <span class="divider">/</span> </li>
     <li> <a href="promote.jsp">Promote Student</a> <span class="divider">/</span> </li>
     <li> <a href="deactivate.jsp">Deactivate Student</a> <span class="divider">/</span> </li>
     </ul>
@@ -72,6 +73,8 @@
 
     <div class="box span12">
         <div class="box-content">
+
+
         
 
     </div>

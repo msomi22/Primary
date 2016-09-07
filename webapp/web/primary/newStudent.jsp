@@ -1,9 +1,16 @@
 
 <%@page import="ke.co.fastech.primaryschool.bean.school.account.Account"%>
 
+
+<%@page import="ke.co.fastech.primaryschool.persistence.school.StreamDAO"%>
+<%@page import="ke.co.fastech.primaryschool.bean.school.Stream"%>
+
 <%@page import="ke.co.fastech.primaryschool.server.cache.CacheVariables"%>
 <%@page import="ke.co.fastech.primaryschool.server.session.SessionConstants"%>
 
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.List"%>
+<%@page import="java.util.Arrays"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.text.SimpleDateFormat"%>
@@ -23,6 +30,18 @@
         String schoolUsername = (String) session.getAttribute(SessionConstants.ACCOUNT_SIGN_IN_KEY);
         String schoolId = "";
 
+           
+      if (session == null) {
+            response.sendRedirect("../index.jsp");
+           }
+
+       if (StringUtils.isEmpty(schoolUsername)) {
+          response.sendRedirect("../index.jsp");
+        }
+
+      session.setMaxInactiveInterval(SessionConstants.SESSION_TIMEOUT);
+      response.setHeader("Refresh", SessionConstants.SESSION_TIMEOUT + "; url=../logout");
+
 
         CacheManager mgr = CacheManager.getInstance();
         Cache accountsCache = mgr.getCache(CacheVariables.CACHE_SCHOOL_ACCOUNTS_BY_USERNAME);
@@ -34,6 +53,21 @@
          }
          
          schoolId = school.getUuid();
+
+        StreamDAO streamDAO = StreamDAO.getInstance();
+        List<Stream> streamList = new ArrayList<Stream>(); 
+        streamList = streamDAO.getStreamList(schoolId); 
+
+
+    Calendar calendar = Calendar.getInstance();
+    final int DAYS_IN_MONTH = calendar.getActualMaximum(Calendar.DAY_OF_MONTH) + 1;
+    final int DAY_OF_MONTH = calendar.get(Calendar.DAY_OF_MONTH);
+    final int MONTH = calendar.get(Calendar.MONTH) + 1;
+    final int YEAR = calendar.get(Calendar.YEAR)-18;
+    final int YEAR_COUNT = YEAR + 10;
+
+    final int YEAR2 = calendar.get(Calendar.YEAR)-10;
+    final int YEAR_COUNT2 = YEAR2 + 10;
 
        
 
@@ -54,11 +88,36 @@
     <div class="box span12">
         <div class="box-content">
 
+                             <%             
+
+                                String updateErr = "";
+                                String updateSuccess = "";
+                                session = request.getSession(false);
+
+                                     updateErr = (String) session.getAttribute(SessionConstants.STUDENT_UPDATE_ERROR);
+                                     updateSuccess = (String) session.getAttribute(SessionConstants.STUDENT_UPDATE_SUCCESS);                     
+
+                                if (StringUtils.isNotEmpty(updateErr)) {
+                                    out.println("<p style='color:red;'>");                 
+                                    out.println("error: " + updateErr);
+                                    out.println("</p>");                                 
+                                    session.setAttribute(SessionConstants.STUDENT_UPDATE_ERROR, null);
+                                  } 
+                                   else if (StringUtils.isNotEmpty(updateSuccess)) {
+                                    out.println("<p style='color:green;'>");                                 
+                                    out.println("success: " + updateSuccess);
+                                    out.println("</p>");                                   
+                                    session.setAttribute(SessionConstants.STUDENT_UPDATE_SUCCESS,null);
+                                  } 
+
+
+                                 %>
+
 
 
 
         <p>Fields marked with a * are compulsory.</p>
-                    <form  class="form-horizontal"   action="" method="POST" >
+                    <form  class="form-horizontal"   action="newStudent" method="POST" >
                     <fieldset>
 
 
@@ -80,10 +139,10 @@
                                                 <option value="">Please select one</option> 
                                                  <%
                                                     int count = 1;
-                                                    if (classList != null) {
-                                                        for (ClassRoom cl : classList) {
+                                                    if (streamList != null) {
+                                                        for (Stream cl : streamList) {
                                                 %>
-                                                <option value="<%=cl.getUuid()%>"><%=cl.getRoomName()%></option>
+                                                <option value="<%=cl.getUuid()%>"><%=cl.getStreamName()%></option>
                                                 <%
                                                             count++;
                                                         }
@@ -101,7 +160,7 @@
                                         <label class="control-label" for="firstname">Firstname*:</label>
                                         <div class="controls">
                                             <input class="input-xlarge focused" id="receiver" type="text" name="firstname" 
-                                             value="<%= StringUtils.trimToEmpty(paramHash.get("firstname")) %>" style="text-transform: capitalize;" >                                    
+                                             value="" style="text-transform: capitalize;" >                                    
                                         </div>
                                     </div> 
 
@@ -110,7 +169,7 @@
                                         <label class="control-label" for="middlename">Middlename*:</label>
                                         <div class="controls">
                                             <input class="input-xlarge focused" id="receiver" type="text" name="middlename"
-                                              value="<%= StringUtils.trimToEmpty(paramHash.get("middlename")) %>" style="text-transform: capitalize;" >
+                                              value="" style="text-transform: capitalize;" >
                                         </div>
                                     </div> 
 
@@ -119,7 +178,7 @@
                                         <label class="control-label" for="lastname">Lastname:</label>
                                         <div class="controls">
                                             <input class="input-xlarge focused" id="receiver" type="text" name="lastname"
-                                              value="<%= StringUtils.trimToEmpty(paramHash.get("lastname")) %>" style="text-transform: capitalize;" >
+                                              value="" style="text-transform: capitalize;" >
                                         </div>
                                     </div> 
 
@@ -176,34 +235,6 @@
                                         </div>
 
 
-                                    
-
-                                    <div class="control-group">
-                                        <label class="control-label" for="bcertNo">Birth Cert:</label>
-                                        <div class="controls">
-                                            <input class="input-xlarge focused" id="receiver" type="text" name="bcertNo"
-                                              value="<%= StringUtils.trimToEmpty(paramHash.get("bcertNo")) %>"  >
-                                        </div>
-                                    </div> 
-
-                                     <div class="control-group">
-                                        <label class="control-label" for="County">County:</label>
-                                        <div class="controls">
-                                            <input class="input-xlarge focused" id="receiver" type="text" name="county"
-                                              value="<%= StringUtils.trimToEmpty(paramHash.get("county")) %>" style="text-transform: capitalize;" >
-                                        </div>
-                                    </div> 
-
-                                    <div class="control-group">
-                                        <label class="control-label" for="Ward">Ward:</label>
-                                        <div class="controls">
-                                            <input class="input-xlarge focused" id="receiver" type="text" name="ward"
-                                              value="<%= StringUtils.trimToEmpty(paramHash.get("ward")) %>" style="text-transform: capitalize;" >
-                                        </div>
-                                    </div> 
-
-
-                                   
 
                                     <div class="control-group">
                                         <label class="control-label" for="Category">Category*:</label>
@@ -236,7 +267,7 @@
 
                                     
                                     <div class="form-actions">
-                                        <input type="hidden" name="schooluuid" value="<%=accountuuid%>">
+                                        <input type="hidden" name="schooluuid" value="<%=schoolId%>">
                                         <button type="submit" class="btn btn-primary">Register</button>
                                     </div> 
 
