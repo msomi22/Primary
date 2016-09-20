@@ -565,7 +565,7 @@ public class MostImproved extends HttpServlet{
 				
 				devtn = Double.parseDouble(deviation);
 				
-				if(devtn != 0){
+				if(devtn > 0){
 				mostImprovedTable.addCell(new Paragraph(devcount+" ",normalNewRoman7));
 				mostImprovedTable.addCell(new Paragraph(studentAdmNoHash.get(studeuuid)+" ",normalNewRoman7));
 				mostImprovedTable.addCell(new Paragraph(studNameHash.get(studeuuid)+" ",normalNewRoman7));
