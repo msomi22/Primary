@@ -22,7 +22,7 @@
 
 #Begin automatic creation of role
 DB_USERNAME="postgres"
-DB_PASSWORD="root"
+DB_PASSWORD="postgres"
 DB_HOST="localhost"
 
 export PGUSER=$DB_USERNAME
@@ -32,7 +32,8 @@ export PGPASSWORD=$DB_PASSWORD
 echo "Creating new role..."
 
 #If a user has not been created, uncomment the line below
-#psql -c "CREATE USER sema WITH PASSWORD 'g6kp7lwt' CREATEDB"
+psql -c "CREATE USER prim WITH PASSWORD 'priM123PriM' CREATEDB"  
+psql -c "ALTER ROLE prim WITH CREATEDB"  
 
 echo "Finished creating new role."
 #End automatic creation of role
